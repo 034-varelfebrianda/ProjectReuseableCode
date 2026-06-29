@@ -9,7 +9,7 @@ export default function TabButton({
 }: TabButtonProps) {
   return (
     <button
-      className={`relative px-5 py-3 text-sm font-medium ${
+      className={`cursor-pointer relative px-5 py-3 text-sm font-medium ${
         active ? "text-zinc-900" : "text-zinc-500 hover:text-zinc-700"
       }`}
     >

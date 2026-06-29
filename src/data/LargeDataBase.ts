@@ -1,4 +1,11 @@
-import { MailItem } from "../types/Mail";
+export interface MailItem {
+    id: number;
+    from : string;
+    subject: string,
+    sent: string;
+    attachment: boolean;
+    size: string;
+}
 
 export const LargeDataBase:MailItem[]=[
     {id:1 ,

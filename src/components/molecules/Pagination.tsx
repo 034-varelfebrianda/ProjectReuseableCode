@@ -14,12 +14,12 @@ export default function Pagination() {
         <button className="flex h-8 w-8 items-center justify-center rounded-md bg-sky-500 text-white">
           1
         </button>
-        <button className="px-2 text-zinc-700">2</button>
-        <button className="px-2 text-zinc-700">3</button>
-        <button className="px-2 text-zinc-700">4</button>
-        <button className="px-2 text-zinc-700">5</button>
+        <button className="px-2 text-zinc-400 cursor-pointer hover:text-[#09090B]">2</button>
+        <button className="px-2 text-zinc-400 cursor-pointer hover:text-[#09090B]">3</button>
+        <button className="px-2 text-zinc-400 cursor-pointer hover:text-[#09090B]">4</button>
+        <button className="px-2 text-zinc-400 cursor-pointer hover:text-[#09090B]">5</button>
         <span className="px-1 text-zinc-400">...</span>
-        <button className="px-2 text-zinc-700">30000</button>
+        <button className="px-2 text-zinc-400 cursor-pointer hover:text-[#09090B]">30000</button>
 
         <IconData className="cursor-pointer hover:text-[#09090B]">
           <ChevronRight size={16} />

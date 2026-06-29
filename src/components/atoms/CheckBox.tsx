@@ -9,7 +9,7 @@ export default function Checkbox({
   }: CheckboxProps) {
   return (
     <div
-      className={`mx-auto flex h-5 w-5 items-center justify-center rounded border ${
+      className={`mx-auto flex cursor-pointer h-5 w-5 items-center justify-center rounded border ${
         checked ? "border-[#0EA5E9] bg-[#0EA5E9]" : "border-zinc-300 bg-white"
       }`}
     >
