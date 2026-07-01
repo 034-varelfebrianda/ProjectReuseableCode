@@ -1,13 +1,13 @@
 import SortIcon from "../atoms/SortIcon";
 
-interface Props<T>{
-    label:string;
-    column:keyof T;
+interface Props<T> {
+    label: string;
+    column: keyof T;
 
-    sortKey:keyof T | null;
-    direction:"asc"|"desc";
+    sortKey: keyof T | null;
+    direction: "asc" | "desc";
 
-    onSort:(key:keyof T)=>void;
+    onSort: (key: keyof T) => void;
 }
 
 export default function SortableHeader<T>({
@@ -16,19 +16,19 @@ export default function SortableHeader<T>({
     sortKey,
     direction,
     onSort,
-}:Props<T>){
+}: Props<T>) {
 
-    return(
+    return (
         <th
             className="cursor-pointer"
-            onClick={()=>onSort(column)}
+            onClick={() => onSort(column)}
         >
             <div className="flex items-center gap-1">
 
                 {label}
 
                 <SortIcon
-                    active={sortKey===column}
+                    active={sortKey === column}
                     direction={direction}
                 />
 

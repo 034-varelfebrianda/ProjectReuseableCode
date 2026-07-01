@@ -10,6 +10,8 @@ interface FilterBoxProps {
   activeSort?: boolean;
   sortDirection?: "asc" | "desc";
   onSort?: (direction: "asc" | "desc") => void;
+  isSortOpen?: boolean;
+  onToggleSortOpen?: () => void;
   sortAscLabel?: string;
   sortDescLabel?: string;
 }
@@ -23,11 +25,19 @@ export default function FilterBox({
   activeSort = false,
   sortDirection = "asc",
   onSort,
+  isSortOpen,
+  onToggleSortOpen,
   sortAscLabel = "A-Z",
   sortDescLabel = "Z-A",
+
 }: FilterBoxProps) {
   const [internalValue, setInternalValue] = useState(value ?? "");
-  const [sortOpen, setSortOpen] = useState(false);
+  const [sortOpenInternal, setSortOpenInternal] = useState(false);
+  const sortOpen = typeof isSortOpen === "boolean" ? isSortOpen : sortOpenInternal;
+  const toggleSortOpen = () => {
+    if (onToggleSortOpen) onToggleSortOpen();
+    else setSortOpenInternal((s) => !s);
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextValue = e.target.value;
@@ -61,7 +71,7 @@ export default function FilterBox({
           <div className="relative">
             <button
               type="button"
-              onClick={() => setSortOpen((prev) => !prev)}
+              onClick={() => toggleSortOpen()}
               className={`flex items-center gap-1 rounded px-1 text-[#71717A] hover:text-[#09090B] ${
                 activeSort ? "bg-zinc-100" : ""
               }`}
@@ -73,7 +83,7 @@ export default function FilterBox({
                 <button
                   type="button"
                   onClick={() => {
-                    setSortOpen(false);
+                    toggleSortOpen();
                     onSort?.("asc");
                   }}
                   className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${
@@ -86,7 +96,7 @@ export default function FilterBox({
                 <button
                   type="button"
                   onClick={() => {
-                    setSortOpen(false);
+                    toggleSortOpen();
                     onSort?.("desc");
                   }}
                   className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${

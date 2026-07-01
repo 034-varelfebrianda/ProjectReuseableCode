@@ -77,5 +77,5 @@ export const LargeDataBase:MailItem[]=[
     sent:"2/24/2016",
     attachment: true,
     size:"112 KB"
-},
+}
 ]

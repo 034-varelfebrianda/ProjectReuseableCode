@@ -4,9 +4,7 @@ interface CheckboxProps {
   checked?: boolean;
 }
 
-export default function Checkbox({
-  checked = false 
-  }: CheckboxProps) {
+export default function Checkbox({ checked = false }: CheckboxProps) {
   return (
     <div
       className={`mx-auto flex cursor-pointer h-5 w-5 items-center justify-center rounded border ${

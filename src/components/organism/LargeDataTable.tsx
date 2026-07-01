@@ -1,230 +1,201 @@
-import { useState, type MouseEvent as ReactMouseEvent } from "react";
-import { LargeDataBase as mails } from "../../data/LargeDataBase";
+import { useState } from "react";
+import { LargeDataBase as initialMails, MailItem } from "../../data/LargeDataBase";
+import ReusableDataTable, { Column } from "./ReusableDataTable";
 import Checkbox from "../atoms/CheckBox";
-import TabButton from "../atoms/TabButton";
 
-import GridFilterRow from "../molecules/GridFilterRow";
-import GridTopBar from "../molecules/GridTopBar";
-import Pagination from "../molecules/Pagination";
-import BreadCrumbs from "../molecules/BreadCrumbs";
+interface TableMailItem extends MailItem {
+  id: number;
+}
 
-type SortField = "from" | "subject" | "sent" | null;
-
-const columns = [
-  { key: "from", label: "From", defaultWidth: 200, minWidth: 100 },
-  { key: "subject", label: "Subject", defaultWidth: 400, minWidth: 180 },
-  { key: "sent", label: "Sent", defaultWidth: 110, minWidth: 80 },
-  { key: "attachment", label: "Attachment?", defaultWidth: 80, minWidth: 60, align: "center" },
-  { key: "size", label: "Size", defaultWidth: 60, minWidth: 40 },
-];
+type TableColumnKey = keyof TableMailItem & string;
+type FilterValue = string;
+type TableFilters = Record<string, FilterValue>;
 
 export default function LargeDataTable() {
-  const [search, setSearch] = useState("");
-  const [subjectFilter, setSubjectFilter] = useState("");
-  const [sentFilter, setSentFilter] = useState("");
-  const [attachmentFilter, setAttachmentFilter] = useState<"all" | "yes" | "no">("all");
-  const [sortField, setSortField] = useState<SortField>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [columnWidths, setColumnWidths] = useState<number[]>(() =>
-    columns.map((column) => column.defaultWidth)
+  const [mails] = useState<TableMailItem[]>(() =>
+    initialMails.map((mail) => ({ ...mail }))
   );
 
-  const handleResizeStart = (
-    columnIndex: number,
-    event: ReactMouseEvent<HTMLDivElement>
-  ) => {
-    event.preventDefault();
-    const startX = event.clientX;
-    const startWidths = [...columnWidths];
-    const startWidth = startWidths[columnIndex];
-
-    const onMouseMove = (moveEvent: globalThis.MouseEvent) => {
-      const delta = moveEvent.clientX - startX;
-      const nextWidth = Math.max(
-        columns[columnIndex].minWidth,
-        startWidth + delta
-      );
-      setColumnWidths((prevWidths) => {
-        const next = [...prevWidths];
-        next[columnIndex] = nextWidth;
-        return next;
-      });
-    };
-
-    const onMouseUp = () => {
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("mouseup", onMouseUp);
-    };
-
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
-  };
-
-  const filteredMails = mails.filter((mail) => {
-    const hasFrom = String(mail.from ?? "").toLowerCase().includes(search.toLowerCase());
-    const hasSubject = String(mail.subject ?? "").toLowerCase().includes(subjectFilter.toLowerCase());
-    const hasSent = String(mail.sent ?? "").toLowerCase().includes(sentFilter.toLowerCase());
-    const hasAttachment =
-      attachmentFilter === "all" ||
-      (attachmentFilter === "yes" && mail.attachment === true) ||
-      (attachmentFilter === "no" && mail.attachment === false);
-    return hasFrom && hasSubject && hasSent && hasAttachment;
+  // Filters State
+  const [filters, setFilters] = useState<TableFilters>({
+    from: "",
+    subject: "",
+    sent: "",
+    attachment: "all",
   });
 
-  const handleSortChange = (
-    field: SortField,
-    direction: "asc" | "desc"
-  ) => {
+  const handleFilterChange = (key: string, value: FilterValue) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
-    if (sortField === field && sortDirection === direction) {
+  // Sorting State
+  const [sortField, setSortField] = useState<TableColumnKey | null>(null);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+
+  const handleSortChange = (
+    field: TableColumnKey | null,
+    direction: "asc" | "desc" | null
+  ) => {
+    if (field === null) {
       setSortField(null);
       setSortDirection("asc");
       return;
     }
 
     setSortField(field);
-    setSortDirection(direction);
+    setSortDirection(direction ?? "asc");
   };
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  // Apply filters
+  const filteredMails = mails.filter((mail) => {
+    const fromMatch = String(mail.from ?? "")
+      .toLowerCase()
+      .includes((filters.from || "").toLowerCase());
+
+    const subjectMatch = String(mail.subject ?? "")
+      .toLowerCase()
+      .includes((filters.subject || "").toLowerCase());
+
+    const sentMatch = String(mail.sent ?? "")
+      .toLowerCase()
+      .includes((filters.sent || "").toLowerCase());
+
+    const attachmentFilter = filters.attachment || "all";
+    const attachmentMatch =
+      attachmentFilter === "all" ||
+      (attachmentFilter === "yes" && mail.attachment === true) ||
+      (attachmentFilter === "no" && mail.attachment === false);
+
+    return fromMatch && subjectMatch && sentMatch && attachmentMatch;
+  });
+
+  const getComparableValue = (item: TableMailItem, field: TableColumnKey) => {
+    if (field === "sent") {
+      const parsedDate = Date.parse(item.sent);
+      return Number.isNaN(parsedDate) ? 0 : parsedDate;
+    }
+
+    if (field === "attachment") {
+      return item.attachment ? 1 : 0;
+    }
+
+    const value = item[field];
+    if (typeof value === "string") {
+      return value.toLowerCase();
+    }
+
+    return value;
+  };
+
+  // Apply sorting
   const sortedMails = sortField
     ? [...filteredMails].sort((a, b) => {
-        const aValue =
-          sortField === "sent"
-            ? new Date(a.sent).getTime()
-            : String(a[sortField] ?? "").toLowerCase();
-        const bValue =
-          sortField === "sent"
-            ? new Date(b.sent).getTime()
-            : String(b[sortField] ?? "").toLowerCase();
+      const aValue = getComparableValue(a, sortField);
+      const bValue = getComparableValue(b, sortField);
 
-        if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
-        if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
-        return 0;
-      })
+      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+      return 0;
+    })
     : filteredMails;
 
+  const columns: Column<TableMailItem>[] = [
+    {
+      key: "from",
+      label: "From",
+      defaultWidth: 200,
+      minWidth: 100,
+      sortable: true,
+      filterType: "text",
+    },
+    {
+      key: "subject",
+      label: "Subject",
+      defaultWidth: 400,
+      minWidth: 180,
+      sortable: true,
+      filterType: "text",
+    },
+    {
+      key: "sent",
+      label: "Sent",
+      defaultWidth: 120,
+      minWidth: 80,
+      sortable: true,
+      filterType: "text",
+    },
+    {
+      key: "attachment",
+      label: "Attachment?",
+      defaultWidth: 100,
+      minWidth: 80,
+      align: "center",
+      filterType: "select",
+      render: (mail) => <Checkbox checked={mail.attachment} />,
+    },
+    {
+      key: "size",
+      label: "Size",
+      defaultWidth: 100,
+      minWidth: 60,
+      align: "right",
+    },
+  ];
+
+  // Dynamic summary calculating total size of filtered mails
+  const renderSummary = (items: TableMailItem[]) => {
+    let totalKb = 0;
+    items.forEach((item) => {
+      const match = item.size.match(/^(\d+)\s*(KB|MB|GB)$/i);
+      if (match) {
+        const val = parseInt(match[1], 10);
+        const unit = match[2].toUpperCase();
+        if (unit === "KB") totalKb += val;
+        else if (unit === "MB") totalKb += val * 1024;
+        else if (unit === "GB") totalKb += val * 1024 * 1024;
+      }
+    });
+
+    let displaySize = `${totalKb} KB`;
+    if (totalKb >= 1024 * 1024) {
+      displaySize = `${(totalKb / (1024 * 1024)).toFixed(2)} GB`;
+    } else if (totalKb >= 1024) {
+      displaySize = `${(totalKb / 1024).toFixed(2)} MB`;
+    }
+
+    return `Filtered Sum = ${displaySize} (Total Sum = 1.20 MB)`;
+  };
+
   return (
-    <div>
-      <div className="pb-5">
-        <BreadCrumbs
-          items={[
-            { label: "Components" },
-            { label: "Grid" },
-            { label: "Large Database (Server Mode)" },
-          ]}
-        />
-      </div>
-
-      <div className="pb-3">
-        <GridTopBar />
-      </div>
-
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
-        <div className="flex border-b border-zinc-200">
-          <TabButton label="Preview" active />
-          <TabButton label="Code" />
-        </div>
-
-        <div className="overflow-x-auto">
-          <table
-            className="w-full min-w-275 border-collapse"
-            style={{ tableLayout: "fixed" }}
-          >
-            <thead>
-              <tr className="bg-zinc-50 text-left size-3.5 text-[#71717A]">
-                {columns.map((column, index) => (
-                  <th
-                    key={column.key}
-                    style={{
-                      width: columnWidths[index],
-                      minWidth: column.minWidth,
-                    }}
-                    className={`relative border-b border-r border-zinc-200 px-4 py-4 ${
-                      column.align === "center" ? "text-center" : ""
-                    }`}
-                  >
-                    <span>{column.label}</span>
-                    {index < columns.length - 1 && (
-                      <div
-                        className="absolute right-0 top-0 h-full w-2 cursor-col-resize"
-                        onMouseDown={(event) => handleResizeStart(index, event)}
-                      />
-                    )}
-                  </th>
-                ))}
-              </tr>
-
-              <GridFilterRow
-                search={search}
-                onSearchChange={setSearch}
-                subjectFilter={subjectFilter}
-                onSubjectChange={setSubjectFilter}
-                sentFilter={sentFilter}
-                onSentChange={setSentFilter}
-                attachmentFilter={attachmentFilter}
-                onAttachmentChange={setAttachmentFilter}
-                onSortChange={handleSortChange}
-                currentSortField={sortField}
-                currentSortDirection={sortDirection}
-              />
-            </thead>
-
-            <tbody>
-              {sortedMails.map((mail) => (
-                <tr
-                  key={mail.id}
-                  className="size-3.5 text-[#09090B] hover:bg-zinc-50"
-                >
-                  <td
-                    style={{ width: columnWidths[0] }}
-                    className="border-b border-r border-zinc-200 px-4 py-4"
-                  >
-                    {mail.from || "-"}
-                  </td>
-
-                  <td
-                    style={{ width: columnWidths[1] }}
-                    className="border-b border-r border-zinc-200 px-4 py-4"
-                  >
-                    {mail.subject || "-"}
-                  </td>
-                  <td
-                    style={{ width: columnWidths[2] }}
-                    className="border-b border-r border-zinc-200 px-4 py-4"
-                  >
-                    {mail.sent || "-"}
-                  </td>
-
-                  <td
-                    style={{ width: columnWidths[3] }}
-                    className="border-b border-r border-zinc-200 px-4 py-4 text-center"
-                  >
-                    <Checkbox checked={mail.attachment} />
-                  </td>
-
-                  <td
-                    style={{ width: columnWidths[4] }}
-                    className="border-b border-zinc-200 px-4 py-4 text-right"
-                  >
-                    {mail.size || "-"}
-                  </td>
-                </tr>
-              ))}
-
-              <tr>
-                <td
-                  colSpan={5}
-                  className="border-b border-zinc-200 px-5 py-3 text-right text-sm font-medium text-zinc-500"
-                >
-                  Sum = 42 GB
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <Pagination />
-      </div>
-    </div>
+    <ReusableDataTable
+      title="Large DataBase (Server Mode)"
+      breadcrumbItems={[
+        { label: "Components" },
+        { label: "Grid" },
+        { label: "Large Database (Server Mode)" },
+      ]}
+      data={sortedMails}
+      columns={columns}
+      filters={filters}
+      onFilterChange={handleFilterChange}
+      sortField={sortField}
+      sortDirection={sortDirection}
+      onSortChange={handleSortChange}
+      currentPage={currentPage}
+      pageSize={pageSize}
+      onPageChange={setCurrentPage}
+      onPageSizeChange={(size) => {
+        setPageSize(size);
+        setCurrentPage(1);
+      }}
+      renderSummary={renderSummary}
+    />
   );
 }

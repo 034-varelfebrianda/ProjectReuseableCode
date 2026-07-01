@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { ChevronDown, Funnel } from "lucide-react";
 
-type AttachmentValue = "all" | "yes" | "no";
+export type AttachmentValue = "all" | "yes" | "no";
 
 interface AttachmentBoxProps {
-  value: AttachmentValue;
+  value: string;
   onChange: (value: AttachmentValue) => void;
 }
 
