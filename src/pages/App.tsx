@@ -1,4 +1,4 @@
-﻿import { StrictMode, useMemo, useState } from "react";
+import { StrictMode, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import ReusableDataTable, { Column } from "../components/organism/ReusableDataTable";
@@ -149,7 +149,7 @@ if (rootElement) {
       <div className="p-5">
         <LargeDataTable />
       </div>
-      <App />
+      {/* <App />  */}
     </StrictMode>
   );
 }
