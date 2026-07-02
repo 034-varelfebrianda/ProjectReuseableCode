@@ -3,7 +3,6 @@ import TabButton from "../atoms/TabButton";
 import BreadCrumbs from "../molecules/BreadCrumbs";
 import GridTopBar from "../molecules/GridTopBar";
 import Pagination from "../molecules/Pagination";
-import SortIcon from "../atoms/SortIcon";
 import FilterBox from "../atoms/FIlterBox";
 import AttachmentBox, { AttachmentValue } from "../atoms/AttachmentBox";
 
@@ -149,23 +148,15 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                       width: columnWidths[index],
                       minWidth: column.minWidth,
                     }}
-                    className={`relative border-b border-r border-zinc-200 px-4 py-4 select-none ${
-                      column.align === "center" ? "text-center" : column.align === "right" ? "text-right" : ""
-                    }`}
+                    className={`relative border-b border-r border-zinc-200 px-4 py-4 select-none ${column.align === "center" ? "text-center" : column.align === "right" ? "text-right" : ""
+                      }`}
                   >
                     <div
-                      className={`flex items-center gap-1.5 ${
-                        column.sortable ? "cursor-pointer hover:text-zinc-950" : ""
-                      } ${column.align === "center" ? "justify-center" : column.align === "right" ? "justify-end" : ""}`}
+                      className={`flex items-center gap-1.5 ${column.sortable ? "cursor-pointer hover:text-zinc-950" : ""
+                        } ${column.align === "center" ? "justify-center" : column.align === "right" ? "justify-end" : ""}`}
                       onClick={() => column.sortable && handleHeaderSort(column.key)}
                     >
                       <span>{column.label}</span>
-                      {column.sortable && (
-                        <SortIcon
-                          active={sortField === column.key}
-                          direction={sortDirection}
-                        />
-                      )}
                     </div>
                     {index < columns.length - 1 && (
                       <div
@@ -240,8 +231,8 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                         column.align === "center"
                           ? "text-center"
                           : column.align === "right"
-                          ? "text-right"
-                          : "";
+                            ? "text-right"
+                            : "";
 
                       return (
                         <td

@@ -145,7 +145,7 @@ export default function LargeDataTable() {
       label: "Size",
       defaultWidth: 100,
       minWidth: 60,
-      align: "right",
+      align: "left",
     },
   ];
 
