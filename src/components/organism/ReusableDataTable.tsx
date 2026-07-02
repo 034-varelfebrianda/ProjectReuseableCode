@@ -97,23 +97,6 @@ export default function ReusableDataTable<T extends { id: string | number }>({
     window.addEventListener("mouseup", onMouseUp);
   };
 
-  // Sort change handler helper: asc -> desc -> clear
-  const handleHeaderSort = (key: keyof T & string) => {
-    const isCurrent = sortField === key;
-    if (!isCurrent) {
-      onSortChange(key, "asc");
-      return;
-    }
-
-    if (sortDirection === "asc") {
-      onSortChange(key, "desc");
-      return;
-    }
-
-    // was desc, clear sort
-    onSortChange(null, null);
-  };
-
   // Pagination slicing
   const startIndex = (currentPage - 1) * pageSize;
   const paginatedData = data.slice(startIndex, startIndex + pageSize);
@@ -152,10 +135,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                       }`}
                   >
                     <div
-                      className={`flex items-center gap-1.5 ${column.sortable ? "cursor-pointer hover:text-zinc-950" : ""
-                        } ${column.align === "center" ? "justify-center" : column.align === "right" ? "justify-end" : ""}`}
-                      onClick={() => column.sortable && handleHeaderSort(column.key)}
-                    >
+                      className={`flex items-center gap-1.5 ${column.align === "center" ? "justify-center" : column.align === "right" ? "justify-end" : ""}`}>
                       <span>{column.label}</span>
                     </div>
                     {index < columns.length - 1 && (
