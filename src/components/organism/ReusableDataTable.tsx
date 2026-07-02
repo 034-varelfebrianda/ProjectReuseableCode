@@ -27,7 +27,7 @@ interface ReusableDataTableProps<T> {
   columns: Column<T>[];
   // Filters state mapping: column key -> filter value
   filters: Record<string, FilterValue>;
-  onFilterChange: (key: string, value: FilterValue) => void;
+  onFilterChange: (key: keyof T & string, value: FilterValue) => void;
   // Sort state
   sortField: (keyof T & string) | null;
   sortDirection: "asc" | "desc";

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { LargeDataBase as initialMails, MailItem } from "../../data/LargeDataBase";
 import ReusableDataTable, { Column } from "./ReusableDataTable";
 import Checkbox from "../atoms/CheckBox";
@@ -9,7 +9,7 @@ interface TableMailItem extends MailItem {
 
 type TableColumnKey = keyof TableMailItem & string;
 type FilterValue = string;
-type TableFilters = Record<string, FilterValue>;
+type TableFilters = Partial<Record<TableColumnKey, FilterValue>>;
 
 export default function LargeDataTable() {
   const [mails] = useState<TableMailItem[]>(() =>
@@ -24,7 +24,7 @@ export default function LargeDataTable() {
     attachment: "all",
   });
 
-  const handleFilterChange = (key: string, value: FilterValue) => {
+  const handleFilterChange = (key: TableColumnKey, value: FilterValue) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
@@ -54,27 +54,29 @@ export default function LargeDataTable() {
   const [pageSize, setPageSize] = useState(10);
 
   // Apply filters
-  const filteredMails = mails.filter((mail) => {
-    const fromMatch = String(mail.from ?? "")
-      .toLowerCase()
-      .includes((filters.from || "").toLowerCase());
+  const filteredMails = useMemo(() => {
+    return mails.filter((mail) => {
+      const fromMatch = String(mail.from ?? "")
+        .toLowerCase()
+        .includes((filters.from || "").toLowerCase());
 
-    const subjectMatch = String(mail.subject ?? "")
-      .toLowerCase()
-      .includes((filters.subject || "").toLowerCase());
+      const subjectMatch = String(mail.subject ?? "")
+        .toLowerCase()
+        .includes((filters.subject || "").toLowerCase());
 
-    const sentMatch = String(mail.sent ?? "")
-      .toLowerCase()
-      .includes((filters.sent || "").toLowerCase());
+      const sentMatch = String(mail.sent ?? "")
+        .toLowerCase()
+        .includes((filters.sent || "").toLowerCase());
 
-    const attachmentFilter = filters.attachment || "all";
-    const attachmentMatch =
-      attachmentFilter === "all" ||
-      (attachmentFilter === "yes" && mail.attachment === true) ||
-      (attachmentFilter === "no" && mail.attachment === false);
+      const attachmentFilter = filters.attachment || "all";
+      const attachmentMatch =
+        attachmentFilter === "all" ||
+        (attachmentFilter === "yes" && mail.attachment === true) ||
+        (attachmentFilter === "no" && mail.attachment === false);
 
-    return fromMatch && subjectMatch && sentMatch && attachmentMatch;
-  });
+      return fromMatch && subjectMatch && sentMatch && attachmentMatch;
+    });
+  }, [mails, filters]);
 
   const getComparableValue = (item: TableMailItem, field: TableColumnKey) => {
     if (field === "sent") {
@@ -95,16 +97,20 @@ export default function LargeDataTable() {
   };
 
   // Apply sorting
-  const sortedMails = sortField
-    ? [...filteredMails].sort((a, b) => {
-      const aValue = getComparableValue(a, sortField);
-      const bValue = getComparableValue(b, sortField);
+  const sortedMails = useMemo(
+    () =>
+      sortField
+        ? [...filteredMails].sort((a, b) => {
+            const aValue = getComparableValue(a, sortField);
+            const bValue = getComparableValue(b, sortField);
 
-      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
-      return 0;
-    })
-    : filteredMails;
+            if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+            if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
+            return 0;
+          })
+        : filteredMails,
+    [filteredMails, sortField, sortDirection]
+  );
 
   const columns: Column<TableMailItem>[] = [
     {
