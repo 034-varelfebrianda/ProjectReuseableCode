@@ -1,8 +1,5 @@
-import { StrictMode, useMemo, useState } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
+﻿import { useMemo, useState } from "react";
 import ReusableDataTable, { Column } from "../components/organism/ReusableDataTable";
-import LargeDataTable from "../components/organism/LargeDataTable";
 import { usePokemon } from "../hooks/usePokemon";
 
 interface TablePokemon {
@@ -137,19 +134,6 @@ export default function App() {
           renderSummary={renderSummary}
         />
       )}
-
     </main>
-  );
-}
-
-const rootElement = document.getElementById("root");
-if (rootElement) {
-  createRoot(rootElement).render(
-    <StrictMode>
-      <div className="p-5">
-        <LargeDataTable />
-      </div>
-      {/* <App />  */}
-    </StrictMode>
   );
 }

@@ -170,7 +170,7 @@ export default function LargeDataTable() {
       displaySize = `${(totalKb / 1024).toFixed(2)} MB`;
     }
 
-    return `Filtered Sum = ${displaySize} (Total Sum = 1.20 MB)`;
+    return `Filtered Sum = ${displaySize} (Total Sum = 16.16 MB)`;
   };
 
   return (
