@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_FAKESTORE_API || import.meta.env.VITE_BASE_URL || "https://fakestoreapi.com/products";
+const BASE_URL = import.meta.env.VITE_FAKESTORE_API || "https://fakestoreapi.com/products";
 
 export interface ProductItem {
   id: number;
