@@ -10,7 +10,7 @@ interface TableProduct {
   image: string;
 }
 
-export default function App() {
+export default function Products() {
   const { products, loading } = useProducts();
   const [filters, setFilters] = useState<Record<string, string>>({
     name: "",

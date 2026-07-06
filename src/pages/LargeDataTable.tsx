@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { LargeDataBase as initialMails, MailItem } from "../../data/LargeDataBase";
-import ReusableDataTable, { Column } from "./ReusableDataTable";
-import Checkbox from "../atoms/CheckBox";
-import { sortItems, type SortDirection } from "../../utils/sort";
+import { LargeDataBase as initialMails, MailItem } from "../features/tables/data/LargeDataBase";
+import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
+import Checkbox from "../features/tables/components/atoms/CheckBox";
+import { sortItems, type SortDirection } from "../features/tables/utils/sort";
 
 interface TableMailItem extends MailItem {
   id: number;
