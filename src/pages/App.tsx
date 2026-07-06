@@ -1,9 +1,9 @@
 ﻿import { useMemo, useState } from "react";
 import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
-import { usePokemon } from "../hooks/usePokemon";
+import { useProducts } from "../hooks/useProducts";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
 
-interface TablePokemon {
+interface TableProduct {
   id: string;
   name: string;
   ability: string;
@@ -11,25 +11,25 @@ interface TablePokemon {
 }
 
 export default function App() {
-  const { pokemon, loading } = usePokemon();
+  const { products, loading } = useProducts();
   const [filters, setFilters] = useState<Record<string, string>>({
     name: "",
     ability: "",
   });
-  const [sortField, setSortField] = useState<keyof TablePokemon | null>(null);
+  const [sortField, setSortField] = useState<keyof TableProduct | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
   const data = useMemo(
     () =>
-      pokemon.map((item, index) => ({
-        id: `pokemon-${index}`,
+      products.map((item, index) => ({
+        id: `product-${index}`,
         name: item.name,
         ability: item.ability,
         image: item.image,
       })),
-    [pokemon]
+    [products]
   );
 
   const filteredData = useMemo(
@@ -47,7 +47,7 @@ export default function App() {
     return sortItems(filteredData, sortField, sortDirection);
   }, [filteredData, sortDirection, sortField]);
 
-  const columns: Column<TablePokemon>[] = [
+  const columns: Column<TableProduct>[] = [
     {
       key: "image",
       label: "Image",
@@ -72,7 +72,7 @@ export default function App() {
     },
     {
       key: "ability",
-      label: "Ability",
+      label: "Category",
       defaultWidth: 420,
       minWidth: 260,
       sortable: true,
@@ -85,7 +85,7 @@ export default function App() {
   };
 
   const handleSortChange = (
-    field: keyof TablePokemon | null,
+    field: keyof TableProduct | null,
     direction: SortDirection | null
   ) => {
     if (field === null) {
@@ -98,19 +98,19 @@ export default function App() {
     setSortDirection(direction ?? "asc");
   };
 
-  const renderSummary = (items: TablePokemon[]) => `${items.length} rows shown`;
+  const renderSummary = (items: TableProduct[]) => `${items.length} rows shown`;
 
   return (
     <main className="min-h-screen bg-[#f7f7f8] px-6 py-6">
       {loading ? (
-        <div className="text-center text-zinc-600">Loading Pokémon data…</div>
+        <div className="text-center text-zinc-600">Loading products from FakeStore…</div>
       ) : (
         <ReusableDataTable
-          title="Pokémon List"
+          title="FakeStore Products"
           breadcrumbItems={[
             { label: "Components" },
             { label: "Tables" },
-            { label: "Pokémon" },
+            { label: "Products" },
           ]}
           mode="client"
           data={sortedData}
