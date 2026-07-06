@@ -110,10 +110,10 @@ export default function LargeDataTable() {
       else if (unit === "GB") totalKb += value * 1024 * 1024;
     });
 
-    if (totalKb >= 1024 * 1024) return `Filtered Sum = ${(totalKb / (1024 * 1024)).toFixed(2)} GB (Total Sum = 16.16 MB)`;
-    if (totalKb >= 1024) return `Filtered Sum = ${(totalKb / 1024).toFixed(2)} MB (Total Sum = 16.16 MB)`;
+    if (totalKb >= 1024 * 1024) return `Filtered Sum = ${(totalKb / (1024 * 1024)).toFixed(2)} GB`;
+    if (totalKb >= 1024) return `Filtered Sum = ${(totalKb / 1024).toFixed(2)} MB`;
 
-    return `Filtered Sum = ${totalKb} KB (Total Sum = 16.16 MB)`;
+    return;
   };
 
   return (
