@@ -1,5 +1,6 @@
 ﻿import AttachmentBox from "../atoms/AttachmentBox";
 import FilterBox from "../atoms/FIlterBox";
+import SortControl from "./SortControl";
 
 interface GridFilterRowProps {
   search: string;
@@ -31,39 +32,42 @@ export default function GridFilterRow({
   return (
     <tr className="bg-zinc-50/50">
       <td className="border-b border-r border-zinc-200 px-2 py-2">
-        <FilterBox
-          value={search}
-          onChange={onSearchChange}
-          placeholder="From..."
-          showSort
-          activeSort={currentSortField === "from"}
-          sortDirection={currentSortDirection}
-          onSort={(direction) => onSortChange("from", direction)}
-        />
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <FilterBox value={search} onChange={onSearchChange} placeholder="From..." />
+          </div>
+          <SortControl
+            activeSort={currentSortField === "from"}
+            sortDirection={currentSortDirection}
+            onSort={(direction) => onSortChange("from", direction)}
+          />
+        </div>
       </td>
       <td className="border-b border-r border-zinc-200 px-2 py-2">
-        <FilterBox
-          value={subjectFilter}
-          onChange={onSubjectChange}
-          placeholder="Subject..."
-          showSort
-          activeSort={currentSortField === "subject"}
-          sortDirection={currentSortDirection}
-          onSort={(direction) => onSortChange("subject", direction)}
-        />
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <FilterBox value={subjectFilter} onChange={onSubjectChange} placeholder="Subject..." />
+          </div>
+          <SortControl
+            activeSort={currentSortField === "subject"}
+            sortDirection={currentSortDirection}
+            onSort={(direction) => onSortChange("subject", direction)}
+          />
+        </div>
       </td>
       <td className="border-b border-r border-zinc-200 px-2 py-2">
-        <FilterBox
-          value={sentFilter}
-          onChange={onSentChange}
-          placeholder="Sent..."
-          showSort
-          activeSort={currentSortField === "sent"}
-          sortDirection={currentSortDirection}
-          sortAscLabel="Oldest"
-          sortDescLabel="Newest"
-          onSort={(direction) => onSortChange("sent", direction)}
-        />
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <FilterBox value={sentFilter} onChange={onSentChange} placeholder="Sent..." />
+          </div>
+          <SortControl
+            activeSort={currentSortField === "sent"}
+            sortDirection={currentSortDirection}
+            sortAscLabel="Oldest"
+            sortDescLabel="Newest"
+            onSort={(direction) => onSortChange("sent", direction)}
+          />
+        </div>
       </td>
       <td className="border-b border-r border-zinc-200 px-2 py-2">
         <AttachmentBox

@@ -1,6 +1,7 @@
 ﻿import { useMemo, useState } from "react";
-import ReusableDataTable, { Column } from "../components/organism/ReusableDataTable";
+import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
 import { usePokemon } from "../hooks/usePokemon";
+import { sortItems, type SortDirection } from "../features/tables/utils/sort";
 
 interface TablePokemon {
   id: string;
@@ -16,7 +17,7 @@ export default function App() {
     ability: "",
   });
   const [sortField, setSortField] = useState<keyof TablePokemon | null>(null);
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
@@ -43,13 +44,7 @@ export default function App() {
 
   const sortedData = useMemo(() => {
     if (!sortField) return filteredData;
-    return [...filteredData].sort((a, b) => {
-      const aValue = String(a[sortField]).toLowerCase();
-      const bValue = String(b[sortField]).toLowerCase();
-      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
-      return 0;
-    });
+    return sortItems(filteredData, sortField, sortDirection);
   }, [filteredData, sortDirection, sortField]);
 
   const columns: Column<TablePokemon>[] = [
@@ -91,7 +86,7 @@ export default function App() {
 
   const handleSortChange = (
     field: keyof TablePokemon | null,
-    direction: "asc" | "desc" | null
+    direction: SortDirection | null
   ) => {
     if (field === null) {
       setSortField(null);
@@ -117,6 +112,7 @@ export default function App() {
             { label: "Tables" },
             { label: "Pokémon" },
           ]}
+          mode="client"
           data={sortedData}
           columns={columns}
           filters={filters}
