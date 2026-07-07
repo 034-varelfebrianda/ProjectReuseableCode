@@ -122,6 +122,7 @@ export default function Products() {
           onSortChange={handleSortChange}
           currentPage={currentPage}
           pageSize={pageSize}
+          totalItems={sortedData.length}
           onPageChange={setCurrentPage}
           onPageSizeChange={(size) => {
             setPageSize(size);

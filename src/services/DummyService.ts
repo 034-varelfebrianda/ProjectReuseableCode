@@ -1,31 +1,6 @@
+import { ProductItem, DummyProduct, DummyApiResponse } from "../types/DummyTypes";
+
 const BASE_URL = import.meta.env.VITE_DUMMY_API || "https://dummyjson.com/products";
-
-export interface ProductItem {
-  id: number;
-  name: string;
-  url: string;
-  ability: string;
-  price: number;
-  image: string;
-}
-
-interface DummyProduct {
-  id: number;
-  title: string;
-  category: string;
-  thumbnail?: string;
-  images?: string[];
-  image?: string;
-  description: string;
-  price: number;
-}
-
-interface DummyApiResponse {
-  products: DummyProduct[];
-  total: number;
-  skip: number;
-  limit: number;
-}
 
 export async function getProducts(
   sortBy?: string,

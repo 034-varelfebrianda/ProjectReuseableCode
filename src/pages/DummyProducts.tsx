@@ -156,6 +156,8 @@ export default function DummyProducts() {
       onSortChange={handleSortChange}
       currentPage={currentPage}
       pageSize={pageSize}
+      totalItems={filteredData.length}
+      serverPageSize
       onPageChange={setCurrentPage}
       onPageSizeChange={(size) => {
         setPageSize(size);

@@ -40,6 +40,8 @@ interface ReusableDataTableProps<T> {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  totalItems: number;
+  serverPageSize?: boolean;
   renderSummary?: (filteredData: T[]) => ReactNode;
 }
 
@@ -57,11 +59,14 @@ export default function ReusableDataTable<T extends { id: string | number }>({
   pageSize,
   onPageChange,
   onPageSizeChange,
+  totalItems,
+  serverPageSize = false,
   renderSummary,
   mode = "client",
 }: ReusableDataTableProps<T>) {
   const startIndex = (currentPage - 1) * pageSize;
-  const paginatedData = data.slice(startIndex, startIndex + pageSize);
+  const shouldLimitPageSize = mode === "client" || serverPageSize;
+  const paginatedData = shouldLimitPageSize ? data.slice(startIndex, startIndex + pageSize) : data;
 
   return (
     <div>
@@ -212,7 +217,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
         <Pagination
           currentPage={currentPage}
           pageSize={pageSize}
-          totalItems={data.length}
+          totalItems={totalItems}
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
         />

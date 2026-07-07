@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getProducts, type ProductItem } from "../services/DummyService";
+import { getProducts } from "../services/DummyService";
+import type { ProductItem } from "../types/DummyTypes";
 
 interface UseDummyOptions {
   sortBy?: string;

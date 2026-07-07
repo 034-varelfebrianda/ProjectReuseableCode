@@ -120,7 +120,7 @@ export default function LargeDataTable() {
     <ReusableDataTable
       title="Large DataBase (Server Mode)"
       breadcrumbItems={[{ label: "Components" }, { label: "Grid" }, { label: "Large Database (Server Mode)" }]}
-      mode="server"
+      mode="client"
       data={sortedMails}
       columns={columns}
       filters={filters}
@@ -130,6 +130,7 @@ export default function LargeDataTable() {
       onSortChange={handleSortChange}
       currentPage={currentPage}
       pageSize={pageSize}
+      totalItems={sortedMails.length}
       onPageChange={setCurrentPage}
       onPageSizeChange={(size) => {
         setPageSize(size);
