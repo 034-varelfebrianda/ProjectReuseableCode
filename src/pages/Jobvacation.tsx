@@ -1,140 +1,176 @@
 import { useMemo, useState } from "react";
-import ReusableDataTable, {
-  type Column,
-} from "../features/tables/components/organism/ReusableDataTable";
-import { useJobVacancies } from "../hooks/useJobvacation";
-import type { JobVacancy } from "../types/JobvacationTypes";
+import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
+import { useJobVacancy } from "../hooks/useJobVacancy";
+import { useDebounce } from "../hooks/useDebounce";
+import type { JobVacancyItem } from "../types/jobVacancyTypes";
+import type { SortDirection } from "../features/tables/utils/sort";
 
-type JobVacancyRow = JobVacancy & { id: string };
-type SortDirection = "asc" | "desc";
+type Row = JobVacancyItem & { id: string };
 
-const toApiSortField = (field: keyof JobVacancyRow | null | undefined) => {
-  if (field === "applicationDeadline") return "applicationDeadline";
-  if (field === "jobTitle") return "jobTitle";
-  if (field === "location") return "location";
-  if (field === "jobType") return "jobType";
-  return undefined;
-};
-
-const buildFilters = (filters: Record<string, string>) => {
-  return Object.entries(filters).reduce<Record<string, string>>((acc, [key, value]) => {
-    const cleanedValue = value.trim();
-    if (cleanedValue) {
-      acc[key] = cleanedValue;
-    }
-    return acc;
-  }, {});
-};
-
-export default function JobVacancy() {
-  const { data, loading, error, totalItems, fetchJobvacation } = useJobVacancies();
-
+export default function Jobvacation() {
   const [filters, setFilters] = useState<Record<string, string>>({
     jobTitle: "",
-    location: "",
-    jobType: "",
-    applicationDeadline: "",
+
   });
 
-  const [sortField, setSortField] = useState<keyof JobVacancyRow | null>("applicationDeadline");
+  const [sortField, setSortField] = useState<keyof Row | null>("jobTitle");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const rows = useMemo(() => data.map((item) => ({ ...item, id: item.uniqueId })), [data]);
+  const debouncedFilters = useDebounce(filters, 500);
 
-  const columns: Column<JobVacancyRow>[] = [
+  const buildFilters = (filters: Record<string, string>) => {
+    const filterArray: { key: string; value: string; operation: string; conjunction: string }[] = [];
+
+    const jobTitleSearch = filters.jobTitle?.trim();
+    if (jobTitleSearch) {
+      filterArray.push(
+        { key: "jobTitle", value: jobTitleSearch, operation: "MATCH", conjunction: "or" },
+        // { key: "jobType", value: jobTitleSearch, operation: "MATCH", conjunction: "or" },
+        // { key: "keyword", value: jobTitleSearch, operation: "MATCH", conjunction: "or" },
+        // { key: "organization.name", value: jobTitleSearch, operation: "MATCH", conjunction: "or" }
+      );
+    }
+
+    const locationSearch = filters.location?.trim();
+    if (locationSearch) {
+      filterArray.push({
+        key: "location",
+        value: locationSearch,
+        operation: "MATCH",
+        conjunction: "or",
+
+      });
+    }
+
+    const jobTypeSearch = filters.jobType?.trim();
+    if (jobTypeSearch) {
+      filterArray.push({
+        key: "jobType",
+        value: jobTypeSearch,
+        operation: "MATCH",
+        conjunction: "or",
+      });
+    }
+
+    // Always include jobStatus ACTIVE at the end (or anywhere)
+    filterArray.push({
+      key: "jobStatus",
+      value: "ACTIVE",
+      operation: "EQUAL",
+      conjunction: "and",
+
+
+    });
+
+    return filterArray;
+  };
+
+  const params = useMemo(
+    () => ({
+      pageNo: currentPage - 1,
+      pageSize,
+      sortByColumn: (sortField as string) ?? undefined,
+      sortType: sortDirection,
+      filter: buildFilters(debouncedFilters),
+    }),
+    [currentPage, pageSize, debouncedFilters, sortField, sortDirection]
+  );
+
+  const { data: apiData = [], loading, error, totalItems } = useJobVacancy(params);
+
+  const rows: Row[] = useMemo(() => apiData.map((item) => ({ ...item, id: item.uniqueId })), [apiData]);
+
+  const columns: Column<Row>[] = [
     {
       key: "jobTitle",
       label: "Job Title",
-      defaultWidth: 260,
+      defaultWidth: 250,
       minWidth: 180,
-      sortable: true,
       filterType: "text",
+      sortable: true,
     },
     {
       key: "location",
       label: "Location",
-      defaultWidth: 220,
-      minWidth: 140,
-      sortable: true,
+      defaultWidth: 180,
+      minWidth: 150,
       filterType: "text",
+      sortable: true,
     },
     {
       key: "jobType",
       label: "Job Type",
-      defaultWidth: 180,
+      defaultWidth: 150,
       minWidth: 120,
-      sortable: true,
       filterType: "text",
+      sortable: true,
     },
     {
-      key: "applicationDeadline",
-      label: "Deadline",
+      key: "createDate",
+      label: "Created Date",
       defaultWidth: 180,
-      minWidth: 140,
-      sortable: true,
-      filterType: "text",
+      minWidth: 160,
     },
   ];
 
-  const handleFilterChange = (key: keyof JobVacancyRow, value: string) => {
-    const nextFilters = { ...filters, [key]: value };
-    setFilters(nextFilters);
+  const handleFilterChange = (key: keyof Row & string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
-    void fetchJobvacation(0, pageSize, toApiSortField(sortField), sortDirection, buildFilters(nextFilters));
   };
 
-  const handleSortChange = (field: keyof JobVacancyRow | null, direction: SortDirection | null) => {
-    const nextField = field ?? "applicationDeadline";
-    const nextDirection = direction ?? "asc";
-
+  const handleSortChange = (field: keyof Row | null, direction: SortDirection | null) => {
+    if (!field) return;
     setSortField(field);
-    setSortDirection(nextDirection);
+    setSortDirection(direction ?? "asc");
     setCurrentPage(1);
-    void fetchJobvacation(0, pageSize, toApiSortField(nextField), nextDirection, buildFilters(filters));
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    void fetchJobvacation(page - 1, pageSize, toApiSortField(sortField), sortDirection, buildFilters(filters));
-  };
-
-  const handlePageSizeChange = (size: number) => {
-    setPageSize(size);
-    setCurrentPage(1);
-    void fetchJobvacation(0, size, toApiSortField(sortField), sortDirection, buildFilters(filters));
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="min-h-screen bg-[#f7f7f8] px-6 py-6">
+        <div className="rounded-xl border border-zinc-200 bg-white p-6 text-center text-zinc-600 shadow-sm">
+          Loading job vacancies...
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return (
+      <div className="min-h-screen bg-[#f7f7f8] px-6 py-6">
+        <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-600 shadow-sm">
+          {error}
+        </div>
+      </div>
+    );
   }
 
   return (
-    <ReusableDataTable
-      title="Job Vacancies"
-      breadcrumbItems={[
-        { label: "Components" },
-        { label: "Tables" },
-        { label: "Job Vacancies" },
-      ]}
-      mode="server"
-      data={rows}
-      columns={columns}
-      filters={filters}
-      onFilterChange={handleFilterChange}
-      sortField={sortField}
-      sortDirection={sortDirection}
-      onSortChange={handleSortChange}
-      currentPage={currentPage}
-      pageSize={pageSize}
-      totalItems={totalItems}
-      onPageChange={handlePageChange}
-      onPageSizeChange={handlePageSizeChange}
-    />
+    <main className="min-h-screen bg-[#f7f7f8] px-6 py-6">
+      <ReusableDataTable
+        title="Job Vacancy"
+        breadcrumbItems={[{ label: "Components" }, { label: "Grid" }, { label: "Job Vacancy" }]}
+        mode="server"
+        data={rows}
+        columns={columns}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSortChange={handleSortChange}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        totalItems={totalItems}
+        serverPageSize
+        onPageChange={setCurrentPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setCurrentPage(1);
+        }}
+      />
+    </main>
   );
 }

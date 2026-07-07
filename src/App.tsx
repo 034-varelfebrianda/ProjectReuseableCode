@@ -6,8 +6,8 @@ import Jobvacation from './pages/Jobvacation'
 export default function App() {
   return (
     <div>
-      <LargeDataTable/>
-      <Jobvacation/>
+      <LargeDataTable />
+      <Jobvacation />
       {/* <DummyProducts/> */}
       {/* <Products/> */}
     </div>

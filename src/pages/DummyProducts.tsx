@@ -1,7 +1,5 @@
 import { useMemo, useState } from "react";
-import ReusableDataTable, {
-  Column,
-} from "../features/tables/components/organism/ReusableDataTable";
+import ReusableDataTable, {Column,} from "../features/tables/components/organism/ReusableDataTable";
 import { useDummy } from "../hooks/useDummy";
 import type { SortDirection } from "../features/tables/utils/sort";
 

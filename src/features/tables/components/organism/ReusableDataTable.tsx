@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import TabButton from "../atoms/TabButton";
 import BreadCrumbs from "../molecules/BreadCrumbs";
 import GridTopBar from "../molecules/GridTopBar";
@@ -64,9 +64,20 @@ export default function ReusableDataTable<T extends { id: string | number }>({
   renderSummary,
   mode = "client",
 }: ReusableDataTableProps<T>) {
+  const [colWidths, setColWidths] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const initialWidths: Record<string, number> = {};
+    columns.forEach(c => {
+      initialWidths[c.key as string] = c.defaultWidth;
+    });
+    // setColWidths(prev => ({ ...initialWidths, ...prev }));
+  }, [columns]);
+
   const startIndex = (currentPage - 1) * pageSize;
-  const shouldLimitPageSize = mode === "client" || serverPageSize;
+  const shouldLimitPageSize = mode === "client" || (mode === "server" && !serverPageSize);
   const paginatedData = shouldLimitPageSize ? data.slice(startIndex, startIndex + pageSize) : data;
+  
 
   return (
     <div>
@@ -99,10 +110,34 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   return (
                     <th
                       key={column.key}
-                      style={{ width: column.defaultWidth, minWidth: column.minWidth }}
-                      className={`border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
+                      style={{ width: colWidths[column.key as string] || column.defaultWidth, minWidth: column.minWidth }}
+                      className={`relative border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
                     >
                       <span>{column.label}</span>
+                      <div
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          const startX = e.clientX;
+                          const startWidth = colWidths[column.key as string] || column.defaultWidth;
+
+                          const onMouseMove = (moveEvent: MouseEvent) => {
+                            const deltaX = moveEvent.clientX - startX;
+                            setColWidths(prev => {
+                              const newW = Math.max(column.minWidth, startWidth + deltaX);
+                              return { ...prev, [column.key as string]: newW };
+                            });
+                          };
+
+                          const onMouseUp = () => {
+                            document.removeEventListener("mousemove", onMouseMove);
+                            document.removeEventListener("mouseup", onMouseUp);
+                          };
+
+                          document.addEventListener("mousemove", onMouseMove);
+                          document.addEventListener("mouseup", onMouseUp);
+                        }}
+                        className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-zinc-300 active:bg-zinc-400 z-10 transition-colors"
+                      />
                     </th>
                   );
                 })}
