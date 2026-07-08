@@ -1,4 +1,4 @@
-﻿import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { ChevronDown, Funnel } from "lucide-react";
 
 interface FilterBoxProps {

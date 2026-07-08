@@ -7,6 +7,40 @@ import type { SortDirection } from "../features/tables/utils/sort";
 
 type Row = JobVacancyItem & { id: string };
 
+const formatIsoDateToIndonesian = (dateString?: string): string => {
+  if (!dateString) return "-";
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+
+    const datePart = date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+
+    const timePart = date.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).replace(".", ":");
+
+    const tzName = date.toLocaleTimeString("id-ID", { timeZoneName: "short" }).split(" ").pop() || "";
+    const tzLabel =
+      tzName === "GMT+7"
+        ? "WIB"
+        : tzName === "GMT+8"
+          ? "WITA"
+          : tzName === "GMT+9"
+            ? "WIT"
+            : tzName;
+
+    return `${datePart}, ${timePart} ${tzLabel}`.trim();
+  } catch (error) {
+    return dateString;
+  }
+};
+
 export default function Jobvacation() {
   const [filters, setFilters] = useState<Record<string, string>>({
     jobTitle: "",
@@ -107,10 +141,12 @@ export default function Jobvacation() {
     {
       key: "createDate",
       label: "Created Date",
-      defaultWidth: 180,
-      minWidth: 160,
+      defaultWidth: 220,
+      minWidth: 180,
+      render: (row) => formatIsoDateToIndonesian(row.createDate),
     },
   ];
+
 
   const handleFilterChange = (key: keyof Row & string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));

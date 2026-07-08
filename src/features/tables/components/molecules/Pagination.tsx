@@ -33,7 +33,7 @@ export default function Pagination({
       }
     } else {
       pages.push(1);
-      
+
       let start = Math.max(2, currentPage - 1);
       let end = Math.min(totalPages - 1, currentPage + 1);
 
@@ -70,9 +70,8 @@ export default function Pagination({
 
       <div className="flex items-center gap-2">
         <IconData
-          className={`cursor-pointer hover:text-[#09090B] ${
-            currentPage === 1 ? "pointer-events-none opacity-40" : ""
-          }`}
+          className={`cursor-pointer hover:text-[#09090B] ${currentPage === 1 ? "pointer-events-none opacity-40" : ""
+            }`}
           onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -95,11 +94,10 @@ export default function Pagination({
             <button
               key={`page-${pageNum}`}
               onClick={() => onPageChange(pageNum)}
-              className={`flex h-8 w-8 items-center justify-center rounded-md text-sm transition ${
-                isActive
+              className={`flex h-8 w-8 items-center justify-center rounded-md text-sm transition ${isActive
                   ? "bg-sky-500 text-white font-medium"
                   : "text-zinc-500 cursor-pointer hover:bg-zinc-100 hover:text-[#09090B]"
-              }`}
+                }`}
             >
               {pageNum}
             </button>
@@ -107,9 +105,8 @@ export default function Pagination({
         })}
 
         <IconData
-          className={`cursor-pointer hover:text-[#09090B] ${
-            currentPage === totalPages ? "pointer-events-none opacity-40" : ""
-          }`}
+          className={`cursor-pointer hover:text-[#09090B] ${currentPage === totalPages ? "pointer-events-none opacity-40" : ""
+            }`}
           onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
         >
@@ -138,9 +135,8 @@ export default function Pagination({
                   onPageSizeChange(option);
                   setPageSizeOpen(false);
                 }}
-                className={`flex w-full justify-center py-1.5 text-sm hover:bg-zinc-100 transition ${
-                  option === pageSize ? "text-sky-500 font-medium" : "text-zinc-500"
-                }`}
+                className={`flex w-full justify-center py-1.5 text-sm hover:bg-zinc-100 transition ${option === pageSize ? "text-sky-500 font-medium" : "text-zinc-500"
+                  }`}
               >
                 {option}
               </button>

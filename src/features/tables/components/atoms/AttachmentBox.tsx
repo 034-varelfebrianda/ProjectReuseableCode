@@ -20,7 +20,7 @@ export default function AttachmentBox({
 }: AttachmentBoxProps) {
   const [open, setOpen] = useState(false);
 
-  const selectedLabel = options.find((option) => option.value === value)?.label ?? "All"; 
+  const selectedLabel = options.find((option) => option.value === value)?.label ?? "All";
 
   return (
     <div className="relative">

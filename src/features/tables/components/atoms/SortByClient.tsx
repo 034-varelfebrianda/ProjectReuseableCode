@@ -25,9 +25,8 @@ export default function SortByClient({
       <button
         type="button"
         onClick={onToggle}
-        className={`flex items-center gap-1 rounded px-1 text-[#71717A] hover:text-[#09090B] ${
-          activeSort ? "bg-zinc-100" : ""
-        }`}
+        className={`flex items-center gap-1 rounded px-1 text-[#71717A] hover:text-[#09090B] ${activeSort ? "bg-zinc-100" : ""
+          }`}
         aria-label="Client-side sort"
       >
         <ChevronsUpDown size={16} />
@@ -41,9 +40,8 @@ export default function SortByClient({
           <button
             type="button"
             onClick={() => onSort?.("asc")}
-            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${
-              activeSort && sortDirection === "asc" ? "text-sky-600" : "text-zinc-500"
-            } hover:bg-zinc-100`}
+            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${activeSort && sortDirection === "asc" ? "text-sky-600" : "text-zinc-500"
+              } hover:bg-zinc-100`}
           >
             <span>{sortAscLabel}</span>
             {activeSort && sortDirection === "asc" && <span>✓</span>}
@@ -51,9 +49,8 @@ export default function SortByClient({
           <button
             type="button"
             onClick={() => onSort?.("desc")}
-            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${
-              activeSort && sortDirection === "desc" ? "text-sky-600" : "text-zinc-500"
-            } hover:bg-zinc-100`}
+            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${activeSort && sortDirection === "desc" ? "text-sky-600" : "text-zinc-500"
+              } hover:bg-zinc-100`}
           >
             <span>{sortDescLabel}</span>
             {activeSort && sortDirection === "desc" && <span>✓</span>}
