@@ -3,7 +3,7 @@ import TabButton from "../atoms/TabButton";
 import BreadCrumbs from "../molecules/BreadCrumbs";
 import GridTopBar from "../molecules/GridTopBar";
 import Pagination from "../molecules/Pagination";
-import FilterBox from "../atoms/FIlterBox";
+import FilterBox, { type FilterOperator } from "../atoms/FIlterBox";
 import AttachmentBox, { AttachmentValue } from "../atoms/AttachmentBox";
 import SortControl from "../molecules/SortControl";
 import type { SortDirection, SortMode } from "../../utils/sort";
@@ -30,6 +30,8 @@ interface ReusableDataTableProps<T> {
   columns: Column<T>[];
   filters: Record<string, FilterValue>;
   onFilterChange: (key: keyof T & string, value: FilterValue) => void;
+  filterOperators?: Record<string, FilterOperator>;
+  onFilterOperatorChange?: (key: keyof T & string, operator: FilterOperator) => void;
   sortField: (keyof T & string) | null;
   sortDirection: "asc" | "desc";
   onSortChange: (
@@ -52,6 +54,8 @@ export default function ReusableDataTable<T extends { id: string | number }>({
   columns,
   filters,
   onFilterChange,
+  filterOperators,
+  onFilterOperatorChange,
   sortField,
   sortDirection,
   onSortChange,
@@ -236,6 +240,10 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                                   value={filterValue}
                                   onChange={(val) =>
                                     onFilterChange(column.key, val)
+                                  }
+                                  operator={filterOperators?.[column.key]}
+                                  onOperatorChange={(op) =>
+                                    onFilterOperatorChange?.(column.key, op)
                                   }
                                   placeholder={`${column.label}...`}
                                 />

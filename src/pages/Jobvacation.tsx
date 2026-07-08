@@ -4,6 +4,7 @@ import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
 import type { JobVacancyItem } from "../types/jobVacancyTypes";
 import type { SortDirection } from "../features/tables/utils/sort";
+import type { FilterOperator } from "../features/tables/components/atoms/FIlterBox";
 
 type Row = JobVacancyItem & { id: string };
 
@@ -45,6 +46,11 @@ export default function Jobvacation() {
   const [filters, setFilters] = useState<Record<string, string>>({
     jobTitle: "",
   });
+  const [filterOperators, setFilterOperators] = useState<Record<string, FilterOperator>>({
+    jobTitle: "contains",
+    location: "contains",
+    jobType: "contains",
+  });
 
   const [sortField, setSortField] = useState<keyof Row | null>("jobTitle");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -54,13 +60,19 @@ export default function Jobvacation() {
 
   const debouncedFilters = useDebounce(filters, 1000);
 
-  const buildFilters = (filters: Record<string, string>) => {
+  const buildFilters = (filters: Record<string, string>, operators: Record<string, FilterOperator>) => {
     const filterArray: { key: string; value: string; operation: string; conjunction: string }[] = [];
+
+    const mapOperator = (op?: FilterOperator) => {
+      if (op === "startsWith") return "START_WITH";
+      if (op === "endsWith") return "END_WITH";
+      return "MATCH";
+    };
 
     const jobTitleSearch = filters.jobTitle?.trim();
     if (jobTitleSearch) {
       filterArray.push(
-        { key: "jobTitle", value: jobTitleSearch, operation: "MATCH", conjunction: "or" }
+        { key: "jobTitle", value: jobTitleSearch, operation: mapOperator(operators.jobTitle), conjunction: "or" }
       );
     }
 
@@ -69,7 +81,7 @@ export default function Jobvacation() {
       filterArray.push({
         key: "location",
         value: locationSearch,
-        operation: "MATCH",
+        operation: mapOperator(operators.location),
         conjunction: "or",
 
       });
@@ -80,7 +92,7 @@ export default function Jobvacation() {
       filterArray.push({
         key: "jobType",
         value: jobTypeSearch,
-        operation: "MATCH",
+        operation: mapOperator(operators.jobType),
         conjunction: "or",
       });
     }
@@ -104,9 +116,9 @@ export default function Jobvacation() {
       pageSize,
       sortByColumn: (sortField as string) ?? undefined,
       sortType: sortDirection,
-      filter: buildFilters(debouncedFilters),
+      filter: buildFilters(debouncedFilters, filterOperators),
     }),
-    [currentPage, pageSize, debouncedFilters, sortField, sortDirection]
+    [currentPage, pageSize, debouncedFilters, filterOperators, sortField, sortDirection]
   );
 
   const { data: apiData = [], loading, error, totalItems } = useJobVacancy(params);
@@ -190,6 +202,11 @@ export default function Jobvacation() {
         columns={columns}
         filters={filters}
         onFilterChange={handleFilterChange}
+        filterOperators={filterOperators}
+        onFilterOperatorChange={(key, op) => {
+          setFilterOperators((prev) => ({ ...prev, [key]: op }));
+          setCurrentPage(1);
+        }}
         sortField={sortField}
         sortDirection={sortDirection}
         onSortChange={handleSortChange}
