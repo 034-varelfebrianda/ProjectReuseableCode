@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import TabButton from "../atoms/TabButton";
 import BreadCrumbs from "../molecules/BreadCrumbs";
 import GridTopBar from "../molecules/GridTopBar";
@@ -66,14 +66,6 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 }: ReusableDataTableProps<T>) {
   const [activeTab, setActiveTab] = useState<"Preview" | "Code">("Preview");
   const [colWidths, setColWidths] = useState<Record<string, number>>({});
-
-  useEffect(() => {
-    const initialWidths: Record<string, number> = {};
-    columns.forEach((c) => {
-      initialWidths[c.key as string] = c.defaultWidth;
-    });
-    // setColWidths(prev => ({ ...initialWidths, ...prev }));
-  }, [columns]);
 
   const startIndex = (currentPage - 1) * pageSize;
   const shouldLimitPageSize =
