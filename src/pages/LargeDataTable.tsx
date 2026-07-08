@@ -3,7 +3,6 @@ import { LargeDataBase as initialMails, MailItem } from "../features/tables/data
 import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
 import Checkbox from "../features/tables/components/atoms/CheckBox";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
-import type { FilterOperator } from "../features/tables/components/atoms/FIlterBox";
 
 interface TableMailItem extends MailItem {
   id: number;
@@ -23,11 +22,6 @@ const defaultFilters: TableFilters = {
 export default function LargeDataTable() {
   const [mails] = useState<TableMailItem[]>(() => initialMails.map((mail) => ({ ...mail })));
   const [filters, setFilters] = useState<TableFilters>(defaultFilters);
-  const [filterOperators, setFilterOperators] = useState<Record<string, FilterOperator>>({
-    from: "contains",
-    subject: "contains",
-    sent: "contains",
-  });
   const [sortField, setSortField] = useState<TableColumnKey | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,19 +43,10 @@ export default function LargeDataTable() {
   };
 
   const filteredMails = useMemo(() => {
-    const matchValue = (value: string, searchTerm: string, op: FilterOperator): boolean => {
-      const val = value.toLowerCase();
-      const search = searchTerm.toLowerCase();
-      if (op === "equals") return val === search;
-      if (op === "startsWith") return val.startsWith(search);
-      if (op === "endsWith") return val.endsWith(search);
-      return val.includes(search);
-    };
-
     return mails.filter((mail) => {
-      const fromMatch = !filters.from || matchValue(String(mail.from ?? ""), filters.from, filterOperators.from || "contains");
-      const subjectMatch = !filters.subject || matchValue(String(mail.subject ?? ""), filters.subject, filterOperators.subject || "contains");
-      const sentMatch = !filters.sent || matchValue(String(mail.sent ?? ""), filters.sent, filterOperators.sent || "contains");
+      const fromMatch = String(mail.from ?? "").toLowerCase().includes((filters.from || "").toLowerCase());
+      const subjectMatch = String(mail.subject ?? "").toLowerCase().includes((filters.subject || "").toLowerCase());
+      const sentMatch = String(mail.sent ?? "").toLowerCase().includes((filters.sent || "").toLowerCase());
 
       const attachmentFilter = filters.attachment || "all";
       const attachmentMatch =
@@ -71,7 +56,7 @@ export default function LargeDataTable() {
 
       return fromMatch && subjectMatch && sentMatch && attachmentMatch;
     });
-  }, [mails, filters, filterOperators]);
+  }, [mails, filters]);
 
   const getComparableValue = (item: TableMailItem, field: TableColumnKey) => {
     if (field === "sent") {
@@ -135,16 +120,12 @@ export default function LargeDataTable() {
     <ReusableDataTable
       title="Large DataBase (Server Mode)"
       breadcrumbItems={[{ label: "Components" }, { label: "Grid" }, { label: "Large Database (Server Mode)" }]}
-      mode="client"
+      mode="server"
+      showThemeToggle
       data={sortedMails}
       columns={columns}
       filters={filters}
       onFilterChange={handleFilterChange}
-      filterOperators={filterOperators}
-      onFilterOperatorChange={(key, op) => {
-        setFilterOperators((prev) => ({ ...prev, [key]: op }));
-        setCurrentPage(1);
-      }}
       sortField={sortField}
       sortDirection={sortDirection}
       onSortChange={handleSortChange}

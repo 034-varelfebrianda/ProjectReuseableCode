@@ -12,7 +12,7 @@ export default function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`cursor-pointer relative px-5 py-3 text-sm font-medium transition-colors ${active ? "text-zinc-900" : "text-zinc-500 hover:text-zinc-700"
+      className={`cursor-pointer relative px-5 py-3 text-sm font-medium transition-colors ${active ? "text-zinc-900 dark:text-zinc-100" : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300"
         }`}
     >
       {label}

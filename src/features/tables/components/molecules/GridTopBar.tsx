@@ -1,18 +1,21 @@
-import { Settings2 } from "lucide-react";
+import ThemeToggle from "../atoms/ThemeToggle";
 
 interface GridTopBarProps {
   title?: string;
+  showThemeToggle?: boolean;
 }
 
-export default function GridTopBar({ title = "Large DataBase (Server Mode)" }: GridTopBarProps) {
+export default function GridTopBar({ 
+  title = "Large DataBase (Server Mode)", 
+  showThemeToggle = false 
+}: GridTopBarProps) {
   return (
-    <div className="flex justify-between pb-5">
-      <p className="font-bold justify-start text-[24px] ">{title}</p>
+    <div className="flex justify-between items-center pb-5">
+      <p className="font-bold justify-start text-[24px] text-zinc-900 dark:text-zinc-100 transition-colors">
+        {title}
+      </p>
 
-      <div className="flex border cursor-pointer gap-2 items-center px-2 bg-[#FFFFFF] border-zinc-300 rounded-md">
-        <Settings2 className="size-4" />
-        <p className="text-[#09090B]">Change Theme Settings</p>
-      </div>
+      {showThemeToggle && <ThemeToggle />}
     </div>
   );
 }

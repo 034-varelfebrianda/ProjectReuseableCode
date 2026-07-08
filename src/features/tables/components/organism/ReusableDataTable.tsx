@@ -45,6 +45,7 @@ interface ReusableDataTableProps<T> {
   totalItems: number;
   serverPageSize?: boolean;
   renderSummary?: (filteredData: T[]) => ReactNode;
+  showThemeToggle?: boolean;
 }
 
 export default function ReusableDataTable<T extends { id: string | number }>({
@@ -67,6 +68,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
   serverPageSize = false,
   renderSummary,
   mode = "client",
+  showThemeToggle = false,
 }: ReusableDataTableProps<T>) {
   const [activeTab, setActiveTab] = useState<"Preview" | "Code">("Preview");
   const [colWidths, setColWidths] = useState<Record<string, number>>({});
@@ -109,12 +111,12 @@ export default function ReusableDataTable<T extends { id: string | number }>({
       </div>
 
       <div className="pb-3">
-        <GridTopBar title={title} />
+        <GridTopBar title={title} showThemeToggle={showThemeToggle} />
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-sm transition-colors">
         {/* Tab Bar */}
-        <div className="flex border-b border-zinc-200 px-4 py-3">
+        <div className="flex border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">
           <TabButton
             label="Preview"
             active={activeTab === "Preview"}
@@ -129,14 +131,14 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 
         {/* Code Tab */}
         {activeTab === "Code" && (
-          <div className="overflow-x-auto bg-[#F4F4F580] rounded-b-xl">
-            <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800">
-              <span className="text-xs text-zinc-900 font-mono">
+          <div className="overflow-x-auto bg-[#F4F4F580] dark:bg-zinc-900/50 rounded-b-xl">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800 dark:border-zinc-600">
+              <span className="text-xs text-zinc-900 dark:text-zinc-200 font-mono">
                 component usage
               </span>
-              <span className="text-xs text-zinc-500">TSX</span>
+              <span className="text-xs text-zinc-500 dark:text-zinc-400">TSX</span>
             </div>
-            <pre className="px-6 py-5 text-sm font-mono text-zinc-900 leading-relaxed overflow-x-auto">
+            <pre className="px-6 py-5 text-sm font-mono text-zinc-900 dark:text-zinc-200 leading-relaxed overflow-x-auto">
               <code>{codeSnippet}</code>
             </pre>
           </div>
@@ -152,7 +154,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
               >
                 <thead>
                   {/* Header Row */}
-                  <tr className="bg-zinc-50 text-left text-sm text-[#71717A]">
+                  <tr className="bg-zinc-50 dark:bg-zinc-800/80 text-left text-sm text-[#71717A] dark:text-zinc-400">
                     {columns.map((column) => {
                       const alignClass =
                         column.align === "center"
@@ -170,7 +172,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                               column.defaultWidth,
                             minWidth: column.minWidth,
                           }}
-                          className={`relative border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
+                          className={`relative border-b border-r border-zinc-200 dark:border-zinc-700 px-4 py-4 ${alignClass}`}
                         >
                           <span>{column.label}</span>
                           <div
@@ -212,7 +214,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                               );
                               document.addEventListener("mouseup", onMouseUp);
                             }}
-                            className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-zinc-300 active:bg-zinc-400 z-10 transition-colors"
+                            className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-zinc-300 dark:hover:bg-zinc-600 active:bg-zinc-400 dark:active:bg-zinc-500 z-10 transition-colors"
                           />
                         </th>
                       );
@@ -220,7 +222,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   </tr>
 
                   {/* Filter Row */}
-                  <tr className="bg-zinc-50/50">
+                  <tr className="bg-zinc-50/50 dark:bg-zinc-800/50">
                     {columns.map((column) => {
                       const filterValue = filters[column.key] ?? "";
                       const sortLabels =
@@ -231,7 +233,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                       return (
                         <td
                           key={`filter-${column.key}`}
-                          className="border-b border-r border-zinc-200 px-2 py-2"
+                          className="border-b border-r border-zinc-200 dark:border-zinc-700 px-2 py-2"
                         >
                           {column.filterType === "text" && (
                             <div className="flex items-center gap-2">
@@ -289,7 +291,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                     paginatedData.map((item) => (
                       <tr
                         key={item.id}
-                        className="text-sm text-[#09090B] transition-colors hover:bg-zinc-50/50"
+                        className="text-sm text-[#09090B] dark:text-zinc-200 transition-colors hover:bg-zinc-50/50 dark:hover:bg-zinc-700/50"
                       >
                         {columns.map((column) => {
                           const alignClass =
@@ -303,7 +305,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                             <td
                               key={`${item.id}-${column.key}`}
                               style={{ width: column.defaultWidth }}
-                              className={`border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
+                              className={`border-b border-r border-zinc-200 dark:border-zinc-700 px-4 py-4 ${alignClass}`}
                             >
                               {column.render
                                 ? column.render(item)
@@ -320,7 +322,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                     <tr>
                       <td
                         colSpan={columns.length}
-                        className="px-4 py-8 text-center text-sm text-zinc-400"
+                        className="px-4 py-8 text-center text-sm text-zinc-400 dark:text-zinc-500"
                       >
                         No matching records found.
                       </td>
@@ -331,7 +333,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                     <tr>
                       <td
                         colSpan={columns.length}
-                        className="border-b border-zinc-200 bg-zinc-50/30 px-5 py-3 text-right text-sm font-medium text-zinc-500"
+                        className="border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50/30 dark:bg-zinc-800/30 px-5 py-3 text-right text-sm font-medium text-zinc-500 dark:text-zinc-400"
                       >
                         {renderSummary(data)}
                       </td>

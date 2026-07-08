@@ -174,8 +174,8 @@ export default function Jobvacation() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#f7f7f8] px-6 py-6">
-        <div className="rounded-xl border border-zinc-200 bg-white p-6 text-center text-zinc-600 shadow-sm">
+      <div className="min-h-screen bg-[#f7f7f8] dark:bg-zinc-900 px-6 py-6">
+        <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-6 text-center text-zinc-600 dark:text-zinc-400 shadow-sm">
           Loading job vacancies...
         </div>
       </div>
@@ -184,8 +184,8 @@ export default function Jobvacation() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-[#f7f7f8] px-6 py-6">
-        <div className="rounded-xl border border-rose-200 bg-rose-50 p-6 text-center text-rose-600 shadow-sm">
+      <div className="min-h-screen bg-[#f7f7f8] dark:bg-zinc-900 px-6 py-6">
+        <div className="rounded-xl border border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-900/30 p-6 text-center text-rose-600 dark:text-rose-400 shadow-sm">
           {error}
         </div>
       </div>

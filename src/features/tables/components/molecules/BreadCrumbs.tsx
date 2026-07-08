@@ -18,9 +18,9 @@ export default function BreadCrumbs({
     <div className="flex items-center gap-1 text-sm">
       {showHome && (
         <>
-          <House className="size-3.5 text-zinc-500" />
+          <House className="size-3.5 text-zinc-500 dark:text-zinc-400" />
           {items.length > 0 && (
-            <ChevronRight className="size-3 text-zinc-500" />
+            <ChevronRight className="size-3 text-zinc-500 dark:text-zinc-400" />
           )}
         </>
       )}
@@ -33,15 +33,15 @@ export default function BreadCrumbs({
             <p
               className={
                 isLast
-                  ? "text-zinc-900 font-medium"
-                  : "text-zinc-500"
+                  ? "text-zinc-900 dark:text-zinc-100 font-medium"
+                  : "text-zinc-500 dark:text-zinc-400"
               }
             >
               {item.label}
             </p>
 
             {!isLast && (
-              <ChevronRight className="size-3 text-zinc-500" />
+              <ChevronRight className="size-3 text-zinc-500 dark:text-zinc-400" />
             )}
           </div>
         );
