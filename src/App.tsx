@@ -1,5 +1,5 @@
 import LargeDataTable from './pages/LargeDataTable'
-import Products from './pages/Products'
+// import Products from './pages/Products'
 // import DummyProducts from './pages/DummyProducts'
 import Jobvacation from './pages/Jobvacation'
 
@@ -9,7 +9,7 @@ export default function App() {
       <LargeDataTable />
       <Jobvacation />
       {/* <DummyProducts /> */}
-      <Products />
+      {/* <Products /> */}
     </div>
   )
 }
