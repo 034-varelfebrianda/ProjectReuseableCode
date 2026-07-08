@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import ReusableDataTable, {Column,} from "../features/tables/components/organism/ReusableDataTable";
+import ReusableDataTable, { Column, } from "../features/tables/components/organism/ReusableDataTable";
 import { useDummy } from "../hooks/useDummy";
 import type { SortDirection } from "../features/tables/utils/sort";
 
@@ -21,7 +21,7 @@ export default function DummyProducts() {
 
   const [sortField, setSortField] = useState<keyof TableProduct | null>(null);
   const [sortDirection, setSortDirection] =
-    useState<SortDirection>("asc");
+    useState<SortDirection>("desc");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);

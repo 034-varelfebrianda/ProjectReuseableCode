@@ -64,20 +64,47 @@ export default function ReusableDataTable<T extends { id: string | number }>({
   renderSummary,
   mode = "client",
 }: ReusableDataTableProps<T>) {
+  const [activeTab, setActiveTab] = useState<"Preview" | "Code">("Preview");
   const [colWidths, setColWidths] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const initialWidths: Record<string, number> = {};
-    columns.forEach(c => {
+    columns.forEach((c) => {
       initialWidths[c.key as string] = c.defaultWidth;
     });
     // setColWidths(prev => ({ ...initialWidths, ...prev }));
   }, [columns]);
 
   const startIndex = (currentPage - 1) * pageSize;
-  const shouldLimitPageSize = mode === "client" || (mode === "server" && !serverPageSize);
-  const paginatedData = shouldLimitPageSize ? data.slice(startIndex, startIndex + pageSize) : data;
-  
+  const shouldLimitPageSize =
+    mode === "client" || (mode === "server" && !serverPageSize);
+  const paginatedData = shouldLimitPageSize
+    ? data.slice(startIndex, startIndex + pageSize)
+    : data;
+
+  const codeSnippet = [
+    'import ReusableDataTable from "@/features/tables/components/organism/ReusableDataTable";',
+    "",
+    "<ReusableDataTable",
+    `  title="${title}"`,
+    '  mode="server"',
+    "  data={rows}",
+    "  columns={columns}",
+    "  filters={filters}",
+    "  onFilterChange={handleFilterChange}",
+    "  sortField={sortField}",
+    "  sortDirection={sortDirection}",
+    "  onSortChange={handleSortChange}",
+    "  currentPage={currentPage}",
+    "  pageSize={pageSize}",
+    "  totalItems={totalItems}",
+    "  onPageChange={setCurrentPage}",
+    "  onPageSizeChange={(size) => {",
+    "    setPageSize(size);",
+    "    setCurrentPage(1);",
+    "  }}",
+    "/>",
+  ].join("\n");
 
   return (
     <div>
@@ -90,119 +117,46 @@ export default function ReusableDataTable<T extends { id: string | number }>({
       </div>
 
       <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-sm">
+        {/* Tab Bar */}
         <div className="flex border-b border-zinc-200 px-4 py-3">
-          <TabButton label="Preview" active />
-          <TabButton label="Code" />
+          <TabButton
+            label="Preview"
+            active={activeTab === "Preview"}
+            onClick={() => setActiveTab("Preview")}
+          />
+          <TabButton
+            label="Code"
+            active={activeTab === "Code"}
+            onClick={() => setActiveTab("Code")}
+          />
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse" style={{ tableLayout: "fixed" }}>
-            <thead>
-              <tr className="bg-zinc-50 text-left text-sm text-[#71717A]">
-                {columns.map((column) => {
-                  const alignClass =
-                    column.align === "center"
-                      ? "text-center"
-                      : column.align === "right"
-                        ? "text-right"
-                        : "";
+        {/* Code Tab */}
+        {activeTab === "Code" && (
+          <div className="overflow-x-auto bg-[#F4F4F580] rounded-b-xl">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-zinc-800">
+              <span className="text-xs text-zinc-900 font-mono">
+                component usage
+              </span>
+              <span className="text-xs text-zinc-500">TSX</span>
+            </div>
+            <pre className="px-6 py-5 text-sm font-mono text-zinc-900 leading-relaxed overflow-x-auto">
+              <code>{codeSnippet}</code>
+            </pre>
+          </div>
+        )}
 
-                  return (
-                    <th
-                      key={column.key}
-                      style={{ width: colWidths[column.key as string] || column.defaultWidth, minWidth: column.minWidth }}
-                      className={`relative border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
-                    >
-                      <span>{column.label}</span>
-                      <div
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          const startX = e.clientX;
-                          const startWidth = colWidths[column.key as string] || column.defaultWidth;
-
-                          const onMouseMove = (moveEvent: MouseEvent) => {
-                            const deltaX = moveEvent.clientX - startX;
-                            setColWidths(prev => {
-                              const newW = Math.max(column.minWidth, startWidth + deltaX);
-                              return { ...prev, [column.key as string]: newW };
-                            });
-                          };
-
-                          const onMouseUp = () => {
-                            document.removeEventListener("mousemove", onMouseMove);
-                            document.removeEventListener("mouseup", onMouseUp);
-                          };
-
-                          document.addEventListener("mousemove", onMouseMove);
-                          document.addEventListener("mouseup", onMouseUp);
-                        }}
-                        className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-zinc-300 active:bg-zinc-400 z-10 transition-colors"
-                      />
-                    </th>
-                  );
-                })}
-              </tr>
-
-              <tr className="bg-zinc-50/50">
-                {columns.map((column) => {
-                  const filterValue = filters[column.key] ?? "";
-                  const sortLabels =
-                    column.key === "sent"
-                      ? { asc: "Oldest", desc: "Newest" }
-                      : undefined;
-
-                  return (
-                    <td
-                      key={`filter-${column.key}`}
-                      className="border-b border-r border-zinc-200 px-2 py-2"
-                    >
-                      {column.filterType === "text" && (
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <FilterBox
-                              value={filterValue}
-                              onChange={(val) => onFilterChange(column.key, val)}
-                              placeholder={`${column.label}...`}
-                            />
-                          </div>
-                          {column.sortable && (
-                            <SortControl
-                              mode={mode}
-                              activeSort={sortField === column.key}
-                              sortDirection={sortDirection}
-                              sortAscLabel={sortLabels?.asc ?? "A-Z"}
-                              sortDescLabel={sortLabels?.desc ?? "Z-A"}
-                              onSort={(direction: SortDirection) => {
-                                if (sortField === column.key && sortDirection === direction) {
-                                  onSortChange(null, null);
-                                } else {
-                                  onSortChange(column.key, direction);
-                                }
-                              }}
-                            />
-                          )}
-                        </div>
-                      )}
-
-                      {column.filterType === "select" && (
-                        <AttachmentBox
-                          value={filterValue || "all"}
-                          onChange={(val: AttachmentValue) => onFilterChange(column.key, val)}
-                        />
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
-            </thead>
-
-            <tbody>
-              {paginatedData.length > 0 ? (
-                paginatedData.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="text-sm text-[#09090B] transition-colors hover:bg-zinc-50/50"
-                  >
+        {/* Preview Tab */}
+        {activeTab === "Preview" && (
+          <div>
+            <div className="overflow-x-auto">
+              <table
+                className="w-full border-collapse"
+                style={{ tableLayout: "fixed" }}
+              >
+                <thead>
+                  {/* Header Row */}
+                  <tr className="bg-zinc-50 text-left text-sm text-[#71717A]">
                     {columns.map((column) => {
                       const alignClass =
                         column.align === "center"
@@ -212,50 +166,190 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                             : "";
 
                       return (
-                        <td
-                          key={`${item.id}-${column.key}`}
-                          style={{ width: column.defaultWidth }}
-                          className={`border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
+                        <th
+                          key={column.key}
+                          style={{
+                            width:
+                              colWidths[column.key as string] ||
+                              column.defaultWidth,
+                            minWidth: column.minWidth,
+                          }}
+                          className={`relative border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
                         >
-                          {column.render
-                            ? column.render(item)
-                            : item[column.key] !== undefined && item[column.key] !== null
-                              ? String(item[column.key])
-                              : "-"}
+                          <span>{column.label}</span>
+                          <div
+                            onMouseDown={(e) => {
+                              e.preventDefault();
+                              const startX = e.clientX;
+                              const startWidth =
+                                colWidths[column.key as string] ||
+                                column.defaultWidth;
+
+                              const onMouseMove = (moveEvent: MouseEvent) => {
+                                const deltaX = moveEvent.clientX - startX;
+                                setColWidths((prev) => {
+                                  const newW = Math.max(
+                                    column.minWidth,
+                                    startWidth + deltaX
+                                  );
+                                  return {
+                                    ...prev,
+                                    [column.key as string]: newW,
+                                  };
+                                });
+                              };
+
+                              const onMouseUp = () => {
+                                document.removeEventListener(
+                                  "mousemove",
+                                  onMouseMove
+                                );
+                                document.removeEventListener(
+                                  "mouseup",
+                                  onMouseUp
+                                );
+                              };
+
+                              document.addEventListener(
+                                "mousemove",
+                                onMouseMove
+                              );
+                              document.addEventListener("mouseup", onMouseUp);
+                            }}
+                            className="absolute right-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-zinc-300 active:bg-zinc-400 z-10 transition-colors"
+                          />
+                        </th>
+                      );
+                    })}
+                  </tr>
+
+                  {/* Filter Row */}
+                  <tr className="bg-zinc-50/50">
+                    {columns.map((column) => {
+                      const filterValue = filters[column.key] ?? "";
+                      const sortLabels =
+                        column.key === "sent"
+                          ? { asc: "Oldest", desc: "Newest" }
+                          : undefined;
+
+                      return (
+                        <td
+                          key={`filter-${column.key}`}
+                          className="border-b border-r border-zinc-200 px-2 py-2"
+                        >
+                          {column.filterType === "text" && (
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1">
+                                <FilterBox
+                                  value={filterValue}
+                                  onChange={(val) =>
+                                    onFilterChange(column.key, val)
+                                  }
+                                  placeholder={`${column.label}...`}
+                                />
+                              </div>
+                              {column.sortable && (
+                                <SortControl
+                                  mode={mode}
+                                  activeSort={sortField === column.key}
+                                  sortDirection={sortDirection}
+                                  sortAscLabel={sortLabels?.asc ?? "A-Z"}
+                                  sortDescLabel={sortLabels?.desc ?? "Z-A"}
+                                  onSort={(direction: SortDirection) => {
+                                    if (
+                                      sortField === column.key &&
+                                      sortDirection === direction
+                                    ) {
+                                      onSortChange(null, null);
+                                    } else {
+                                      onSortChange(column.key, direction);
+                                    }
+                                  }}
+                                />
+                              )}
+                            </div>
+                          )}
+
+                          {column.filterType === "select" && (
+                            <AttachmentBox
+                              value={filterValue || "all"}
+                              onChange={(val: AttachmentValue) =>
+                                onFilterChange(column.key, val)
+                              }
+                            />
+                          )}
                         </td>
                       );
                     })}
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={columns.length} className="px-4 py-8 text-center text-sm text-zinc-400">
-                    No matching records found.
-                  </td>
-                </tr>
-              )}
+                </thead>
 
-              {renderSummary && (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="border-b border-zinc-200 bg-zinc-50/30 px-5 py-3 text-right text-sm font-medium text-zinc-500"
-                  >
-                    {renderSummary(data)}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                <tbody>
+                  {paginatedData.length > 0 ? (
+                    paginatedData.map((item) => (
+                      <tr
+                        key={item.id}
+                        className="text-sm text-[#09090B] transition-colors hover:bg-zinc-50/50"
+                      >
+                        {columns.map((column) => {
+                          const alignClass =
+                            column.align === "center"
+                              ? "text-center"
+                              : column.align === "right"
+                                ? "text-right"
+                                : "";
 
-        <Pagination
-          currentPage={currentPage}
-          pageSize={pageSize}
-          totalItems={totalItems}
-          onPageChange={onPageChange}
-          onPageSizeChange={onPageSizeChange}
-        />
+                          return (
+                            <td
+                              key={`${item.id}-${column.key}`}
+                              style={{ width: column.defaultWidth }}
+                              className={`border-b border-r border-zinc-200 px-4 py-4 ${alignClass}`}
+                            >
+                              {column.render
+                                ? column.render(item)
+                                : item[column.key] !== undefined &&
+                                  item[column.key] !== null
+                                  ? String(item[column.key])
+                                  : "-"}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={columns.length}
+                        className="px-4 py-8 text-center text-sm text-zinc-400"
+                      >
+                        No matching records found.
+                      </td>
+                    </tr>
+                  )}
+
+                  {renderSummary && (
+                    <tr>
+                      <td
+                        colSpan={columns.length}
+                        className="border-b border-zinc-200 bg-zinc-50/30 px-5 py-3 text-right text-sm font-medium text-zinc-500"
+                      >
+                        {renderSummary(data)}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <Pagination
+              currentPage={currentPage}
+              pageSize={pageSize}
+              totalItems={totalItems}
+              onPageChange={onPageChange}
+              onPageSizeChange={onPageSizeChange}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
