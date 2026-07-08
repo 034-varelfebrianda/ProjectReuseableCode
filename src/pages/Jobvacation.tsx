@@ -10,7 +10,6 @@ type Row = JobVacancyItem & { id: string };
 export default function Jobvacation() {
   const [filters, setFilters] = useState<Record<string, string>>({
     jobTitle: "",
-
   });
 
   const [sortField, setSortField] = useState<keyof Row | null>("jobTitle");
@@ -19,7 +18,7 @@ export default function Jobvacation() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const debouncedFilters = useDebounce(filters, 500);
+  const debouncedFilters = useDebounce(filters, 1000);
 
   const buildFilters = (filters: Record<string, string>) => {
     const filterArray: { key: string; value: string; operation: string; conjunction: string }[] = [];
@@ -27,10 +26,7 @@ export default function Jobvacation() {
     const jobTitleSearch = filters.jobTitle?.trim();
     if (jobTitleSearch) {
       filterArray.push(
-        { key: "jobTitle", value: jobTitleSearch, operation: "MATCH", conjunction: "or" },
-        // { key: "jobType", value: jobTitleSearch, operation: "MATCH", conjunction: "or" },
-        // { key: "keyword", value: jobTitleSearch, operation: "MATCH", conjunction: "or" },
-        // { key: "organization.name", value: jobTitleSearch, operation: "MATCH", conjunction: "or" }
+        { key: "jobTitle", value: jobTitleSearch, operation: "MATCH", conjunction: "or" }
       );
     }
 
@@ -149,7 +145,7 @@ export default function Jobvacation() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f7f8] px-6 py-6">
+    <main className="min-h-screen p-5">
       <ReusableDataTable
         title="Job Vacancy"
         breadcrumbItems={[{ label: "Components" }, { label: "Grid" }, { label: "Job Vacancy" }]}
