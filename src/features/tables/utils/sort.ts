@@ -25,7 +25,14 @@ function toComparableValue(value: unknown): ComparableValue {
   }
 
   if (typeof value === "string") {
-    return { type: "string", value: value.toLowerCase() };
+    const trimmedValue = value.trim();
+    const parsedDate = Date.parse(trimmedValue);
+
+    if (!Number.isNaN(parsedDate)) {
+      return { type: "number", value: parsedDate };
+    }
+
+    return { type: "string", value: trimmedValue.toLowerCase() };
   }
 
   if (value === null || value === undefined) {

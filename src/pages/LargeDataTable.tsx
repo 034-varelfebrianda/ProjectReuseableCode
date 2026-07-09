@@ -67,32 +67,24 @@ export default function LargeDataTable() {
     });
   }, [mails, filters]);
 
-  const getComparableValue = (item: TableMailItem, field: TableColumnKey) => {
-    if (field === "sent") {
-      const parsedDate = Date.parse(item.sent);
-      return Number.isNaN(parsedDate) ? 0 : parsedDate;
-    }
-
-    if (field === "attachment") {
-      return item.attachment ? 1 : 0;
-    }
-
-    const value = item[field];
-    return typeof value === "string" ? value.toLowerCase() : value;
-  };
-
   const sortedMails = useMemo(() => {
     if (!sortField) return filteredMails;
 
-    return sortItems(filteredMails, sortField, sortDirection, (item, field) =>
-      getComparableValue(item, field as TableColumnKey)
-    );
+    return sortItems(filteredMails, sortField, sortDirection);
   }, [filteredMails, sortField, sortDirection]);
 
   const columns: Column<TableMailItem>[] = [
     { key: "from", label: "From", defaultWidth: 200, minWidth: 100, sortable: true, filterType: "text" },
     { key: "subject", label: "Subject", defaultWidth: 400, minWidth: 180, sortable: true, filterType: "text" },
-    { key: "sent", label: "Sent", defaultWidth: 120, minWidth: 80, sortable: true, filterType: "text" },
+    {
+      key: "sent",
+      label: "Sent",
+      defaultWidth: 120,
+      minWidth: 80,
+      sortable: true,
+      filterType: "text",
+      sortLabels: { asc: "Oldest", desc: "Newest" },
+    },
     {
       key: "attachment",
       label: "Attachment?",

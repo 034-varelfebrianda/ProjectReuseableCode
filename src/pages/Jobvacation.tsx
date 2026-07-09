@@ -149,6 +149,9 @@ export default function Jobvacation() {
       label: "Created Date",
       defaultWidth: 220,
       minWidth: 180,
+      sortable: true,
+      filterType: "text",
+      sortLabels: { asc: "Oldest", desc: "Newest" },
       render: (row) => formatIsoDateToIndonesian(row.createDate),
     },
   ];

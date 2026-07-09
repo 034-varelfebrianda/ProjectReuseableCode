@@ -20,6 +20,7 @@ export interface Column<T> {
   sortable?: boolean;
   filterType?: "text" | "select" | "none";
   filterOptions?: Array<{ value: string; label: string }>;
+  sortLabels?: { asc: string; desc: string };
   render?: (item: T) => ReactNode;
 }
 
@@ -221,10 +222,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   {/* Filter Row */}
                   <tr className="bg-zinc-50/50  dark:bg-zinc-800/50">
                     {columns.map((column) => {
-                      const sortLabels =
-                        column.key === "sent"
-                          ? { asc: "Oldest", desc: "Newest" }
-                          : undefined;
+                      const sortLabels = column.sortLabels;
 
                       return (
                         <td
