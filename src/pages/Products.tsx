@@ -1,5 +1,6 @@
-﻿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
+import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 import { useProducts } from "../hooks/useProducts";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
 
@@ -80,8 +81,8 @@ export default function Products() {
     },
   ];
 
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+  const handleFilterChange = (key: keyof TableProduct & string, value: string | FilterState) => {
+    setFilters((prev) => ({ ...prev, [key]: typeof value === "string" ? value : "" }));
   };
 
   const handleSortChange = (
