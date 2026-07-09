@@ -37,7 +37,7 @@ const formatIsoDateToIndonesian = (dateString?: string): string => {
             : tzName;
 
     return `${datePart}, ${timePart} ${tzLabel}`.trim();
-  } catch (error) {
+  } catch {
     return dateString;
   }
 };
