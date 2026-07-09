@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import ReusableDataTable, { Column, } from "../features/tables/components/organism/ReusableDataTable";
-import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
+// import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 import { useDummy } from "../hooks/useDummy";
 import type { SortDirection } from "../features/tables/utils/sort";
 
