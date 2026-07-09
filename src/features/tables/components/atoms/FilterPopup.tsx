@@ -93,7 +93,7 @@ export default function FilterPopup({
   return (
     <div
       ref={popupRef}
-      className="absolute right-0 top-full mt-2 z-50 w-80 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-xl"
+      className="absolute -right-25 top-full mt-2 z-50  w-80 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-xl"
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">

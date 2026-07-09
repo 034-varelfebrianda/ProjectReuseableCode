@@ -4,7 +4,7 @@ import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
 import type { JobVacancyItem } from "../types/jobVacancyTypes";
 import type { SortDirection } from "../features/tables/utils/sort";
-import type { FilterState } from "../features/tables/components/molecules/FilterPopup";
+import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 
 type Row = JobVacancyItem & { id: string };
 
@@ -187,7 +187,7 @@ export default function Jobvacation() {
   }
 
   return (
-    <main className="min-h-screen p-5">
+    <main className=" p-5 ">
       <ReusableDataTable
         title="Job Vacancy"
         breadcrumbItems={[{ label: "Components" }, { label: "Grid" }, { label: "Job Vacancy" }]}

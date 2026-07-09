@@ -3,8 +3,8 @@ import TabButton from "../atoms/TabButton";
 import BreadCrumbs from "../molecules/BreadCrumbs";
 import GridTopBar from "../molecules/GridTopBar";
 import Pagination from "../molecules/Pagination";
-import FilterBox from "../atoms/FIlterBox";
-import type { FilterState } from "../molecules/FilterPopup";
+import FilterBox from "../molecules/FIlterBox";
+import type { FilterState } from "../atoms/FilterPopup";
 import AttachmentBox, { AttachmentValue } from "../atoms/AttachmentBox";
 import SortControl from "../molecules/SortControl";
 import type { SortDirection, SortMode } from "../../utils/sort";
@@ -111,7 +111,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
         <GridTopBar title={title} showThemeToggle={showThemeToggle} />
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-sm transition-colors">
+      <div className="overflow-visible rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-sm transition-colors h-fit">
         {/* Tab Bar */}
         <div className="flex border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">
           <TabButton
@@ -143,13 +143,13 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 
         {/* Preview Tab */}
         {activeTab === "Preview" && (
-          <div>
-            <div className="overflow-x-auto">
+          <div className="z-500">
+            <div className="overflow-x-auto relative z-10 min-h-75 h-fit">
               <table
                 className="w-full border-collapse"
                 style={{ tableLayout: "fixed" }}
               >
-                <thead>
+                <thead className="">
                   {/* Header Row */}
                   <tr className="bg-zinc-50 dark:bg-zinc-800/80 text-left text-sm text-[#71717A] dark:text-zinc-400">
                     {columns.map((column) => {
@@ -219,7 +219,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   </tr>
 
                   {/* Filter Row */}
-                  <tr className="bg-zinc-50/50 dark:bg-zinc-800/50">
+                  <tr className="bg-zinc-50/50  dark:bg-zinc-800/50">
                     {columns.map((column) => {
                       const sortLabels =
                         column.key === "sent"
@@ -286,7 +286,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   </tr>
                 </thead>
 
-                <tbody>
+                <tbody className="">
                   {paginatedData.length > 0 ? (
                     paginatedData.map((item) => (
                       <tr

@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { ChevronDown, Funnel } from "lucide-react";
-import FilterPopup, { type FilterState } from "../molecules/FilterPopup";
+import FilterPopup, { type FilterState } from "../atoms/FilterPopup";
 
 export type FilterOperator = "contains" | "equals" | "startsWith" | "endsWith";
 
@@ -72,11 +72,10 @@ export default function FilterBox({
           <button
             type="button"
             onClick={() => setShowPopup((prev) => !prev)}
-            className={`flex items-center justify-center p-1 rounded transition-colors cursor-pointer ${
-              hasActiveFilter
-                ? "text-sky-500 hover:bg-sky-100 dark:hover:bg-sky-900/30"
-                : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700"
-            }`}
+            className={`flex items-center justify-center p-1 rounded transition-colors cursor-pointer ${hasActiveFilter
+              ? "text-sky-500 hover:bg-sky-100 dark:hover:bg-sky-900/30"
+              : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+              }`}
             title="Advanced Filter"
           >
             <Funnel size={14} />

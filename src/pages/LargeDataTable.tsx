@@ -3,7 +3,7 @@ import { LargeDataBase as initialMails, MailItem } from "../features/tables/data
 import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
 import Checkbox from "../features/tables/components/atoms/CheckBox";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
-import type { FilterState } from "../features/tables/components/molecules/FilterPopup";
+import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 
 interface TableMailItem extends MailItem {
   id: number;

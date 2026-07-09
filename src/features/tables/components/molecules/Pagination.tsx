@@ -63,7 +63,7 @@ export default function Pagination({
   const pages = getPageNumbers();
 
   return (
-    <div className="flex items-center justify-between border-t border-zinc-200 dark:border-zinc-700 px-5 py-4 text-sm text-zinc-500 dark:text-zinc-400">
+    <div className="flex  items-center justify-between border-t border-zinc-200 dark:border-zinc-700 px-5 py-4 text-sm text-zinc-500 dark:text-zinc-400">
       <p>
         Page {currentPage} of {totalPages} ({totalItems.toLocaleString()} items)
       </p>
@@ -95,8 +95,8 @@ export default function Pagination({
               key={`page-${pageNum}`}
               onClick={() => onPageChange(pageNum)}
               className={`flex h-8 w-8 items-center justify-center rounded-md text-sm transition ${isActive
-                  ? "bg-sky-500 text-white font-medium"
-                  : "text-zinc-500 dark:text-zinc-400 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-[#09090B] dark:hover:text-zinc-200"
+                ? "bg-sky-500 text-white font-medium"
+                : "text-zinc-500 dark:text-zinc-400 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-[#09090B] dark:hover:text-zinc-200"
                 }`}
             >
               {pageNum}
