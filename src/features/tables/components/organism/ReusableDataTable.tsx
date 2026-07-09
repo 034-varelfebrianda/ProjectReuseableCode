@@ -3,12 +3,13 @@ import TabButton from "../atoms/TabButton";
 import BreadCrumbs from "../molecules/BreadCrumbs";
 import GridTopBar from "../molecules/GridTopBar";
 import Pagination from "../molecules/Pagination";
-import FilterBox, { type FilterOperator } from "../atoms/FIlterBox";
+import FilterBox from "../atoms/FIlterBox";
+import type { FilterState } from "../molecules/FilterPopup";
 import AttachmentBox, { AttachmentValue } from "../atoms/AttachmentBox";
 import SortControl from "../molecules/SortControl";
 import type { SortDirection, SortMode } from "../../utils/sort";
 
-type FilterValue = string;
+type FilterValue = string | FilterState;
 
 export interface Column<T> {
   key: keyof T & string;
@@ -29,9 +30,7 @@ interface ReusableDataTableProps<T> {
   data: T[];
   columns: Column<T>[];
   filters: Record<string, FilterValue>;
-  onFilterChange: (key: keyof T & string, value: FilterValue) => void;
-  filterOperators?: Record<string, FilterOperator>;
-  onFilterOperatorChange?: (key: keyof T & string, operator: FilterOperator) => void;
+  onFilterChange: (key: keyof T & string, value: string | FilterState) => void;
   sortField: (keyof T & string) | null;
   sortDirection: "asc" | "desc";
   onSortChange: (
@@ -55,8 +54,6 @@ export default function ReusableDataTable<T extends { id: string | number }>({
   columns,
   filters,
   onFilterChange,
-  filterOperators,
-  onFilterOperatorChange,
   sortField,
   sortDirection,
   onSortChange,
@@ -224,7 +221,6 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   {/* Filter Row */}
                   <tr className="bg-zinc-50/50 dark:bg-zinc-800/50">
                     {columns.map((column) => {
-                      const filterValue = filters[column.key] ?? "";
                       const sortLabels =
                         column.key === "sent"
                           ? { asc: "Oldest", desc: "Newest" }
@@ -239,13 +235,17 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                             <div className="flex items-center gap-2">
                               <div className="flex-1">
                                 <FilterBox
-                                  value={filterValue}
+                                  value={
+                                    typeof filters[column.key] === "string"
+                                      ? (filters[column.key] as string)
+                                      : ""
+                                  }
                                   onChange={(val) =>
                                     onFilterChange(column.key, val)
                                   }
-                                  operator={filterOperators?.[column.key]}
-                                  onOperatorChange={(op) =>
-                                    onFilterOperatorChange?.(column.key, op)
+                                  columnLabel={column.label}
+                                  onFilterApply={(state) =>
+                                    onFilterChange(column.key, state)
                                   }
                                   placeholder={`${column.label}...`}
                                 />
@@ -274,7 +274,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 
                           {column.filterType === "select" && (
                             <AttachmentBox
-                              value={filterValue || "all"}
+                              value={(filters[column.key] as string) || "all"}
                               onChange={(val: AttachmentValue) =>
                                 onFilterChange(column.key, val)
                               }

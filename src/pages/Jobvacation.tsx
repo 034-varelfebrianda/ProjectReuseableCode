@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
 import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
 import type { JobVacancyItem } from "../types/jobVacancyTypes";
 import type { SortDirection } from "../features/tables/utils/sort";
-import type { FilterOperator } from "../features/tables/components/atoms/FIlterBox";
+import type { FilterState } from "../features/tables/components/molecules/FilterPopup";
 
 type Row = JobVacancyItem & { id: string };
 
@@ -43,13 +43,8 @@ const formatIsoDateToIndonesian = (dateString?: string): string => {
 };
 
 export default function Jobvacation() {
-  const [filters, setFilters] = useState<Record<string, string>>({
+  const [filters, setFilters] = useState<Record<string, string | FilterState>>({
     jobTitle: "",
-  });
-  const [filterOperators, setFilterOperators] = useState<Record<string, FilterOperator>>({
-    jobTitle: "contains",
-    location: "contains",
-    jobType: "contains",
   });
 
   const [sortField, setSortField] = useState<keyof Row | null>("jobTitle");
@@ -58,41 +53,42 @@ export default function Jobvacation() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  const extractFilterValue = (filterValue: string | FilterState | undefined): string => {
+    if (typeof filterValue === "string") return filterValue;
+    if (filterValue && "conditions" in filterValue && filterValue.conditions.length > 0) {
+      return filterValue.conditions[0].value;
+    }
+    return "";
+  };
+
   const debouncedFilters = useDebounce(filters, 1000);
 
-  const buildFilters = (filters: Record<string, string>, operators: Record<string, FilterOperator>) => {
+  const buildFilters = useCallback((filters: Record<string, string | FilterState>) => {
     const filterArray: { key: string; value: string; operation: string; conjunction: string }[] = [];
 
-    const mapOperator = (op?: FilterOperator) => {
-      if (op === "startsWith") return "START_WITH";
-      if (op === "endsWith") return "END_WITH";
-      return "MATCH";
-    };
-
-    const jobTitleSearch = filters.jobTitle?.trim();
+    const jobTitleSearch = extractFilterValue(filters.jobTitle)?.trim();
     if (jobTitleSearch) {
       filterArray.push(
-        { key: "jobTitle", value: jobTitleSearch, operation: mapOperator(operators.jobTitle), conjunction: "or" }
+        { key: "jobTitle", value: jobTitleSearch, operation: "MATCH", conjunction: "or" }
       );
     }
 
-    const locationSearch = filters.location?.trim();
+    const locationSearch = extractFilterValue(filters.location)?.trim();
     if (locationSearch) {
       filterArray.push({
         key: "location",
         value: locationSearch,
-        operation: mapOperator(operators.location),
+        operation: "MATCH",
         conjunction: "or",
-
       });
     }
 
-    const jobTypeSearch = filters.jobType?.trim();
+    const jobTypeSearch = extractFilterValue(filters.jobType)?.trim();
     if (jobTypeSearch) {
       filterArray.push({
         key: "jobType",
         value: jobTypeSearch,
-        operation: mapOperator(operators.jobType),
+        operation: "MATCH",
         conjunction: "or",
       });
     }
@@ -103,12 +99,10 @@ export default function Jobvacation() {
       value: "ACTIVE",
       operation: "EQUAL",
       conjunction: "and",
-
-
     });
 
     return filterArray;
-  };
+  }, []);
 
   const params = useMemo(
     () => ({
@@ -116,9 +110,9 @@ export default function Jobvacation() {
       pageSize,
       sortByColumn: (sortField as string) ?? undefined,
       sortType: sortDirection,
-      filter: buildFilters(debouncedFilters, filterOperators),
+      filter: buildFilters(debouncedFilters),
     }),
-    [currentPage, pageSize, debouncedFilters, filterOperators, sortField, sortDirection]
+    [currentPage, pageSize, debouncedFilters, sortField, sortDirection, buildFilters]
   );
 
   const { data: apiData = [], loading, error, totalItems } = useJobVacancy(params);
@@ -160,7 +154,7 @@ export default function Jobvacation() {
   ];
 
 
-  const handleFilterChange = (key: keyof Row & string, value: string) => {
+  const handleFilterChange = (key: keyof Row & string, value: string | FilterState) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   };
@@ -202,11 +196,6 @@ export default function Jobvacation() {
         columns={columns}
         filters={filters}
         onFilterChange={handleFilterChange}
-        filterOperators={filterOperators}
-        onFilterOperatorChange={(key, op) => {
-          setFilterOperators((prev) => ({ ...prev, [key]: op }));
-          setCurrentPage(1);
-        }}
         sortField={sortField}
         sortDirection={sortDirection}
         onSortChange={handleSortChange}

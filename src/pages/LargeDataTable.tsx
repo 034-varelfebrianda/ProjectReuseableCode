@@ -3,13 +3,14 @@ import { LargeDataBase as initialMails, MailItem } from "../features/tables/data
 import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
 import Checkbox from "../features/tables/components/atoms/CheckBox";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
+import type { FilterState } from "../features/tables/components/molecules/FilterPopup";
 
 interface TableMailItem extends MailItem {
   id: number;
 }
 
 type TableColumnKey = keyof TableMailItem & string;
-type FilterValue = string;
+type FilterValue = string | FilterState;
 type TableFilters = Partial<Record<TableColumnKey, FilterValue>>;
 
 const defaultFilters: TableFilters = {
@@ -26,6 +27,14 @@ export default function LargeDataTable() {
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+
+  const extractFilterValue = (filterValue: FilterValue | undefined): string => {
+    if (typeof filterValue === "string") return filterValue;
+    if (filterValue && "conditions" in filterValue && filterValue.conditions.length > 0) {
+      return filterValue.conditions[0].value;
+    }
+    return "";
+  };
 
   const handleFilterChange = (key: TableColumnKey, value: FilterValue) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -44,11 +53,11 @@ export default function LargeDataTable() {
 
   const filteredMails = useMemo(() => {
     return mails.filter((mail) => {
-      const fromMatch = String(mail.from ?? "").toLowerCase().includes((filters.from || "").toLowerCase());
-      const subjectMatch = String(mail.subject ?? "").toLowerCase().includes((filters.subject || "").toLowerCase());
-      const sentMatch = String(mail.sent ?? "").toLowerCase().includes((filters.sent || "").toLowerCase());
+      const fromMatch = String(mail.from ?? "").toLowerCase().includes((extractFilterValue(filters.from) || "").toLowerCase());
+      const subjectMatch = String(mail.subject ?? "").toLowerCase().includes((extractFilterValue(filters.subject) || "").toLowerCase());
+      const sentMatch = String(mail.sent ?? "").toLowerCase().includes((extractFilterValue(filters.sent) || "").toLowerCase());
 
-      const attachmentFilter = filters.attachment || "all";
+      const attachmentFilter = extractFilterValue(filters.attachment) || "all";
       const attachmentMatch =
         attachmentFilter === "all" ||
         (attachmentFilter === "yes" && mail.attachment === true) ||
