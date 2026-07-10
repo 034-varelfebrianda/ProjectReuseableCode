@@ -49,6 +49,7 @@
     "MainContain.tsx",
     "navbar.tsx",
     "Sidebar.tsx",
-    "componentsData.ts"
+    "componentsData.ts",
+    "ProductsService.ts"
   ]
 }
