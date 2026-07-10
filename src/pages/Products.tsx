@@ -103,7 +103,7 @@ export default function Products() {
   const renderSummary = (items: TableProduct[]) => `${items.length} rows shown`;
 
   return (
-    <main className="min-h-screen bg-[#f7f7f8] px-6 py-6">
+    <main className="min-h-screen bg-[#f7f7f8] px-6 py-6 dark:bg-zinc-900">
       {loading ? (
         <div className="text-center text-zinc-600">Loading products from FakeStore…</div>
       ) : (
