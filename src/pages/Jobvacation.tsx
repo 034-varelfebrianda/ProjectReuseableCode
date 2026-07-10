@@ -53,7 +53,7 @@ export default function Jobvacation() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const debouncedFilters = useDebounce(filters, 1000);
+  const debouncedFilters = useDebounce(filters, 500);
 
   const buildFilters = useCallback((filters: Record<string, string | FilterState>) => {
     const filterArray: { key: string; value: string; operation: string; conjunction: string }[] = [];

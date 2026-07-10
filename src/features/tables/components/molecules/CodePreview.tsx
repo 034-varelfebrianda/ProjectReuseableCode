@@ -8,6 +8,7 @@ export default function CodePreview({ title }: CodePreviewProps) {
     "",
     "<ReusableDataTable",
     `  title="${title}"`,
+    `  breadcrumbs=${title}`,
     '  mode="server"',
     "  data={rows}",
     "  columns={columns}",
