@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import type { Column } from "../features/tables/types";
+import type { Column } from "../features/tables/utils/types";
 
 export function useColumnResize<T>() {
   const [colWidths, setColWidths] = useState<Record<string, number>>({});

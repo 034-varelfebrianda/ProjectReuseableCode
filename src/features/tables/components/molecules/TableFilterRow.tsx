@@ -1,4 +1,4 @@
-import type { Column, FilterValue } from "../../types";
+import type { Column, FilterValue } from "../../utils/types";
 import type { FilterState } from "../atoms/FilterPopup";
 import type { SortDirection, SortMode } from "../../utils/sort";
 import FilterBox from "./FIlterBox";

@@ -1,4 +1,4 @@
-import type { Column } from "../../types";
+import type { Column } from "../../utils/types";
 
 interface TableHeaderProps<T> {
   columns: Column<T>[];

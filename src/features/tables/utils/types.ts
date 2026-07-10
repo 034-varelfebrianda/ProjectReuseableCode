@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { FilterState } from "./components/atoms/FilterPopup";
+import type { FilterState } from "../components/atoms/FilterPopup";
 
 export type FilterValue = string | FilterState;
 

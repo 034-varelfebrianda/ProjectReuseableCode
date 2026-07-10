@@ -10,10 +10,10 @@ import CodePreview from "../molecules/CodePreview";
 import { useColumnResize } from "../../../../hooks/useColumnResize";
 import type { SortDirection, SortMode } from "../../utils/sort";
 import type { FilterState } from "../atoms/FilterPopup";
-import type { Column, FilterValue } from "../../types";
+import type { Column, FilterValue } from "../../utils/types";
 
 // Re-export Column so existing page imports don't break
-export type { Column } from "../../types";
+export type { Column } from "../../utils/types";
 
 interface ReusableDataTableProps<T> {
   mode?: SortMode;

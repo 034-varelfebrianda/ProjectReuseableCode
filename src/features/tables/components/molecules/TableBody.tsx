@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { Column } from "../../types";
+import type { Column } from "../../utils/types";
 
 interface TableBodyProps<T extends { id: string | number }> {
   data: T[];
