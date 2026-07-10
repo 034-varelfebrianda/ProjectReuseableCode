@@ -39,7 +39,9 @@ export default function FilterPopup({
   onClose,
 }: FilterPopupProps) {
   const [conditions, setConditions] = useState<FilterCondition[]>(
-    initialState?.conditions ?? [{ operator: "contains", value: "" }]
+    initialState?.conditions && initialState.conditions.length > 0
+      ? initialState.conditions
+      : [{ operator: "contains", value: "" }]
   );
   const [logic, setLogic] = useState<"AND" | "OR">(initialState?.logic ?? "AND");
   const popupRef = useRef<HTMLDivElement>(null);
@@ -88,6 +90,8 @@ export default function FilterPopup({
   const handleClear = () => {
     setConditions([{ operator: "contains", value: "" }]);
     setLogic("AND");
+    onApply({ conditions: [], logic: "AND" });
+    onClose();
   };
 
   return (
@@ -183,6 +187,7 @@ export default function FilterPopup({
                 >
                   <input
                     type="radio"
+                    name={`logic-operator-${columnLabel.replace(/\s+/g, "-")}`}
                     value={opt.value}
                     checked={logic === opt.value}
                     onChange={(e) => setLogic(e.target.value as "AND" | "OR")}

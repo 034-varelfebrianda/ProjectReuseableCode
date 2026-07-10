@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import { ChevronDown, Funnel } from "lucide-react";
 import FilterPopup, { type FilterState } from "../atoms/FilterPopup";
 
@@ -29,6 +29,10 @@ export default function FilterBox({
     initialFilterState
   );
 
+  useEffect(() => {
+    setFilterState(initialFilterState);
+  }, [initialFilterState]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextValue = e.target.value;
     if (onChange) {
@@ -49,13 +53,37 @@ export default function FilterBox({
   const hasActiveFilter =
     filterState && filterState.conditions.length > 0 && filterState.conditions.some((c) => c.value.trim().length > 0);
 
+  const getDisplayValue = () => {
+    if (hasActiveFilter && filterState) {
+      const active = filterState.conditions.filter((c) => c.value.trim().length > 0);
+      if (active.length === 1) {
+        const op = active[0].operator;
+        const opLabel =
+          op === "contains"
+            ? "Contains"
+            : op === "equals"
+            ? "Equals"
+            : op === "startsWith"
+            ? "Starts with"
+            : "Ends with";
+        return `${opLabel}: ${active[0].value}`;
+      } else if (active.length > 1) {
+        return `(${active.length}) filters [${filterState.logic}]`;
+      }
+    }
+    return onChange ? value ?? "" : internalValue;
+  };
+
   return (
     <div className="flex h-9 items-center rounded-md border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-2 transition-colors relative">
       <input
-        className="w-full bg-transparent text-sm text-zinc-900 dark:text-zinc-200 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
-        value={onChange ? value ?? "" : internalValue}
+        className={`w-full bg-transparent text-sm text-zinc-900 dark:text-zinc-200 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${
+          hasActiveFilter ? "text-sky-600 dark:text-sky-400 font-medium cursor-not-allowed" : ""
+        }`}
+        value={getDisplayValue()}
         onChange={handleChange}
         placeholder={placeholder}
+        disabled={!!hasActiveFilter}
       />
 
       <div className="flex items-center gap-2">

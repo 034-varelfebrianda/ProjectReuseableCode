@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import ReusableDataTable, { Column, } from "../features/tables/components/organism/ReusableDataTable";
-// import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
+import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
+import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 import { useDummy } from "../hooks/useDummy";
 import type { SortDirection } from "../features/tables/utils/sort";
+import { matchFilter, type FilterValue } from "../features/tables/utils/filter";
 
 interface TableProduct {
   id: string | number;
@@ -13,7 +14,7 @@ interface TableProduct {
 }
 
 export default function DummyProducts() {
-  const [filters, setFilters] = useState<Record<string, string>>({
+  const [filters, setFilters] = useState<Record<string, FilterValue>>({
     name: "",
     ability: "",
   });
@@ -48,14 +49,8 @@ export default function DummyProducts() {
   // Filter saja, tanpa sorting frontend
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      const nameMatch = item.name
-        .toLowerCase()
-        .includes(filters.name.toLowerCase());
-
-      const abilityMatch = item.ability
-        .toLowerCase()
-        .includes(filters.ability.toLowerCase());
-
+      const nameMatch = matchFilter(item.name, filters.name);
+      const abilityMatch = matchFilter(item.ability, filters.ability);
       return nameMatch && abilityMatch;
     });
   }, [data, filters]);
@@ -102,7 +97,7 @@ export default function DummyProducts() {
     },
   ];
 
-  const handleFilterChange = (key: string, value: string) => {
+  const handleFilterChange = (key: string, value: string | FilterState) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,

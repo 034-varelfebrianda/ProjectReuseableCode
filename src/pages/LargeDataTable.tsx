@@ -4,6 +4,7 @@ import ReusableDataTable, { Column } from "../features/tables/components/organis
 import Checkbox from "../features/tables/components/atoms/CheckBox";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
 import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
+import { matchFilter } from "../features/tables/utils/filter";
 
 interface TableMailItem extends MailItem {
   id: number;
@@ -28,16 +29,9 @@ export default function LargeDataTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const extractFilterValue = (filterValue: FilterValue | undefined): string => {
-    if (typeof filterValue === "string") return filterValue;
-    if (filterValue && "conditions" in filterValue && filterValue.conditions.length > 0) {
-      return filterValue.conditions[0].value;
-    }
-    return "";
-  };
-
   const handleFilterChange = (key: TableColumnKey, value: FilterValue) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
   };
 
   const handleSortChange = (field: TableColumnKey | null, direction: SortDirection | null) => {
@@ -49,15 +43,16 @@ export default function LargeDataTable() {
 
     setSortField(field);
     setSortDirection(direction ?? "asc");
+    setCurrentPage(1);
   };
 
   const filteredMails = useMemo(() => {
     return mails.filter((mail) => {
-      const fromMatch = String(mail.from ?? "").toLowerCase().includes((extractFilterValue(filters.from) || "").toLowerCase());
-      const subjectMatch = String(mail.subject ?? "").toLowerCase().includes((extractFilterValue(filters.subject) || "").toLowerCase());
-      const sentMatch = String(mail.sent ?? "").toLowerCase().includes((extractFilterValue(filters.sent) || "").toLowerCase());
+      const fromMatch = matchFilter(mail.from, filters.from);
+      const subjectMatch = matchFilter(mail.subject, filters.subject);
+      const sentMatch = matchFilter(mail.sent, filters.sent);
 
-      const attachmentFilter = extractFilterValue(filters.attachment) || "all";
+      const attachmentFilter = typeof filters.attachment === "string" ? filters.attachment : "all";
       const attachmentMatch =
         attachmentFilter === "all" ||
         (attachmentFilter === "yes" && mail.attachment === true) ||

@@ -53,6 +53,11 @@ export default function TableFilterRow<T>({
                     onFilterApply={(state) =>
                       onFilterChange(column.key, state)
                     }
+                    initialFilterState={
+                      typeof filters[column.key] === "object"
+                        ? (filters[column.key] as FilterState)
+                        : undefined
+                    }
                     placeholder={`${column.label}...`}
                   />
                 </div>

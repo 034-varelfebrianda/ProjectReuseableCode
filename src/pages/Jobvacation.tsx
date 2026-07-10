@@ -53,45 +53,41 @@ export default function Jobvacation() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  const extractFilterValue = (filterValue: string | FilterState | undefined): string => {
-    if (typeof filterValue === "string") return filterValue;
-    if (filterValue && "conditions" in filterValue && filterValue.conditions.length > 0) {
-      return filterValue.conditions[0].value;
-    }
-    return "";
-  };
-
   const debouncedFilters = useDebounce(filters, 1000);
 
   const buildFilters = useCallback((filters: Record<string, string | FilterState>) => {
     const filterArray: { key: string; value: string; operation: string; conjunction: string }[] = [];
 
-    const jobTitleSearch = extractFilterValue(filters.jobTitle)?.trim();
-    if (jobTitleSearch) {
-      filterArray.push(
-        { key: "jobTitle", value: jobTitleSearch, operation: "MATCH", conjunction: "or" }
-      );
-    }
+    const processFilter = (key: string, filterVal: string | FilterState | undefined) => {
+      if (!filterVal) return;
 
-    const locationSearch = extractFilterValue(filters.location)?.trim();
-    if (locationSearch) {
-      filterArray.push({
-        key: "location",
-        value: locationSearch,
-        operation: "MATCH",
-        conjunction: "or",
-      });
-    }
+      if (typeof filterVal === "string") {
+        const val = filterVal.trim();
+        if (val) {
+          filterArray.push({
+            key,
+            value: val,
+            operation: "MATCH",
+            conjunction: "or",
+          });
+        }
+      } else if (typeof filterVal === "object" && "conditions" in filterVal) {
+        const active = filterVal.conditions.filter((c) => c.value && c.value.trim().length > 0);
+        active.forEach((cond) => {
+          const op = cond.operator === "equals" ? "EQUAL" : "MATCH";
+          filterArray.push({
+            key,
+            value: cond.value.trim(),
+            operation: op,
+            conjunction: filterVal.logic.toLowerCase(),
+          });
+        });
+      }
+    };
 
-    const jobTypeSearch = extractFilterValue(filters.jobType)?.trim();
-    if (jobTypeSearch) {
-      filterArray.push({
-        key: "jobType",
-        value: jobTypeSearch,
-        operation: "MATCH",
-        conjunction: "or",
-      });
-    }
+    processFilter("jobTitle", filters.jobTitle);
+    processFilter("location", filters.location);
+    processFilter("jobType", filters.jobType);
 
     // Always include jobStatus ACTIVE at the end (or anywhere)
     filterArray.push({

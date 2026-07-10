@@ -3,6 +3,7 @@ import ReusableDataTable, { Column } from "../features/tables/components/organis
 import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 import { useProducts } from "../hooks/useProducts";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
+import { matchFilter, type FilterValue } from "../features/tables/utils/filter";
 
 interface TableProduct {
   id: string;
@@ -13,7 +14,7 @@ interface TableProduct {
 
 export default function Products() {
   const { products, loading } = useProducts();
-  const [filters, setFilters] = useState<Record<string, string>>({
+  const [filters, setFilters] = useState<Record<string, FilterValue>>({
     name: "",
     ability: "",
   });
@@ -36,8 +37,8 @@ export default function Products() {
   const filteredData = useMemo(
     () =>
       data.filter((item) => {
-        const nameMatch = item.name.toLowerCase().includes(filters.name.toLowerCase());
-        const abilityMatch = item.ability.toLowerCase().includes(filters.ability.toLowerCase());
+        const nameMatch = matchFilter(item.name, filters.name);
+        const abilityMatch = matchFilter(item.ability, filters.ability);
         return nameMatch && abilityMatch;
       }),
     [data, filters]
@@ -82,7 +83,7 @@ export default function Products() {
   ];
 
   const handleFilterChange = (key: keyof TableProduct & string, value: string | FilterState) => {
-    setFilters((prev) => ({ ...prev, [key]: typeof value === "string" ? value : "" }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSortChange = (
