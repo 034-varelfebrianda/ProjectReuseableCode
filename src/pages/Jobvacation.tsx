@@ -6,26 +6,34 @@ import type { JobVacancyItem } from "../types/jobVacancyTypes";
 import type { SortDirection } from "../features/tables/utils/sort";
 import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 
+// Tipe data Row memperluas JobVacancyItem dengan menambahkan properti 'id' yang unik
 type Row = JobVacancyItem & { id: string };
 
+/**
+ * Fungsi pembantu untuk memformat string tanggal ISO ke format Indonesia.
+ * Contoh output: "10 Juli 2026, 13:21 WIB"
+ */
 const formatIsoDateToIndonesian = (dateString?: string): string => {
   if (!dateString) return "-";
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString;
 
+    // Memformat bagian tanggal (Hari Bulan Tahun)
     const datePart = date.toLocaleDateString("id-ID", {
       day: "2-digit",
       month: "long",
       year: "numeric",
     });
 
+    // Memformat bagian waktu (Jam:Menit)
     const timePart = date.toLocaleTimeString("id-ID", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
     }).replace(".", ":");
 
+    // Menentukan label zona waktu (WIB, WITA, WIT) berdasarkan GMT offset
     const tzName = date.toLocaleTimeString("id-ID", { timeZoneName: "short" }).split(" ").pop() || "";
     const tzLabel =
       tzName === "GMT+7"
@@ -43,18 +51,26 @@ const formatIsoDateToIndonesian = (dateString?: string): string => {
 };
 
 export default function Jobvacation() {
+  // State untuk menyimpan filter pencarian yang dimasukkan pengguna
   const [filters, setFilters] = useState<Record<string, string | FilterState>>({
     jobTitle: "",
   });
 
+  // State untuk kolom yang diurutkan (sorting) dan arah pengurutannya (asc/desc)
   const [sortField, setSortField] = useState<keyof Row | null>("jobTitle");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
+  // State untuk manajemen halaman (pagination) pada tabel
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
+  // Menggunakan debounce filter sebesar 500ms agar query API tidak dipanggil terlalu sering saat mengetik
   const debouncedFilters = useDebounce(filters, 500);
 
+  /**
+   * Mengubah struktur data filter frontend menjadi format parameter filter
+   * yang dikenali oleh server API (key, value, operation, conjunction).
+   */
   const buildFilters = useCallback((filters: Record<string, string | FilterState>) => {
     const filterArray: { key: string; value: string; operation: string; conjunction: string }[] = [];
 
@@ -85,11 +101,12 @@ export default function Jobvacation() {
       }
     };
 
+    // Memproses field filter yang aktif
     processFilter("jobTitle", filters.jobTitle);
     processFilter("location", filters.location);
     processFilter("jobType", filters.jobType);
 
-    // Always include jobStatus ACTIVE at the end (or anywhere)
+    // Menambahkan filter default agar hanya menampilkan lowongan pekerjaan yang ACTIVE
     filterArray.push({
       key: "jobStatus",
       value: "ACTIVE",
@@ -100,9 +117,10 @@ export default function Jobvacation() {
     return filterArray;
   }, []);
 
+  // Menyusun object query parameter secara memoized untuk memicu fetch data saat state berubah
   const params = useMemo(
     () => ({
-      pageNo: currentPage - 1,
+      pageNo: currentPage - 1, // API menggunakan indeks halaman 0-based
       pageSize,
       sortByColumn: (sortField as string) ?? undefined,
       sortType: sortDirection,
@@ -111,10 +129,13 @@ export default function Jobvacation() {
     [currentPage, pageSize, debouncedFilters, sortField, sortDirection, buildFilters]
   );
 
+  // Mengambil data dari server API menggunakan custom hook useJobVacancy
   const { data: apiData = [], loading, error, totalItems } = useJobVacancy(params);
 
+  // Memetakan uniqueId dari API ke properti id agar kompatibel dengan baris tabel
   const rows: Row[] = useMemo(() => apiData.map((item) => ({ ...item, id: item.uniqueId })), [apiData]);
 
+  // Definisi kolom tabel, lengkap dengan label, lebar default/minimal, tipe filter, dan fungsi render kustom
   const columns: Column<Row>[] = [
     {
       key: "jobTitle",
@@ -148,23 +169,25 @@ export default function Jobvacation() {
       sortable: true,
       filterType: "text",
       sortLabels: { asc: "Oldest", desc: "Newest" },
-      render: (row) => formatIsoDateToIndonesian(row.createDate),
+      render: (row) => formatIsoDateToIndonesian(row.createDate), // Menggunakan helper format tanggal Indonesia
     },
   ];
 
-
+  // Callback handler saat ada perubahan nilai filter
   const handleFilterChange = (key: keyof Row & string, value: string | FilterState) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
-    setCurrentPage(1);
+    setCurrentPage(1); // Mereset ke halaman pertama saat filter berubah
   };
 
+  // Callback handler saat pengurutan kolom diubah
   const handleSortChange = (field: keyof Row | null, direction: SortDirection | null) => {
     if (!field) return;
     setSortField(field);
     setSortDirection(direction ?? "asc");
-    setCurrentPage(1);
+    setCurrentPage(1); // Mereset ke halaman pertama saat pengurutan berubah
   };
 
+  // Tampilan loading
   if (loading) {
     return (
       <div className="min-h-screen bg-[#f7f7f8] dark:bg-zinc-900 px-6 py-6">
@@ -175,6 +198,7 @@ export default function Jobvacation() {
     );
   }
 
+  // Tampilan pesan error jika terjadi kegagalan fetch data
   if (error) {
     return (
       <div className="min-h-screen bg-[#f7f7f8] dark:bg-zinc-900 px-6 py-6">
@@ -185,6 +209,7 @@ export default function Jobvacation() {
     );
   }
 
+  // Render komponen ReusableDataTable dalam mode "server" (server-side pagination, sorting, & filtering)
   return (
     <main className=" p-5 ">
       <ReusableDataTable
