@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from "react";
 import TabButton from "../atoms/TabButton";
-import BreadCrumbs from "../molecules/BreadCrumbs";
 import GridTopBar from "../molecules/GridTopBar";
 import Pagination from "../molecules/Pagination";
 import TableHeader from "../molecules/TableHeader";
@@ -18,8 +17,6 @@ export type { Column } from "../../utils/types";
 interface ReusableDataTableProps<T> {
   mode?: SortMode;
   title?: string;
-  breadcrumbItems?: Array<{ label: string }>;
-  showBreadcrumbs?: boolean;
   showGridTopBar?: boolean;
   data: T[];
   columns: Column<T>[];
@@ -43,8 +40,6 @@ interface ReusableDataTableProps<T> {
 
 export default function ReusableDataTable<T extends { id: string | number }>({
   title,
-  breadcrumbItems,
-  showBreadcrumbs = true,
   showGridTopBar = true,
   data,
   columns,
@@ -75,11 +70,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 
   return (
     <div>
-      {showBreadcrumbs && breadcrumbItems && (
-        <div className="pb-5">
-          <BreadCrumbs items={breadcrumbItems} />
-        </div>
-      )}
+
 
       {showGridTopBar && (
         <div className="pb-3">

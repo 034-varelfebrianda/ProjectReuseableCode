@@ -109,11 +109,6 @@ export default function Products() {
       ) : (
         <ReusableDataTable
           title="FakeStore Products"
-          breadcrumbItems={[
-            { label: "Components" },
-            { label: "Tables" },
-            { label: "Products" },
-          ]}
           mode="client"
           data={sortedData}
           columns={columns}

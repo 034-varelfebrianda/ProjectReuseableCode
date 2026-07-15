@@ -139,7 +139,6 @@ export default function LargeDataTable() {
   return (
     <ReusableDataTable
       title="Large DataBase (Server Mode)"
-      breadcrumbItems={[{ label: "Components" }, { label: "Grid" }, { label: "Large Database (Server Mode)" }]}
       mode="server"
       showThemeToggle
       data={sortedMails}

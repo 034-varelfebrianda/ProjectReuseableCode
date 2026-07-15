@@ -135,11 +135,6 @@ export default function DummyProducts() {
   return (
     <ReusableDataTable
       title="DummyJSON Products (Backend Price Sorting)"
-      breadcrumbItems={[
-        { label: "Components" },
-        { label: "Grid" },
-        { label: "DummyJSON Products" },
-      ]}
       mode="server"
       data={filteredData}
       columns={columns}
