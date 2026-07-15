@@ -1,0 +1,79 @@
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    /* --- Surface / Background --- */
+    --color-bg-page: #ffffff;
+    --color-bg-table: #ffffff;
+    --color-bg-header: #f4f4f5;
+    /* zinc-100 */
+    --color-bg-row-hover: #fafafa;
+    /* zinc-50/50 */
+    --color-bg-input: #ffffff;
+    --color-bg-dropdown: #ffffff;
+    --color-bg-summary: rgba(244, 244, 245, 0.3);
+    /* zinc-50/30 */
+    /* --- Border --- */
+    --color-border: #e4e4e7;
+    /* zinc-200 */
+    --color-border-input: #e4e4e7;
+    /* --- Text --- */
+    --color-text-primary: #09090b;
+    /* zinc-950 */
+    --color-text-secondary: #71717a;
+    /* zinc-500 */
+    --color-text-muted: #a1a1aa;
+    /* zinc-400 */
+    --color-text-placeholder: #a1a1aa;
+    /* --- Accent (active page, active filter) --- */
+    --color-accent: #0ea5e9;
+    /* sky-500 */
+    --color-accent-text: #ffffff;
+    --color-accent-filter: #0284c7;
+    /* sky-600 */
+    --color-accent-filter-bg: rgba(224, 242, 254, 0.5);
+    /* sky-100/50 */
+    /* --- Shadow --- */
+    --color-shadow: rgba(0, 0, 0, 0.06);
+}
+
+/* Dark theme — diaktifkan via class .dark di <html> */
+.dark {
+    /* --- Surface / Background --- */
+    --color-bg-page: #18181b;
+    /* zinc-900 */
+    --color-bg-table: #27272a;
+    /* zinc-800 */
+    --color-bg-header: rgba(39, 39, 42, 0.8);
+    /* zinc-800/80 */
+    --color-bg-row-hover: rgba(63, 63, 70, 0.5);
+    /* zinc-700/50 */
+    --color-bg-input: #27272a;
+    --color-bg-dropdown: #27272a;
+    --color-bg-summary: rgba(39, 39, 42, 0.3);
+    /* zinc-800/30 */
+    /* --- Border --- */
+    --color-border: #3f3f46;
+    /* zinc-700 */
+    --color-border-input: #52525b;
+    /* zinc-600 */
+    /* --- Text --- */
+    --color-text-primary: #e4e4e7;
+    /* zinc-200 */
+    --color-text-secondary: #a1a1aa;
+    /* zinc-400 */
+    --color-text-muted: #71717a;
+    /* zinc-500 */
+    --color-text-placeholder: #71717a;
+    /* --- Accent --- */
+    --color-accent: #0ea5e9;
+    /* sky-500 */
+    --color-accent-text: #ffffff;
+    --color-accent-filter: #38bdf8;
+    /* sky-400 */
+    --color-accent-filter-bg: rgba(14, 116, 144, 0.3);
+    /* sky-900/30 */
+    /* --- Shadow --- */
+    --color-shadow: rgba(0, 0, 0, 0.3);
+}
+
+@custom-variant dark (&:where(.dark, .dark *));

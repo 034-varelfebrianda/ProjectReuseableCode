@@ -60,10 +60,10 @@ export default function FilterBox({
           op === "contains"
             ? "Contains"
             : op === "equals"
-            ? "Equals"
-            : op === "startsWith"
-            ? "Starts with"
-            : "Ends with";
+              ? "Equals"
+              : op === "startsWith"
+                ? "Starts with"
+                : "Ends with";
         return `${opLabel}: ${active[0].value}`;
       } else if (active.length > 1) {
         return `(${active.length}) filters [${filterState.logic}]`;
@@ -75,9 +75,8 @@ export default function FilterBox({
   return (
     <div className="flex h-9 items-center rounded-md border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-2 transition-colors relative">
       <input
-        className={`w-full bg-transparent text-sm text-zinc-900 dark:text-zinc-200 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${
-          hasActiveFilter ? "text-sky-600 dark:text-sky-400 font-medium cursor-not-allowed" : ""
-        }`}
+        className={`w-full bg-transparent text-sm text-zinc-900 dark:text-zinc-200 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${hasActiveFilter ? "text-sky-600 dark:text-sky-400 font-medium cursor-not-allowed" : ""
+          }`}
         value={getDisplayValue()}
         onChange={handleChange}
         placeholder={placeholder}

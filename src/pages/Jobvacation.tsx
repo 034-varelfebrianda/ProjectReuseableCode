@@ -211,7 +211,7 @@ export default function Jobvacation() {
 
   // Render komponen ReusableDataTable dalam mode "server" (server-side pagination, sorting, & filtering)
   return (
-    <main className=" p-5 ">
+    <main className="pt-5">
       <ReusableDataTable
         mode="server"
         data={rows}
