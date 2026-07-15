@@ -97,17 +97,17 @@ export default function FilterPopup({
   return (
     <div
       ref={popupRef}
-      className="absolute -right-25 top-full mt-2 z-50  w-80 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-xl"
+      className="absolute -right-25 top-full mt-2 z-50  w-80 rounded-lg border border-theme-border bg-theme-bg-dropdown shadow-xl"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-700 px-4 py-3">
-        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+      <div className="flex items-center justify-between border-b border-theme-border px-4 py-3">
+        <h3 className="text-sm font-semibold text-theme-text-primary">
           Filter: {columnLabel}
         </h3>
         <button
           type="button"
           onClick={onClose}
-          className="rounded hover:bg-zinc-100 dark:hover:bg-zinc-700 p-1 text-zinc-500 dark:text-zinc-400"
+          className="rounded hover:bg-theme-bg-row-hover p-1 text-theme-text-secondary"
         >
           <X size={16} />
         </button>
@@ -119,7 +119,7 @@ export default function FilterPopup({
         {conditions.map((condition, index) => (
           <div key={index} className="space-y-2">
             {index > 0 && (
-              <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <div className="text-xs font-medium text-theme-text-secondary">
                 {logic}
               </div>
             )}
@@ -133,7 +133,7 @@ export default function FilterPopup({
                     e.target.value as FilterOperator
                   )
                 }
-                className="flex-1 px-2 py-1.5 text-sm border border-zinc-200 dark:border-zinc-600 rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary focus:outline-none focus:ring-2 focus:ring-sky-500"
               >
                 {operatorOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -148,13 +148,13 @@ export default function FilterPopup({
                   handleConditionChange(index, "value", e.target.value)
                 }
                 placeholder="Value"
-                className="flex-1 px-2 py-1.5 text-sm border border-zinc-200 dark:border-zinc-600 rounded bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary placeholder:text-theme-text-placeholder focus:outline-none focus:ring-2 focus:ring-sky-500"
               />
               {conditions.length > 1 && (
                 <button
                   type="button"
                   onClick={() => handleRemoveCondition(index)}
-                  className="p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                  className="p-1.5 text-red-500 hover:bg-red-500/10 rounded"
                 >
                   <X size={16} />
                 </button>
@@ -167,7 +167,7 @@ export default function FilterPopup({
         <button
           type="button"
           onClick={handleAddCondition}
-          className="flex items-center gap-1 text-xs font-medium text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 mt-2"
+          className="flex items-center gap-1 text-xs font-medium text-theme-accent hover:opacity-80 mt-2"
         >
           <Plus size={14} />
           Add condition
@@ -175,8 +175,8 @@ export default function FilterPopup({
 
         {/* Logic Selector (show if multiple conditions) */}
         {conditions.length > 1 && (
-          <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3 mt-3">
-            <label className="text-xs font-medium text-zinc-600 dark:text-zinc-400 block mb-2">
+          <div className="border-t border-theme-border pt-3 mt-3">
+            <label className="text-xs font-medium text-theme-text-secondary block mb-2">
               Match
             </label>
             <div className="flex gap-2">
@@ -193,7 +193,7 @@ export default function FilterPopup({
                     onChange={(e) => setLogic(e.target.value as "AND" | "OR")}
                     className="w-4 h-4"
                   />
-                  <span className="text-xs text-zinc-700 dark:text-zinc-300">
+                  <span className="text-xs text-theme-text-primary">
                     {opt.label}
                   </span>
                 </label>
@@ -204,11 +204,11 @@ export default function FilterPopup({
       </div>
 
       {/* Footer */}
-      <div className="flex gap-2 border-t border-zinc-200 dark:border-zinc-700 px-4 py-3 bg-zinc-50/50 dark:bg-zinc-900/50">
+      <div className="flex gap-2 border-t border-theme-border px-4 py-3 bg-theme-bg-header/50">
         <button
           type="button"
           onClick={handleClear}
-          className="flex-1 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-600 rounded hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+          className="flex-1 px-3 py-1.5 text-sm font-medium text-theme-text-secondary border border-theme-border rounded hover:bg-theme-bg-row-hover transition-colors"
         >
           Clear
         </button>

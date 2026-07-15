@@ -73,9 +73,9 @@ export default function FilterBox({
   };
 
   return (
-    <div className="flex h-9 items-center rounded-md border border-zinc-200 dark:border-zinc-600 bg-white dark:bg-zinc-800 px-2 transition-colors relative">
+    <div className="flex h-9 items-center rounded-md border border-theme-border bg-theme-bg-input px-2 transition-colors relative">
       <input
-        className={`w-full bg-transparent text-sm text-zinc-900 dark:text-zinc-200 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 ${hasActiveFilter ? "text-sky-600 dark:text-sky-400 font-medium cursor-not-allowed" : ""
+        className={`w-full bg-transparent text-sm text-theme-text-primary outline-none placeholder:text-theme-text-placeholder ${hasActiveFilter ? "text-sky-600 font-medium cursor-not-allowed" : ""
           }`}
         value={getDisplayValue()}
         onChange={handleChange}
@@ -84,22 +84,22 @@ export default function FilterBox({
       />
 
       <div className="flex items-center gap-2">
-        {attachmentBox && <div className="h-9 border-zinc-200 dark:border-zinc-600" />}
+        {attachmentBox && <div className="h-9 border-theme-border" />}
         {attachmentBox && (
           <ChevronDown
             size={14}
-            className="cursor-pointer hover:text-zinc-900 dark:hover:text-zinc-200 text-zinc-500 dark:text-zinc-400"
+            className="cursor-pointer hover:text-theme-text-primary text-theme-text-secondary"
           />
         )}
 
-        <div className="border-l h-6 border-zinc-200 dark:border-zinc-600" />
+        <div className="border-l h-6 border-theme-border" />
         <div className="relative flex items-center">
           <button
             type="button"
             onClick={() => setShowPopup((prev) => !prev)}
             className={`flex items-center justify-center p-1 rounded transition-colors cursor-pointer ${hasActiveFilter
-              ? "text-sky-500 hover:bg-sky-100 dark:hover:bg-sky-900/30"
-              : "text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+              ? "text-theme-accent hover:bg-theme-accent-filter-bg"
+              : "text-theme-text-secondary hover:bg-theme-bg-row-hover"
               }`}
             title="Advanced Filter"
           >

@@ -25,7 +25,7 @@ export default function SortByBackend({
       <button
         type="button"
         onClick={onToggle}
-        className={`flex items-center gap-1 rounded px-1 text-[#71717A] dark:text-zinc-400 hover:text-[#09090B] dark:hover:text-zinc-200 ${activeSort ? "bg-zinc-100 dark:bg-zinc-700" : ""
+        className={`flex items-center gap-1 rounded px-1 text-theme-text-secondary hover:text-theme-text-primary ${activeSort ? "bg-theme-bg-header" : ""
           }`}
         aria-label="Server-side sort"
       >
@@ -33,15 +33,15 @@ export default function SortByBackend({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full z-10 mt-1 w-36 rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-lg">
-          <div className="border-b border-zinc-100 dark:border-zinc-700 px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500">
+        <div className="absolute right-0 top-full z-10 mt-1 w-36 rounded-md border border-theme-border bg-theme-bg-dropdown shadow-lg">
+          <div className="border-b border-theme-border px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-theme-text-muted">
             Server-side sort
           </div>
           <button
             type="button"
             onClick={() => onSort?.("asc")}
-            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${activeSort && sortDirection === "asc" ? "text-sky-600 dark:text-sky-400" : "text-zinc-500 dark:text-zinc-400"
-              } hover:bg-zinc-100 dark:hover:bg-zinc-700`}
+            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${activeSort && sortDirection === "asc" ? "text-theme-accent" : "text-theme-text-secondary"
+              } hover:bg-theme-bg-row-hover`}
           >
             <span>{sortAscLabel}</span>
             {activeSort && sortDirection === "asc" && <span>✓</span>}
@@ -49,8 +49,8 @@ export default function SortByBackend({
           <button
             type="button"
             onClick={() => onSort?.("desc")}
-            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${activeSort && sortDirection === "desc" ? "text-sky-600 dark:text-sky-400" : "text-zinc-500 dark:text-zinc-400"
-              } hover:bg-zinc-100 dark:hover:bg-zinc-700`}
+            className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm ${activeSort && sortDirection === "desc" ? "text-theme-accent" : "text-theme-text-secondary"
+              } hover:bg-theme-bg-row-hover`}
           >
             <span>{sortDescLabel}</span>
             {activeSort && sortDirection === "desc" && <span>✓</span>}

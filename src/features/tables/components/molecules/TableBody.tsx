@@ -20,7 +20,7 @@ export default function TableBody<T extends { id: string | number }>({
         data.map((item) => (
           <tr
             key={item.id}
-            className="text-sm text-[#09090B] dark:text-zinc-200 transition-colors hover:bg-zinc-50/50 dark:hover:bg-zinc-700/50"
+            className="text-sm text-theme-text-primary transition-colors hover:bg-theme-bg-row-hover"
           >
             {columns.map((column) => {
               const alignClass =
@@ -34,7 +34,7 @@ export default function TableBody<T extends { id: string | number }>({
                 <td
                   key={`${item.id}-${column.key}`}
                   style={{ width: column.defaultWidth }}
-                  className={`border-b border-r border-zinc-200 dark:border-zinc-700 px-4 py-4 ${alignClass}`}
+                  className={`border-b border-r border-theme-border px-4 py-4 ${alignClass}`}
                 >
                   {column.render
                     ? column.render(item)
@@ -51,7 +51,7 @@ export default function TableBody<T extends { id: string | number }>({
         <tr>
           <td
             colSpan={columns.length}
-            className="px-4 py-8 text-center text-sm text-zinc-400 dark:text-zinc-500"
+            className="px-4 py-8 text-center text-sm text-theme-text-muted"
           >
             No matching records found.
           </td>
@@ -62,7 +62,7 @@ export default function TableBody<T extends { id: string | number }>({
         <tr>
           <td
             colSpan={columns.length}
-            className="border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50/30 dark:bg-zinc-800/30 px-5 py-3 text-right text-sm font-medium text-zinc-500 dark:text-zinc-400"
+            className="border-b border-theme-border bg-theme-bg-summary px-5 py-3 text-right text-sm font-medium text-theme-text-secondary"
           >
             {renderSummary(allData)}
           </td>

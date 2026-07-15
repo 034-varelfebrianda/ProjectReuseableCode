@@ -28,14 +28,14 @@ export default function TableFilterRow<T>({
   mode,
 }: TableFilterRowProps<T>) {
   return (
-    <tr className="bg-zinc-50/50  dark:bg-zinc-800/50">
+    <tr className="bg-theme-bg-header/50">
       {columns.map((column) => {
         const sortLabels = column.sortLabels;
 
         return (
           <td
             key={`filter-${column.key}`}
-            className="border-b border-r border-zinc-200 dark:border-zinc-700 px-2 py-2"
+            className="border-b border-r border-theme-border px-2 py-2"
           >
             {column.filterType === "text" && (
               <div className="flex items-center gap-2">
