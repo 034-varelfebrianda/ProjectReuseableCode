@@ -27,7 +27,7 @@ const defaultFilters: TableFilters = {
 export default function LargeDataTable() {
   // State untuk menyimpan daftar email. Data diambil dari data dummy awal (initialMails)
   const [mails] = useState<TableMailItem[]>(() => initialMails.map((mail) => ({ ...mail })));
-  
+
   // State untuk melacak filter, kolom sorting aktif, arah urutan, halaman aktif, dan ukuran halaman
   const [filters, setFilters] = useState<TableFilters>(defaultFilters);
   const [sortField, setSortField] = useState<TableColumnKey | null>(null);
@@ -119,7 +119,7 @@ export default function LargeDataTable() {
 
       const value = Number(match[1]);
       const unit = match[2].toUpperCase();
-      
+
       // Normalisasi ukuran ke satuan KB
       if (unit === "KB") totalKb += value;
       else if (unit === "MB") totalKb += value * 1024;

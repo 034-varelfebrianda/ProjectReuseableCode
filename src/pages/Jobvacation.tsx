@@ -169,7 +169,7 @@ export default function Jobvacation() {
       sortable: true,
       filterType: "text",
       sortLabels: { asc: "Oldest", desc: "Newest" },
-      render: (row) => formatIsoDateToIndonesian(row.createDate), // Menggunakan helper format tanggal Indonesia
+      render: (row) => formatIsoDateToIndonesian(row.createDate),
     },
   ];
 
@@ -213,8 +213,6 @@ export default function Jobvacation() {
   return (
     <main className=" p-5 ">
       <ReusableDataTable
-        title="Job Vacancy"
-        breadcrumbItems={[{ label: "Components" }, { label: "Grid" }, { label: "Job Vacancy" }]}
         mode="server"
         data={rows}
         columns={columns}

@@ -17,8 +17,10 @@ export type { Column } from "../../utils/types";
 
 interface ReusableDataTableProps<T> {
   mode?: SortMode;
-  title: string;
-  breadcrumbItems: Array<{ label: string }>;
+  title?: string;
+  breadcrumbItems?: Array<{ label: string }>;
+  showBreadcrumbs?: boolean;
+  showGridTopBar?: boolean;
   data: T[];
   columns: Column<T>[];
   filters: Record<string, FilterValue>;
@@ -42,6 +44,8 @@ interface ReusableDataTableProps<T> {
 export default function ReusableDataTable<T extends { id: string | number }>({
   title,
   breadcrumbItems,
+  showBreadcrumbs = true,
+  showGridTopBar = true,
   data,
   columns,
   filters,
@@ -71,13 +75,17 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 
   return (
     <div>
-      <div className="pb-5">
-        <BreadCrumbs items={breadcrumbItems} />
-      </div>
+      {showBreadcrumbs && breadcrumbItems && (
+        <div className="pb-5">
+          <BreadCrumbs items={breadcrumbItems} />
+        </div>
+      )}
 
-      <div className="pb-3">
-        <GridTopBar title={title} showThemeToggle={showThemeToggle} />
-      </div>
+      {showGridTopBar && (
+        <div className="pb-3">
+          <GridTopBar title={title ?? ""} showThemeToggle={showThemeToggle} />
+        </div>
+      )}
 
       <div className="overflow-visible rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 shadow-sm transition-colors h-fit">
         {/* Tab Bar */}

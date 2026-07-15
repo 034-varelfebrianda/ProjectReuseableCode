@@ -19,7 +19,7 @@ export function matchCondition(cellValue: string, condition: FilterCondition): b
   }
 }
 
-export function matchFilter(cellValue: any, filter: FilterValue | undefined): boolean {
+export function matchFilter(cellValue: unknown, filter: FilterValue | undefined): boolean {
   if (filter === undefined || filter === null) return true;
 
   // If it's a simple string filter

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect } from "react";
+import { ChangeEvent, useState } from "react";
 import { ChevronDown, Funnel } from "lucide-react";
 import FilterPopup, { type FilterState } from "../atoms/FilterPopup";
 
@@ -29,9 +29,7 @@ export default function FilterBox({
     initialFilterState
   );
 
-  useEffect(() => {
-    setFilterState(initialFilterState);
-  }, [initialFilterState]);
+
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextValue = e.target.value;
