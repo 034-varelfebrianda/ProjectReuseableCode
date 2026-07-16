@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { LargeDataBase as initialMails, MailItem } from "../features/tables/data/LargeDataBase";
 import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
+import ThemeButton from "../features/tables/components/molecules/ThemeButton";
 import Checkbox from "../features/tables/components/atoms/CheckBox";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
 import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
@@ -115,6 +116,10 @@ export default function LargeDataTable() {
   };
 
   return (
+    <>
+      <div className="flex justify-end px-6 pt-4">
+        <ThemeButton showThemeToggle />
+      </div>
     <ReusableDataTable
       mode="server"
       data={sortedMails}
@@ -133,6 +138,7 @@ export default function LargeDataTable() {
         setCurrentPage(1);
       }}
       renderSummary={renderSummary}
-    />
+      />
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import type { Column, FilterValue } from "../../utils/types";
 import type { FilterState } from "../atoms/FilterPopup";
 import type { SortDirection, SortMode } from "../../utils/sort";
-import FilterBox from "./FIlterBox";
+import FilterBox from "./FilterBox";
 import AttachmentBox, { type AttachmentValue } from "../atoms/AttachmentBox";
 import SortControl from "./SortControl";
 
