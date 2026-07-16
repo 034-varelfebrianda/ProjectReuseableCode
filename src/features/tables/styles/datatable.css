@@ -1,0 +1,30 @@
+.table-shell {
+  display: block;
+}
+
+.table-card {
+  overflow: visible;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background-color: var(--color-bg-table);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.table-scroll-area {
+  position: relative;
+  z-index: var(--z-dropdown);
+  min-height: calc(var(--toolbar-height) + var(--pagination-height));
+  overflow-x: auto;
+}
+
+.table-scroll-area table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table-viewport {
+  height: calc(100vh - var(--navbar-height) - var(--toolbar-height) - var(--pagination-height));
+  overflow: auto;
+}

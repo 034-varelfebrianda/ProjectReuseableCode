@@ -1,0 +1,34 @@
+.pagination-shell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--pagination-height);
+  border-top: 1px solid var(--color-border);
+  padding: 0 var(--space-4);
+  color: var(--color-text-secondary);
+  background-color: var(--color-bg-page);
+}
+
+.pagination-page-btn {
+  display: flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+.pagination-size-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 2.25rem;
+  min-width: 4rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-input);
+  color: var(--color-text-secondary);
+  padding: 0 var(--space-2);
+}

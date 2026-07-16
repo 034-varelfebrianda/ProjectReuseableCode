@@ -50,7 +50,7 @@ export default function AttachmentBox({
               className="flex w-full justify-between px-3 py-2 text-left text-sm text-theme-text-secondary hover:bg-theme-bg-row-hover"
             >
               <span>{option.label}</span>
-              {option.value === value && <span className="text-sky-500">✓</span>}
+              {option.value === value && <span className="text-theme-accent">✓</span>}
             </button>
           ))}
         </div>

@@ -1,0 +1,22 @@
+.filter-popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: -25px;
+  z-index: var(--z-modal);
+  width: 320px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-bg-dropdown);
+  box-shadow: var(--shadow-lg);
+}
+
+.filter-control {
+  position: relative;
+}
+
+.filter-input {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg-input);
+  color: var(--color-text-primary);
+}

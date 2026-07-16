@@ -97,7 +97,7 @@ export default function FilterPopup({
   return (
     <div
       ref={popupRef}
-      className="absolute -right-25 top-full mt-2 z-50  w-80 rounded-lg border border-theme-border bg-theme-bg-dropdown shadow-xl"
+      className="filter-popup"
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-theme-border px-4 py-3">
@@ -133,7 +133,7 @@ export default function FilterPopup({
                     e.target.value as FilterOperator
                   )
                 }
-                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary focus:outline-none focus:ring-2 focus:ring-theme-accent"
               >
                 {operatorOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -148,13 +148,13 @@ export default function FilterPopup({
                   handleConditionChange(index, "value", e.target.value)
                 }
                 placeholder="Value"
-                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary placeholder:text-theme-text-placeholder focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary placeholder:text-theme-text-placeholder focus:outline-none focus:ring-2 focus:ring-theme-accent"
               />
               {conditions.length > 1 && (
                 <button
                   type="button"
                   onClick={() => handleRemoveCondition(index)}
-                  className="p-1.5 text-red-500 hover:bg-red-500/10 rounded"
+                  className="p-1.5 text-theme-accent hover:bg-theme-accent-filter-bg rounded"
                 >
                   <X size={16} />
                 </button>
@@ -215,7 +215,7 @@ export default function FilterPopup({
         <button
           type="button"
           onClick={handleApply}
-          className="flex-1 px-3 py-1.5 text-sm font-medium bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors"
+          className="flex-1 px-3 py-1.5 text-sm font-medium bg-theme-accent text-theme-accent-text rounded hover:opacity-90 transition-colors"
         >
           Apply
         </button>

@@ -1,0 +1,17 @@
+.table-scroll-area::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-scroll-area::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+.table-scroll-area::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-muted);
+}

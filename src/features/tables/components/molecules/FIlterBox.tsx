@@ -73,9 +73,9 @@ export default function FilterBox({
   };
 
   return (
-    <div className="flex h-9 items-center rounded-md border border-theme-border bg-theme-bg-input px-2 transition-colors relative">
+    <div className="filter-control flex h-9 items-center rounded-md border border-theme-border bg-theme-bg-input px-2 transition-colors relative">
       <input
-        className={`w-full bg-transparent text-sm text-theme-text-primary outline-none placeholder:text-theme-text-placeholder ${hasActiveFilter ? "text-sky-600 font-medium cursor-not-allowed" : ""
+        className={`filter-input w-full bg-transparent text-sm text-theme-text-primary outline-none placeholder:text-theme-text-placeholder ${hasActiveFilter ? "font-medium cursor-not-allowed text-theme-accent" : ""
           }`}
         value={getDisplayValue()}
         onChange={handleChange}
