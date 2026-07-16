@@ -1,1 +1,23 @@
-@import "./styles/index.css";
+@import "tailwindcss";
+@import "./styles/Theme.css";
+
+@theme {
+  --color-theme-bg-page: var(--color-bg-page);
+  --color-theme-bg-table: var(--color-bg-table);
+  --color-theme-bg-header: var(--color-bg-header);
+  --color-theme-bg-row-hover: var(--color-bg-row-hover);
+  --color-theme-bg-input: var(--color-bg-input);
+  --color-theme-bg-dropdown: var(--color-bg-dropdown);
+  --color-theme-bg-summary: var(--color-bg-summary);
+  --color-theme-border: var(--color-border);
+  --color-theme-border-input: var(--color-border-input);
+  --color-theme-text-primary: var(--color-text-primary);
+  --color-theme-text-secondary: var(--color-text-secondary);
+  --color-theme-text-muted: var(--color-text-muted);
+  --color-theme-text-placeholder: var(--color-text-placeholder);
+  --color-theme-accent: var(--color-accent);
+  --color-theme-accent-text: var(--color-accent-text);
+  --color-theme-accent-filter: var(--color-accent-filter);
+  --color-theme-accent-filter-bg: var(--color-accent-filter-bg);
+  --color-theme-shadow: var(--color-shadow);
+}

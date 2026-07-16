@@ -63,7 +63,7 @@ export default function Pagination({
   const pages = getPageNumbers();
 
   return (
-    <div className="pagination-shell text-sm">
+    <div className="flex  items-center justify-between border-t border-theme-border px-5 py-4 text-sm text-theme-text-secondary">
       <p>
         Page {currentPage} of {totalPages} ({totalItems.toLocaleString()} items)
       </p>
@@ -94,8 +94,8 @@ export default function Pagination({
             <button
               key={`page-${pageNum}`}
               onClick={() => onPageChange(pageNum)}
-              className={`pagination-page-btn text-sm ${isActive
-                ? "bg-theme-accent text-theme-accent-text font-medium"
+              className={`flex h-8 w-8 items-center justify-center rounded-md text-sm transition ${isActive
+                ? "bg-sky-500 text-white font-medium"
                 : "text-theme-text-secondary cursor-pointer hover:bg-theme-bg-row-hover hover:text-theme-text-primary"
                 }`}
             >
@@ -135,7 +135,7 @@ export default function Pagination({
                   onPageSizeChange(option);
                   setPageSizeOpen(false);
                 }}
-                className={`flex w-full justify-center py-1.5 text-sm hover:bg-theme-bg-row-hover transition ${option === pageSize ? "text-theme-accent font-medium" : "text-theme-text-secondary"
+                className={`flex w-full justify-center py-1.5 text-sm hover:bg-theme-bg-row-hover transition ${option === pageSize ? "text-sky-500 font-medium" : "text-theme-text-secondary"
                   }`}
               >
                 {option}

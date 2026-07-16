@@ -59,10 +59,10 @@ export default function ReusableDataTable<T extends { id: string | number }>({
     : data;
 
   return (
-    <div className="table-shell">
-      <div className="table-card">
-        <div className="table-shell">
-          <div className="table-scroll-area">
+    <div>
+      <div className="overflow-visible rounded-xl border border-theme-border bg-theme-bg-table shadow-sm transition-colors h-fit">
+        <div className="z-500">
+          <div className="overflow-x-auto relative z-10 min-h-75 h-fit">
             <table
               className="w-full border-collapse"
               style={{ tableLayout: "fixed" }}
