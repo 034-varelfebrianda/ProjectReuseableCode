@@ -1,22 +1,31 @@
+/* Panel dropdown filter yang muncul di bawah tombol kontrol filter */
 .filter-popup {
   position: absolute;
-  top: calc(100% + 8px);
-  right: -25px;
+  top: calc(100% + 0.5rem);
+  right: clamp(-12px, -0.8vw, -6px);
   z-index: var(--z-modal);
-  width: 320px;
+  width: min(320px, calc(100vw - 1.5rem));
+  max-width: calc(100vw - 1rem);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   background-color: var(--color-bg-dropdown);
   box-shadow: var(--shadow-lg);
 }
 
+/* Wadah relatif agar popup filter bisa diposisikan dengan tepat */
 .filter-control {
   position: relative;
+  width: 100%;
 }
 
+/* Input filter dengan gaya konsisten sesuai tema aplikasi */
 .filter-input {
+  width: 100%;
+  min-width: 0;
+  padding: clamp(0.5rem, 1vw, 0.75rem);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background-color: var(--color-bg-input);
   color: var(--color-text-primary);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base), background-color var(--transition-base);
 }

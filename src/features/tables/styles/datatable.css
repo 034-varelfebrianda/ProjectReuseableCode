@@ -1,9 +1,16 @@
-.table-shell {
+/* Wrapper utama tabel agar elemen di dalamnya tetap tampil sebagai blok terpisah */
+.table-shiell {
   display: block;
+  width: 100%;
+  max-width: 100%;
 }
 
+/* Kontainer kartu tabel yang memberi border, background, bayangan, dan transisi saat tema berubah */
 .table-card {
-  overflow: visible;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  min-height: clamp(320px, 45vh, 520px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   background-color: var(--color-bg-table);
@@ -11,20 +18,44 @@
   transition: background-color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
+/* Area scroll horizontal untuk tabel agar kolom tetap bisa digeser saat lebar layar kecil */
 .table-scroll-area {
   position: relative;
   z-index: var(--z-dropdown);
-  min-height: calc(var(--toolbar-height) + var(--pagination-height));
+  min-height: calc(var(--toolbar-height) + var(--pagination-height) + 1rem);
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
 }
 
+/* Tampilan tabel di dalam area scroll agar lebar penuh dan border antar kolom rapat */
 .table-scroll-area table {
   width: 100%;
+  min-width: min(100%, 860px);
   border-collapse: collapse;
   table-layout: fixed;
 }
 
+/* Area viewport utama tabel yang mengatur tinggi agar sesuai dengan layar dan bisa discroll vertikal */
 .table-viewport {
-  height: calc(100vh - var(--navbar-height) - var(--toolbar-height) - var(--pagination-height));
+  height: calc(100dvh - var(--navbar-height) - var(--toolbar-height) - var(--pagination-height));
+  min-height: clamp(320px, 55vh, 480px);
+  max-width: 100%;
   overflow: auto;
+}
+
+@media (max-width: 768px) {
+  .table-card {
+    border-radius: var(--radius-lg);
+    min-height: clamp(280px, 60vh, 420px);
+  }
+
+  .table-scroll-area {
+    min-height: auto;
+  }
+
+  .table-viewport {
+    height: auto;
+    max-height: calc(100dvh - 12rem);
+  }
 }

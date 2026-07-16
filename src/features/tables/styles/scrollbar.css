@@ -1,17 +1,26 @@
-.table-scroll-area::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* Gaya scrollbar untuk area tabel agar scroll terlihat lebih rapi dan tidak terlalu mencolok */
+.table-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
 }
 
+.table-scroll-area::-webkit-scrollbar {
+  width: var(--scrollbar-size, clamp(6px, 0.8vw, 8px));
+  height: var(--scrollbar-size, clamp(6px, 0.8vw, 8px));
+}
+
+/* Latar belakang jalur scrollbar agar tetap transparan */
 .table-scroll-area::-webkit-scrollbar-track {
   background: transparent;
 }
 
+/* Tombol scrollbar yang menunjukkan area dapat discroll */
 .table-scroll-area::-webkit-scrollbar-thumb {
   background-color: var(--color-border);
   border-radius: var(--radius-full);
 }
 
+/* Saat pointer hover, warna scrollbar menjadi lebih terlihat */
 .table-scroll-area::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-text-muted);
 }

@@ -1,8 +1,10 @@
 :root {
-  --sidebar-width: 260px;
-  --navbar-height: 64px;
-  --toolbar-height: 56px;
-  --pagination-height: 48px;
+  --sidebar-width: clamp(220px, 20vw, 260px);
+  --navbar-height: clamp(56px, 7vh, 64px);
+  --toolbar-height: clamp(48px, 6vh, 56px);
+  --pagination-height: clamp(44px, 5vh, 48px);
+  --container-max-width: 1440px;
+  --content-gap: clamp(12px, 1.4vw, 20px);
 
   --color-bg-page: #ffffff;
   --color-bg-card: #ffffff;
@@ -25,30 +27,30 @@
   --color-accent-filter-bg: #e0f2fe80;
   --color-shadow: #0000000f;
 
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
+  --space-1: clamp(4px, 0.6vw, 6px);
+  --space-2: clamp(8px, 1vw, 10px);
+  --space-3: clamp(12px, 1.4vw, 14px);
+  --space-4: clamp(16px, 2vw, 20px);
+  --space-5: clamp(20px, 2.4vw, 24px);
+  --space-6: clamp(24px, 3vw, 28px);
+  --space-8: clamp(32px, 4vw, 40px);
+  --space-10: clamp(40px, 5vw, 48px);
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 16px;
+  --radius-sm: clamp(6px, 0.8vw, 8px);
+  --radius-md: clamp(10px, 1.2vw, 12px);
+  --radius-lg: clamp(14px, 1.8vw, 16px);
+  --radius-xl: clamp(16px, 2vw, 20px);
   --radius-full: 999px;
 
   --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
   --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
   --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.12);
 
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-md: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
+  --font-size-xs: clamp(0.7rem, 0.85vw, 0.75rem);
+  --font-size-sm: clamp(0.8rem, 0.95vw, 0.875rem);
+  --font-size-md: clamp(0.95rem, 1vw, 1rem);
+  --font-size-lg: clamp(1rem, 1.2vw, 1.125rem);
+  --font-size-xl: clamp(1.1rem, 1.4vw, 1.25rem);
 
   --transition-fast: 150ms ease;
   --transition-base: 200ms ease;

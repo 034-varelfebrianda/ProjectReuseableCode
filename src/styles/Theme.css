@@ -19,6 +19,10 @@
     --color-shadow: #0000000f;
 }
 
+:root {
+    color-scheme: light;
+}
+
 .dark {
     --color-bg-page: #18181b;
     --color-bg-table: #27272a;
@@ -38,4 +42,11 @@
     --color-accent-filter: #38bdf8;
     --color-accent-filter-bg: #0e74904d;
     --color-shadow: #0000004d;
+    color-scheme: dark;
+}
+
+body {
+    background-color: var(--color-bg-page);
+    color: var(--color-text-primary);
+    transition: background-color var(--transition-base), color var(--transition-base), border-color var(--transition-base);
 }
