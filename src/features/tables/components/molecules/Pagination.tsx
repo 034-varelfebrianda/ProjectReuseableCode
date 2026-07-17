@@ -63,14 +63,14 @@ export default function Pagination({
   const pages = getPageNumbers();
 
   return (
-    <div className="flex  items-center justify-between border-t border-theme-border px-5 py-4 text-sm text-theme-text-secondary">
+    <div className="flex  items-center justify-between border-t border-[var(--color-border)] px-5 py-4 text-sm text-[var(--color-text-secondary)]">
       <p>
         Page {currentPage} of {totalPages} ({totalItems.toLocaleString()} items)
       </p>
 
       <div className="flex items-center gap-2">
         <IconData
-          className={`cursor-pointer hover:text-theme-text-primary ${currentPage === 1 ? "pointer-events-none opacity-40" : ""
+          className={`cursor-pointer hover:text-[var(--color-text-primary)] ${currentPage === 1 ? "pointer-events-none opacity-40" : ""
             }`}
           onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
@@ -81,7 +81,7 @@ export default function Pagination({
         {pages.map((page, index) => {
           if (page === "...") {
             return (
-              <span key={`ellipsis-${index}`} className="px-1 text-theme-text-muted">
+              <span key={`ellipsis-${index}`} className="px-1 text-[var(--color-text-muted)]">
                 ...
               </span>
             );
@@ -96,7 +96,7 @@ export default function Pagination({
               onClick={() => onPageChange(pageNum)}
               className={`flex h-8 w-8 items-center justify-center rounded-md text-sm transition ${isActive
                 ? "bg-sky-500 text-white font-medium"
-                : "text-theme-text-secondary cursor-pointer hover:bg-theme-bg-row-hover hover:text-theme-text-primary"
+                : "text-[var(--color-text-secondary)] cursor-pointer hover:bg-[var(--color-bg-row-hover)] hover:text-[var(--color-text-primary)]"
                 }`}
             >
               {pageNum}
@@ -105,7 +105,7 @@ export default function Pagination({
         })}
 
         <IconData
-          className={`cursor-pointer hover:text-theme-text-primary ${currentPage === totalPages ? "pointer-events-none opacity-40" : ""
+          className={`cursor-pointer hover:text-[var(--color-text-primary)] ${currentPage === totalPages ? "pointer-events-none opacity-40" : ""
             }`}
           onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
@@ -119,14 +119,14 @@ export default function Pagination({
         <button
           type="button"
           onClick={() => setPageSizeOpen((prev) => !prev)}
-          className="flex h-9 min-w-16 items-center justify-between gap-1 rounded-md border px-2.5 border-theme-border bg-theme-bg-input text-theme-text-secondary hover:border-theme-text-secondary/50 transition cursor-pointer"
+          className="flex h-9 min-w-16 items-center justify-between gap-1 rounded-md border px-2.5 border-[var(--color-border)] bg-[var(--color-bg-input)] text-[var(--color-text-secondary)] hover:border-[var(--color-text-secondary)]/50 transition cursor-pointer"
         >
           <span className="text-sm">{pageSize}</span>
-          <ChevronDown size={14} className="text-theme-text-muted" />
+          <ChevronDown size={14} className="text-[var(--color-text-muted)]" />
         </button>
 
         {pageSizeOpen && (
-          <div className="absolute bottom-full right-0 z-15 mb-1 w-20 rounded-md border border-theme-border bg-theme-bg-dropdown shadow-lg py-1">
+          <div className="absolute bottom-full right-0 z-15 mb-1 w-20 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-dropdown)] shadow-lg py-1">
             {pageSizeOptions.map((option) => (
               <button
                 key={option}
@@ -135,7 +135,7 @@ export default function Pagination({
                   onPageSizeChange(option);
                   setPageSizeOpen(false);
                 }}
-                className={`flex w-full justify-center py-1.5 text-sm hover:bg-theme-bg-row-hover transition ${option === pageSize ? "text-sky-500 font-medium" : "text-theme-text-secondary"
+                className={`flex w-full justify-center py-1.5 text-sm hover:bg-[var(--color-bg-row-hover)] transition ${option === pageSize ? "text-sky-500 font-medium" : "text-[var(--color-text-secondary)]"
                   }`}
               >
                 {option}

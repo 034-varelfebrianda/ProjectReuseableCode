@@ -1,5 +1,9 @@
-/* Theme variables */
+/* Common theme variables & dynamic mappings */
 :root {
-  --color-bg: #ffffff;
-  --color-text: #111827;
+  --color-bg: var(--color-bg-page);
+  --color-text: var(--color-text-primary);
+  
+  /* Add other global design tokens here if needed (e.g. border radii, transitions) */
+  --transition-speed-normal: 0.2s;
+  --transition-timing-default: cubic-bezier(0.4, 0, 0.2, 1);
 }

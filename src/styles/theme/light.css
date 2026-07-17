@@ -1,1 +1,21 @@
-/* Light theme styles */
+/* Light theme variables */
+:root {
+  --color-bg-page: #ffffff;
+  --color-bg-table: #ffffff;
+  --color-bg-header: #f4f4f5;
+  --color-bg-row-hover: #fafafa;
+  --color-bg-input: #ffffff;
+  --color-bg-dropdown: #ffffff;
+  --color-bg-summary: #f4f4f54d;
+  --color-border: #e4e4e7;
+  --color-border-input: #e4e4e7;
+  --color-text-primary: #09090b;
+  --color-text-secondary: #71717a;
+  --color-text-muted: #a1a1aa;
+  --color-text-placeholder: #a1a1aa;
+  --color-accent: #0ea5e9;
+  --color-accent-text: #ffffff;
+  --color-accent-filter: #0284c7;
+  --color-accent-filter-bg: #e0f2fe80;
+  --color-shadow: #0000000f;
+}
