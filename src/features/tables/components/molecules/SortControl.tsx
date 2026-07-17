@@ -1,6 +1,5 @@
 import { useState } from "react";
-import SortByClient from "../atoms/SortByClient";
-import SortByBackend from "../atoms/SortByBackend";
+import SortDropdown from "../atoms/SortDropdown";
 import type { SortDirection } from "../../utils/sort";
 
 interface SortControlProps {
@@ -27,15 +26,16 @@ export default function SortControl({
     setIsOpen(false);
   };
 
-  const commonProps = {
-    activeSort,
-    sortDirection,
-    sortAscLabel,
-    sortDescLabel,
-    onSort: handleSelect,
-    isOpen,
-    onToggle: () => setIsOpen((prev) => !prev),
-  };
-
-  return mode === "server" ? <SortByBackend {...commonProps} /> : <SortByClient {...commonProps} />;
+  return (
+    <SortDropdown
+      mode={mode}
+      activeSort={activeSort}
+      sortDirection={sortDirection}
+      sortAscLabel={sortAscLabel}
+      sortDescLabel={sortDescLabel}
+      onSort={handleSelect}
+      isOpen={isOpen}
+      onToggle={() => setIsOpen((prev) => !prev)}
+    />
+  );
 }

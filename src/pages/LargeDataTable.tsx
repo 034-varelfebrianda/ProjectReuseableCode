@@ -117,7 +117,7 @@ export default function LargeDataTable() {
 
   return (
     <>
-      <div className="flex justify-end px-6 pt-4">
+      <div className="theme-button">
         <ThemeButton showThemeToggle />
       </div>
     <ReusableDataTable

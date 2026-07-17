@@ -59,12 +59,12 @@ export default function ReusableDataTable<T extends { id: string | number }>({
     : data;
 
   return (
-    <div>
-      <div className="overflow-visible rounded-xl border border-theme-border bg-theme-bg-table shadow-sm transition-colors h-fit">
-        <div className="z-500">
-          <div className="overflow-x-auto relative z-10 min-h-75 h-fit">
+    <div className="data-table-wrapper">
+      <div className="data-table">
+        <div className="data-table-content">
+          <div className="data-table-scroll">
             <table
-              className="w-full border-collapse"
+              className="data-table-element"
               style={{ tableLayout: "fixed" }}
             >
               <thead>
@@ -73,6 +73,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   colWidths={colWidths}
                   onResize={handleResize}
                 />
+
                 <TableFilterRow
                   columns={columns}
                   filters={filters}
@@ -83,6 +84,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
                   mode={mode}
                 />
               </thead>
+
               <TableBody
                 data={paginatedData}
                 columns={columns}
@@ -101,6 +103,5 @@ export default function ReusableDataTable<T extends { id: string | number }>({
           />
         </div>
       </div>
-    </div>
-  );
+    </div>);
 }

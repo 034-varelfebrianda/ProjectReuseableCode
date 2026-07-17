@@ -8,7 +8,7 @@ export default function ThemeButton({
   showThemeToggle = false
 }: GridTopBarProps) {
   return (
-    <div className="flex justify-end items-center pb-5">
+    <div className="theme-button">
       {showThemeToggle && <ThemeToggle />}
     </div>
   );

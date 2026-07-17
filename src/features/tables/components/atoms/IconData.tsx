@@ -6,7 +6,11 @@ interface IconDataProps extends ComponentPropsWithoutRef<"button"> {
 
 export default function IconData({ children, ...props }: IconDataProps) {
   return (
-    <button type="button" {...props} className={`flex items-center justify-center ${props.className ?? ""}`}>
+    <button
+      type="button"
+      {...props}
+      className={`icon-button ${props.className ?? ""}`}
+    >
       {children}
     </button>
   );

@@ -95,35 +95,33 @@ export default function FilterPopup({
   };
 
   return (
-    <div
-      ref={popupRef}
-      className="absolute -right-25 top-full mt-2 z-50  w-80 rounded-lg border border-theme-border bg-theme-bg-dropdown shadow-xl"
-    >
+    <div ref={popupRef} className="filter-popup">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-theme-border px-4 py-3">
-        <h3 className="text-sm font-semibold text-theme-text-primary">
+      <div className="filter-popup-header">
+        <h3 className="filter-popup-title">
           Filter: {columnLabel}
         </h3>
+
         <button
           type="button"
           onClick={onClose}
-          className="rounded hover:bg-theme-bg-row-hover p-1 text-theme-text-secondary"
+          className="filter-popup-close"
         >
           <X size={16} />
         </button>
       </div>
 
       {/* Content */}
-      <div className="px-4 py-3 space-y-3 max-h-96 overflow-y-auto">
-        {/* Conditions */}
+      <div className="filter-popup-content">
         {conditions.map((condition, index) => (
-          <div key={index} className="space-y-2">
+          <div key={index} className="filter-condition">
             {index > 0 && (
-              <div className="text-xs font-medium text-theme-text-secondary">
+              <div className="filter-logic-label">
                 {logic}
               </div>
             )}
-            <div className="flex gap-2 items-start">
+
+            <div className="filter-condition-row">
               <select
                 value={condition.operator}
                 onChange={(e) =>
@@ -133,7 +131,7 @@ export default function FilterPopup({
                     e.target.value as FilterOperator
                   )
                 }
-                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="filter-input"
               >
                 {operatorOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -141,6 +139,7 @@ export default function FilterPopup({
                   </option>
                 ))}
               </select>
+
               <input
                 type="text"
                 value={condition.value}
@@ -148,13 +147,14 @@ export default function FilterPopup({
                   handleConditionChange(index, "value", e.target.value)
                 }
                 placeholder="Value"
-                className="flex-1 px-2 py-1.5 text-sm border border-theme-border rounded bg-theme-bg-input text-theme-text-primary placeholder:text-theme-text-placeholder focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="filter-input"
               />
+
               {conditions.length > 1 && (
                 <button
                   type="button"
                   onClick={() => handleRemoveCondition(index)}
-                  className="p-1.5 text-red-500 hover:bg-red-500/10 rounded"
+                  className="filter-remove-button"
                 >
                   <X size={16} />
                 </button>
@@ -163,27 +163,26 @@ export default function FilterPopup({
           </div>
         ))}
 
-        {/* Add Condition Button */}
         <button
           type="button"
           onClick={handleAddCondition}
-          className="flex items-center gap-1 text-xs font-medium text-theme-accent hover:opacity-80 mt-2"
+          className="filter-add-button"
         >
           <Plus size={14} />
           Add condition
         </button>
 
-        {/* Logic Selector (show if multiple conditions) */}
         {conditions.length > 1 && (
-          <div className="border-t border-theme-border pt-3 mt-3">
-            <label className="text-xs font-medium text-theme-text-secondary block mb-2">
+          <div className="filter-logic-section">
+            <label className="filter-match-label">
               Match
             </label>
-            <div className="flex gap-2">
+
+            <div className="filter-radio-group">
               {logicOptions.map((opt) => (
                 <label
                   key={opt.value}
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="filter-radio-label"
                 >
                   <input
                     type="radio"
@@ -191,11 +190,9 @@ export default function FilterPopup({
                     value={opt.value}
                     checked={logic === opt.value}
                     onChange={(e) => setLogic(e.target.value as "AND" | "OR")}
-                    className="w-4 h-4"
                   />
-                  <span className="text-xs text-theme-text-primary">
-                    {opt.label}
-                  </span>
+
+                  <span>{opt.label}</span>
                 </label>
               ))}
             </div>
@@ -204,18 +201,19 @@ export default function FilterPopup({
       </div>
 
       {/* Footer */}
-      <div className="flex gap-2 border-t border-theme-border px-4 py-3 bg-theme-bg-header/50">
+      <div className="filter-popup-footer">
         <button
           type="button"
           onClick={handleClear}
-          className="flex-1 px-3 py-1.5 text-sm font-medium text-theme-text-secondary border border-theme-border rounded hover:bg-theme-bg-row-hover transition-colors"
+          className="filter-clear-button"
         >
           Clear
         </button>
+
         <button
           type="button"
           onClick={handleApply}
-          className="flex-1 px-3 py-1.5 text-sm font-medium bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors"
+          className="filter-apply-button"
         >
           Apply
         </button>

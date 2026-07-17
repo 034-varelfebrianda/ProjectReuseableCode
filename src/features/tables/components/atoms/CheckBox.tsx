@@ -7,10 +7,15 @@ interface CheckboxProps {
 export default function Checkbox({ checked = false }: CheckboxProps) {
   return (
     <div
-      className={`mx-auto flex cursor-pointer h-5 w-5 items-center justify-center rounded border ${checked ? "border-[#0EA5E9] bg-[#0EA5E9]" : "border-theme-border bg-theme-bg-input"
-        }`}
+      className={`custom-checkbox ${checked ? "checked" : ""}`}
     >
-      {checked && <Check size={14} className="text-white" strokeWidth={3} />}
+      {checked && (
+        <Check
+          size={14}
+          className="custom-checkbox-icon"
+          strokeWidth={3}
+        />
+      )}
     </div>
-  );
+  )
 }

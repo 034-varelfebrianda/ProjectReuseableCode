@@ -28,18 +28,18 @@ export default function TableFilterRow<T>({
   mode,
 }: TableFilterRowProps<T>) {
   return (
-    <tr className="bg-theme-bg-header/50">
+    <tr className="filter-row">
       {columns.map((column) => {
         const sortLabels = column.sortLabels;
 
         return (
           <td
             key={`filter-${column.key}`}
-            className="border-b border-r border-theme-border px-2 py-2"
+            className="filter-cell"
           >
             {column.filterType === "text" && (
-              <div className="flex items-center gap-2">
-                <div className="flex-1">
+              <div className="filter-cell-content">
+                <div className="filter-cell-input">
                   <FilterBox
                     value={
                       typeof filters[column.key] === "string"
@@ -61,6 +61,7 @@ export default function TableFilterRow<T>({
                     placeholder={`${column.label}...`}
                   />
                 </div>
+
                 {column.sortable && (
                   <SortControl
                     mode={mode}

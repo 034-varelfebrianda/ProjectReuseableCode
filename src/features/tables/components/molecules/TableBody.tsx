@@ -15,26 +15,23 @@ export default function TableBody<T extends { id: string | number }>({
   renderSummary,
 }: TableBodyProps<T>) {
   return (
-    <tbody className="">
+    <tbody className="table-body">
       {data.length > 0 ? (
         data.map((item) => (
-          <tr
-            key={item.id}
-            className="text-sm text-theme-text-primary transition-colors hover:bg-theme-bg-row-hover"
-          >
+          <tr key={item.id} className="table-row">
             {columns.map((column) => {
               const alignClass =
                 column.align === "center"
-                  ? "text-center"
+                  ? "table-cell-center"
                   : column.align === "right"
-                    ? "text-right"
-                    : "";
+                    ? "table-cell-right"
+                    : "table-cell-left";
 
               return (
                 <td
                   key={`${item.id}-${column.key}`}
                   style={{ width: column.defaultWidth }}
-                  className={`border-b border-r border-theme-border px-4 py-4 ${alignClass}`}
+                  className={`table-cell ${alignClass}`}
                 >
                   {column.render
                     ? column.render(item)
@@ -51,7 +48,7 @@ export default function TableBody<T extends { id: string | number }>({
         <tr>
           <td
             colSpan={columns.length}
-            className="px-4 py-8 text-center text-sm text-theme-text-muted"
+            className="table-empty"
           >
             No matching records found.
           </td>
@@ -62,7 +59,7 @@ export default function TableBody<T extends { id: string | number }>({
         <tr>
           <td
             colSpan={columns.length}
-            className="border-b border-theme-border bg-theme-bg-summary px-5 py-3 text-right text-sm font-medium text-theme-text-secondary"
+            className="table-summary"
           >
             {renderSummary(allData)}
           </td>
