@@ -1,21 +1,23 @@
 :root {
     /* ── Design Tokens ──────────────────────────── */
-    --space-1:  4px;
-    --space-2:  8px;
+    color-scheme: light;
+
+    --space-1: 4px;
+    --space-2: 8px;
     --space-3: 12px;
     --space-4: 16px;
     --space-5: 20px;
     --space-6: 24px;
 
-    --radius-sm:  6px;
-    --radius-md:  8px;
+    --radius-sm: 6px;
+    --radius-md: 8px;
     --radius-lg: 10px;
     --radius-xl: 16px;
 
-    --font-size-xs:  11px;
-    --font-size-sm:  13px;
-    --font-size-md:  14px;
-    --font-size-lg:  16px;
+    --font-size-xs: 11px;
+    --font-size-sm: 13px;
+    --font-size-md: 14px;
+    --font-size-lg: 16px;
     /* ─────────────────────────────────────────── */
 
     /* Light Theme Values */
@@ -33,10 +35,15 @@
     --theme-text-placeholder: #cbd5e1;
     --theme-accent: #0284c7;
     --theme-accent-filter-bg: #f0f9ff;
+
+    --theme-scrollbar-track: #f1f5f9;
+    --theme-scrollbar-thumb: #cbd5e1;
 }
 
 :root.dark {
     /* Dark Theme Values */
+    color-scheme: dark;
+
     --theme-bg-page: #0b0f19;
     --theme-bg-table: #111827;
     --theme-bg-header: #1f2937;
@@ -54,4 +61,7 @@
 
     --theme-accent: #38bdf8;
     --theme-accent-filter-bg: #38bdf81a;
+
+    --theme-scrollbar-track: #111827;
+    --theme-scrollbar-thumb: #374151;
 }

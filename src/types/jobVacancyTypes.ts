@@ -1,15 +1,19 @@
+import { FilterOperation, FilterConjunction, SortDirectionEnum, JobStatus } from "./enums";
+
+export { FilterOperation, FilterConjunction, SortDirectionEnum, JobStatus };
+
 export interface FilterConfig {
   key: string;
   value: string;
-  operation: string;
-  conjunction: string;
+  operation: FilterOperation | string;
+  conjunction: FilterConjunction | string;
 }
 
 export interface JobVacancyRequest {
   pageNo: number;
   pageSize: number;
   sortByColumn?: string;
-  sortType?: "asc" | "desc";
+  sortType?: SortDirectionEnum | "asc" | "desc";
   filter?: FilterConfig[];
 }
 

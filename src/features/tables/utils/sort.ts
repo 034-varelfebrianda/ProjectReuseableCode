@@ -1,4 +1,7 @@
-export type SortDirection = "asc" | "desc";
+import { SortDirectionEnum } from "../../../types/enums";
+
+export { SortDirectionEnum };
+export type SortDirection = SortDirectionEnum | "asc" | "desc";
 export type SortMode = "client" | "server";
 
 export type SortValueResolver<T> = (

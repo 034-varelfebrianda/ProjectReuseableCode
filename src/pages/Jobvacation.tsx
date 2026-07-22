@@ -4,7 +4,8 @@ import ReusableDataTable, {
 } from "../features/tables/components/organism/ReusableDataTable";
 import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
-import type { JobVacancyItem } from "../types/jobVacancyTypes";
+import type { JobVacancyItem, FilterConfig } from "../types/jobVacancyTypes";
+import { FilterOperation, FilterConjunction, JobStatus } from "../types/enums";
 import type { SortDirection } from "../features/tables/utils/sort";
 import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 
@@ -73,12 +74,7 @@ export default function Jobvacation() {
 
   const buildFilters = useCallback(
     (filters: Record<string, string | FilterState>) => {
-      const filterArray: {
-        key: string;
-        value: string;
-        operation: string;
-        conjunction: string;
-      }[] = [];
+      const filterArray: FilterConfig[] = [];
 
       const processFilter = (
         key: string,
@@ -93,8 +89,8 @@ export default function Jobvacation() {
             filterArray.push({
               key,
               value: val,
-              operation: "MATCH",
-              conjunction: "or",
+              operation: FilterOperation.MATCH,
+              conjunction: FilterConjunction.OR,
             });
           }
         } else {
@@ -108,8 +104,8 @@ export default function Jobvacation() {
               value: cond.value.trim(),
               operation:
                 cond.operator === "equals"
-                  ? "EQUAL"
-                  : "MATCH",
+                  ? FilterOperation.EQUAL
+                  : FilterOperation.MATCH,
               conjunction: filterVal.logic.toLowerCase(),
             });
           });
@@ -122,9 +118,9 @@ export default function Jobvacation() {
 
       filterArray.push({
         key: "jobStatus",
-        value: "ACTIVE",
-        operation: "EQUAL",
-        conjunction: "and",
+        value: JobStatus.ACTIVE,
+        operation: FilterOperation.EQUAL,
+        conjunction: FilterConjunction.AND,
       });
 
       return filterArray;

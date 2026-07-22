@@ -1,5 +1,32 @@
 @import "./tokens.css";
 
+/* Global Scrollbar Customization */
+* {
+    scrollbar-color: var(--theme-scrollbar-thumb) var(--theme-scrollbar-track);
+    scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--theme-scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--theme-scrollbar-thumb);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--theme-text-muted);
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--theme-scrollbar-track);
+}
 
 html,
 body {
@@ -24,7 +51,7 @@ body {
 }
 
 .page-section {
-    margin-bottom: calc(var(--space-2) * 5); /* 40px */
+    margin-bottom: calc(var(--space-2) * 5);
 }
 
 /* Theme Button */
@@ -432,8 +459,8 @@ body {
 
 /* icon button */
 .icon-button {
-    width: calc(var(--space-2) * 3 + var(--space-1)); /* 28px */
-    height: calc(var(--space-2) * 3 + var(--space-1)); /* 28px */
+    width: calc(var(--space-2) * 3 + var(--space-1));
+    height: calc(var(--space-2) * 3 + var(--space-1));
 
     display: flex;
     align-items: center;
@@ -994,7 +1021,7 @@ body {
 }
 
 .jobvacation-message {
-    min-height: calc(var(--space-4) * 32); /* 512px */
+    min-height: calc(var(--space-4) * 32);
 
     border-radius: var(--radius-xl);
     border: 1px solid var(--theme-border);
@@ -1010,7 +1037,7 @@ body {
 }
 
 .jobvacation-error {
-    min-height: calc(var(--space-4) * 32); /* 512px */
+    min-height: calc(var(--space-4) * 32);
 
     border-radius: var(--radius-xl);
     border: 1px solid #ffe4e6;

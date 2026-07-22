@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Plus } from "lucide-react";
+import { FilterOperator, FilterLogic } from "../../../../types/enums";
 
-export type FilterOperator = "contains" | "equals" | "startsWith" | "endsWith";
+export { FilterOperator, FilterLogic };
 
 export interface FilterCondition {
-  operator: FilterOperator;
+  operator: FilterOperator | "contains" | "equals" | "startsWith" | "endsWith";
   value: string;
 }
 
 export interface FilterState {
   conditions: FilterCondition[];
-  logic: "AND" | "OR";
+  logic: FilterLogic | "AND" | "OR";
 }
 
 interface FilterPopupProps {
@@ -21,15 +22,15 @@ interface FilterPopupProps {
 }
 
 const operatorOptions: Array<{ value: FilterOperator; label: string }> = [
-  { value: "contains", label: "Contains" },
-  { value: "equals", label: "Equals" },
-  { value: "startsWith", label: "Start With" },
-  { value: "endsWith", label: "Ends With" },
+  { value: FilterOperator.CONTAINS, label: "Contains" },
+  { value: FilterOperator.EQUALS, label: "Equals" },
+  { value: FilterOperator.STARTS_WITH, label: "Start With" },
+  { value: FilterOperator.ENDS_WITH, label: "Ends With" },
 ];
 
 const logicOptions = [
-  { value: "AND" as const, label: "AND" },
-  { value: "OR" as const, label: "OR" },
+  { value: FilterLogic.AND, label: "AND" },
+  { value: FilterLogic.OR, label: "OR" },
 ];
 
 export default function FilterPopup({
@@ -41,9 +42,11 @@ export default function FilterPopup({
   const [conditions, setConditions] = useState<FilterCondition[]>(
     initialState?.conditions && initialState.conditions.length > 0
       ? initialState.conditions
-      : [{ operator: "contains", value: "" }]
+      : [{ operator: FilterOperator.CONTAINS, value: "" }]
   );
-  const [logic, setLogic] = useState<"AND" | "OR">(initialState?.logic ?? "AND");
+  const [logic, setLogic] = useState<FilterLogic | "AND" | "OR">(
+    initialState?.logic ?? FilterLogic.AND
+  );
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export default function FilterPopup({
   }, [onClose]);
 
   const handleAddCondition = () => {
-    setConditions([...conditions, { operator: "contains", value: "" }]);
+    setConditions([...conditions, { operator: FilterOperator.CONTAINS, value: "" }]);
   };
 
   const handleRemoveCondition = (index: number) => {
@@ -88,9 +91,9 @@ export default function FilterPopup({
   };
 
   const handleClear = () => {
-    setConditions([{ operator: "contains", value: "" }]);
-    setLogic("AND");
-    onApply({ conditions: [], logic: "AND" });
+    setConditions([{ operator: FilterOperator.CONTAINS, value: "" }]);
+    setLogic(FilterLogic.AND);
+    onApply({ conditions: [], logic: FilterLogic.AND });
     onClose();
   };
 

@@ -31,7 +31,7 @@ export function matchFilter(cellValue: unknown, filter: FilterValue | undefined)
   // If it's a FilterState object
   if (typeof filter === "object" && "conditions" in filter) {
     const { conditions, logic } = filter;
-    
+
     // Filter out empty conditions
     const activeConditions = conditions.filter(
       (c) => c.value !== undefined && c.value.trim() !== ""
