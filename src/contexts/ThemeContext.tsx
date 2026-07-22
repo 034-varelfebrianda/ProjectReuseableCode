@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect, type ReactNode } from "react";
+import { ThemeMode } from "../types/enums";
 
-type Theme = "light" | "dark";
+export { ThemeMode };
+export type Theme = ThemeMode | "light" | "dark";
 
 interface ThemeContextType {
   theme: Theme;
@@ -13,12 +15,12 @@ export const ThemeContext = createContext<ThemeContextType | undefined>(undefine
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem("theme") as Theme | null;
-    return saved ?? "light";
+    return saved ?? ThemeMode.LIGHT;
   });
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "dark") {
+    if (theme === ThemeMode.DARK) {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");

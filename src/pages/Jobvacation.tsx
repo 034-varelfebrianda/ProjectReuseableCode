@@ -5,7 +5,7 @@ import ReusableDataTable, {
 import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
 import type { JobVacancyItem, FilterConfig } from "../types/jobVacancyTypes";
-import { FilterOperation, FilterConjunction, JobStatus } from "../types/enums";
+import { FilterOperation, FilterConjunction, JobStatus, TableMode } from "../types/enums";
 import type { SortDirection } from "../features/tables/utils/sort";
 import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 
@@ -247,7 +247,7 @@ export default function Jobvacation() {
   return (
     <main className="jobvacation">
       <ReusableDataTable
-        mode="server"
+        mode={TableMode.SERVER}
         data={rows}
         columns={columns}
         filters={filters}

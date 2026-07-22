@@ -4,14 +4,16 @@ import TableHeader from "../molecules/TableHeader";
 import TableFilterRow from "../molecules/TableFilterRow";
 import TableBody from "../molecules/TableBody";
 import { useColumnResize } from "../../../../hooks/useColumnResize";
-import type { SortDirection, SortMode } from "../../utils/sort";
+import type { SortDirection } from "../../utils/sort";
 import type { FilterState } from "../atoms/FilterPopup";
 import type { Column, FilterValue } from "../../utils/types";
+import { TableMode } from "../../../../types/enums";
 
+export { TableMode };
 export type { Column } from "../../utils/types";
 
 interface ReusableDataTableProps<T> {
-  mode?: SortMode;
+  mode?: TableMode | "client" | "server";
 
   data: T[];
   columns: Column<T>[];
@@ -47,7 +49,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
   totalItems,
   serverPageSize = false,
   renderSummary,
-  mode = "client",
+  mode = TableMode.CLIENT,
 }: ReusableDataTableProps<T>) {
   const { colWidths, handleResize } = useColumnResize<T>();
 

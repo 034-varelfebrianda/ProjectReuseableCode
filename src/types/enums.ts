@@ -1,8 +1,3 @@
-/**
- * Implementation of Enumerations (Enums) in TypeScript.
- * Compatible with modern TypeScript compiler settings (`erasableSyntaxOnly` / Node.js type stripping).
- */
-
 // Filter Operation Enum
 export const FilterOperation = {
   MATCH: "MATCH",
@@ -57,3 +52,17 @@ export const JobType = {
   INTERNSHIP: "Internship",
 } as const;
 export type JobType = (typeof JobType)[keyof typeof JobType];
+
+// Table Mode Enum (Client / Server)
+export const TableMode = {
+  CLIENT: "client",
+  SERVER: "server",
+} as const;
+export type TableMode = (typeof TableMode)[keyof typeof TableMode];
+
+// Theme Mode Enum (Light / Dark)
+export const ThemeMode = {
+  LIGHT: "light",
+  DARK: "dark",
+} as const;
+export type ThemeMode = (typeof ThemeMode)[keyof typeof ThemeMode];

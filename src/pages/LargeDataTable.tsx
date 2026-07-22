@@ -6,6 +6,7 @@ import Checkbox from "../features/tables/components/atoms/CheckBox";
 import { sortItems, type SortDirection } from "../features/tables/utils/sort";
 import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
 import { matchFilter } from "../features/tables/utils/filter";
+import { TableMode } from "../types/enums";
 
 interface TableMailItem extends MailItem {
   id: number;
@@ -120,24 +121,24 @@ export default function LargeDataTable() {
       <div className="theme-button">
         <ThemeButton showThemeToggle />
       </div>
-    <ReusableDataTable
-      mode="server"
-      data={sortedMails}
-      columns={columns}
-      filters={filters}
-      onFilterChange={handleFilterChange}
-      sortField={sortField}
-      sortDirection={sortDirection}
-      onSortChange={handleSortChange}
-      currentPage={currentPage}
-      pageSize={pageSize}
-      totalItems={sortedMails.length}
-      onPageChange={setCurrentPage}
-      onPageSizeChange={(size) => {
-        setPageSize(size);
-        setCurrentPage(1);
-      }}
-      renderSummary={renderSummary}
+      <ReusableDataTable
+        mode={TableMode.CLIENT}
+        data={sortedMails}
+        columns={columns}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSortChange={handleSortChange}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        totalItems={sortedMails.length}
+        onPageChange={setCurrentPage}
+        onPageSizeChange={(size) => {
+          setPageSize(size);
+          setCurrentPage(1);
+        }}
+        renderSummary={renderSummary}
       />
     </>
   );
