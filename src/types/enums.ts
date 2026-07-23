@@ -3,21 +3,24 @@ export const FilterOperation = {
   MATCH: "MATCH",
   EQUAL: "EQUAL",
 } as const;
-export type FilterOperation = (typeof FilterOperation)[keyof typeof FilterOperation];
+export type FilterOperation =
+  (typeof FilterOperation)[keyof typeof FilterOperation];
 
 // Filter Conjunction Enum
 export const FilterConjunction = {
   AND: "and",
   OR: "or",
 } as const;
-export type FilterConjunction = (typeof FilterConjunction)[keyof typeof FilterConjunction];
+export type FilterConjunction =
+  (typeof FilterConjunction)[keyof typeof FilterConjunction];
 
 // Sort Direction Enum
 export const SortDirectionEnum = {
   ASC: "asc",
   DESC: "desc",
 } as const;
-export type SortDirectionEnum = (typeof SortDirectionEnum)[keyof typeof SortDirectionEnum];
+export type SortDirectionEnum =
+  (typeof SortDirectionEnum)[keyof typeof SortDirectionEnum];
 
 // Filter Comparison Operator Enum
 export const FilterOperator = {
@@ -26,7 +29,8 @@ export const FilterOperator = {
   STARTS_WITH: "startsWith",
   ENDS_WITH: "endsWith",
 } as const;
-export type FilterOperator = (typeof FilterOperator)[keyof typeof FilterOperator];
+export type FilterOperator =
+  (typeof FilterOperator)[keyof typeof FilterOperator];
 
 // Filter Logic Enum (AND / OR)
 export const FilterLogic = {

@@ -1,4 +1,9 @@
-import { FilterOperation, FilterConjunction, SortDirectionEnum, JobStatus } from "./enums";
+import {
+  FilterOperation,
+  FilterConjunction,
+  SortDirectionEnum,
+  JobStatus,
+} from "./enums";
 
 export { FilterOperation, FilterConjunction, SortDirectionEnum, JobStatus };
 

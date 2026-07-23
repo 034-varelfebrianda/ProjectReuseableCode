@@ -1,52 +1,37 @@
 import { useMemo, useState } from "react";
-import { LargeDataBase as initialMails, MailItem } from "../features/tables/data/LargeDataBase";
-import ReusableDataTable, { Column } from "../features/tables/components/organism/ReusableDataTable";
+import {
+  LargeDataBase as initialMails,
+  MailItem,
+} from "../features/tables/data/LargeDataBase";
+import ReusableDataTable, {
+  Column,
+} from "../features/tables/components/organism/ReusableDataTable";
 import Checkbox from "../features/tables/components/atoms/CheckBox";
-import { sortItems, type SortDirection } from "../features/tables/utils/sort";
-import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
+import { sortItems } from "../features/tables/utils/sort";
 import { matchFilter } from "../features/tables/utils/filter";
 import { TableMode } from "../types/enums";
+import { useTableState } from "../hooks/useTableState";
 
 interface TableMailItem extends MailItem {
   id: number;
 }
 
-type TableColumnKey = keyof TableMailItem & string;
-type FilterValue = string | FilterState;
-type TableFilters = Partial<Record<TableColumnKey, FilterValue>>;
-
-const defaultFilters: TableFilters = {
-  from: "",
-  subject: "",
-  sent: "",
-  attachment: "all",
-};
-
 export default function LargeDataTable() {
-  const [mails] = useState<TableMailItem[]>(() => initialMails.map((mail) => ({ ...mail })));
+  const [mails] = useState<TableMailItem[]>(() =>
+    initialMails.map((mail) => ({ ...mail })),
+  );
 
-  const [filters, setFilters] = useState<TableFilters>(defaultFilters);
-  const [sortField, setSortField] = useState<TableColumnKey | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-
-  const handleFilterChange = (key: TableColumnKey, value: FilterValue) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-    setCurrentPage(1);
-  };
-
-  const handleSortChange = (field: TableColumnKey | null, direction: SortDirection | null) => {
-    if (field === null) {
-      setSortField(null);
-      setSortDirection("asc");
-      return;
-    }
-
-    setSortField(field);
-    setSortDirection(direction ?? "asc");
-    setCurrentPage(1);
-  };
+  const {
+    filters,
+    sortField,
+    sortDirection,
+    currentPage,
+    pageSize,
+    setCurrentPage,
+    setPageSize,
+    handleFilterChange,
+    handleSortChange,
+  } = useTableState<TableMailItem>();
 
   const filteredMails = useMemo(() => {
     return mails.filter((mail) => {
@@ -54,7 +39,8 @@ export default function LargeDataTable() {
       const subjectMatch = matchFilter(mail.subject, filters.subject);
       const sentMatch = matchFilter(mail.sent, filters.sent);
 
-      const attachmentFilter = typeof filters.attachment === "string" ? filters.attachment : "all";
+      const attachmentFilter =
+        typeof filters.attachment === "string" ? filters.attachment : "all";
       const attachmentMatch =
         attachmentFilter === "all" ||
         (attachmentFilter === "yes" && mail.attachment === true) ||
@@ -71,8 +57,22 @@ export default function LargeDataTable() {
   }, [filteredMails, sortField, sortDirection]);
 
   const columns: Column<TableMailItem>[] = [
-    { key: "from", label: "From", defaultWidth: 200, minWidth: 100, sortable: true, filterType: "text" },
-    { key: "subject", label: "Subject", defaultWidth: 400, minWidth: 180, sortable: true, filterType: "text" },
+    {
+      key: "from",
+      label: "From",
+      defaultWidth: 200,
+      minWidth: 100,
+      sortable: true,
+      filterType: "text",
+    },
+    {
+      key: "subject",
+      label: "Subject",
+      defaultWidth: 400,
+      minWidth: 180,
+      sortable: true,
+      filterType: "text",
+    },
     {
       key: "sent",
       label: "Sent",
@@ -91,7 +91,13 @@ export default function LargeDataTable() {
       filterType: "select",
       render: (mail) => <Checkbox checked={mail.attachment} />,
     },
-    { key: "size", label: "Size", defaultWidth: 100, minWidth: 60, align: "left" },
+    {
+      key: "size",
+      label: "Size",
+      defaultWidth: 100,
+      minWidth: 60,
+      align: "left",
+    },
   ];
 
   const renderSummary = (items: TableMailItem[]) => {
@@ -109,8 +115,10 @@ export default function LargeDataTable() {
       else if (unit === "GB") totalKb += value * 1024 * 1024;
     });
 
-    if (totalKb >= 1024 * 1024) return `Filtered Sum = ${(totalKb / (1024 * 1024)).toFixed(2)} GB`;
-    if (totalKb >= 1024) return `Filtered Sum = ${(totalKb / 1024).toFixed(2)} MB`;
+    if (totalKb >= 1024 * 1024)
+      return `Filtered Sum = ${(totalKb / (1024 * 1024)).toFixed(2)} GB`;
+    if (totalKb >= 1024)
+      return `Filtered Sum = ${(totalKb / 1024).toFixed(2)} MB`;
 
     return;
   };

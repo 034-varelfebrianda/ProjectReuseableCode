@@ -1,10 +1,13 @@
 import type { FilterCondition } from "../components/atoms/FilterPopup";
-import { parseRowDate } from "../components/atoms/DateFilterPopup";
+import { parseRowDate } from "./dateUtils";
 import type { DateFilterState, FilterValue } from "./types";
 
 export type { FilterValue };
 
-export function matchCondition(cellValue: string, condition: FilterCondition): boolean {
+export function matchCondition(
+  cellValue: string,
+  condition: FilterCondition,
+): boolean {
   const cellStr = cellValue.toLowerCase();
   const condVal = (condition.value ?? "").toLowerCase();
 
@@ -21,19 +24,30 @@ export function matchCondition(cellValue: string, condition: FilterCondition): b
   }
 }
 
-export function matchFilter(cellValue: unknown, filter: FilterValue | undefined): boolean {
+export function matchFilter(
+  cellValue: unknown,
+  filter: FilterValue | undefined,
+): boolean {
   if (filter === undefined || filter === null) return true;
 
   // If it's a simple string filter
   if (typeof filter === "string") {
     if (!filter.trim()) return true;
-    return String(cellValue ?? "").toLowerCase().includes(filter.toLowerCase());
+    return String(cellValue ?? "")
+      .toLowerCase()
+      .includes(filter.toLowerCase());
   }
 
   // If it's a DateFilterState object
-  if (typeof filter === "object" && filter !== null && "type" in filter && filter.type === "date_tree") {
+  if (
+    typeof filter === "object" &&
+    filter !== null &&
+    "type" in filter &&
+    filter.type === "date_tree"
+  ) {
     const dateFilter = filter as DateFilterState;
-    if (!dateFilter.selectedDates || dateFilter.selectedDates.length === 0) return true;
+    if (!dateFilter.selectedDates || dateFilter.selectedDates.length === 0)
+      return true;
 
     const parsed = parseRowDate(cellValue);
     if (!parsed) return false;
@@ -46,7 +60,7 @@ export function matchFilter(cellValue: unknown, filter: FilterValue | undefined)
     const { conditions, logic } = filter;
 
     const activeConditions = conditions.filter(
-      (c) => c.value !== undefined && c.value.trim() !== ""
+      (c) => c.value !== undefined && c.value.trim() !== "",
     );
     if (activeConditions.length === 0) return true;
 

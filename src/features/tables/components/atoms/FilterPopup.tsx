@@ -42,16 +42,19 @@ export default function FilterPopup({
   const [conditions, setConditions] = useState<FilterCondition[]>(
     initialState?.conditions && initialState.conditions.length > 0
       ? initialState.conditions
-      : [{ operator: FilterOperator.CONTAINS, value: "" }]
+      : [{ operator: FilterOperator.CONTAINS, value: "" }],
   );
   const [logic, setLogic] = useState<FilterLogic | "AND" | "OR">(
-    initialState?.logic ?? FilterLogic.AND
+    initialState?.logic ?? FilterLogic.AND,
   );
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         onClose();
       }
     };
@@ -61,7 +64,10 @@ export default function FilterPopup({
   }, [onClose]);
 
   const handleAddCondition = () => {
-    setConditions([...conditions, { operator: FilterOperator.CONTAINS, value: "" }]);
+    setConditions([
+      ...conditions,
+      { operator: FilterOperator.CONTAINS, value: "" },
+    ]);
   };
 
   const handleRemoveCondition = (index: number) => {
@@ -73,7 +79,7 @@ export default function FilterPopup({
   const handleConditionChange = (
     index: number,
     field: keyof FilterCondition,
-    value: string
+    value: string,
   ) => {
     const updated = [...conditions];
     updated[index] = { ...updated[index], [field]: value };
@@ -81,7 +87,9 @@ export default function FilterPopup({
   };
 
   const handleApply = () => {
-    const activeConditions = conditions.filter((c) => c.value.trim().length > 0);
+    const activeConditions = conditions.filter(
+      (c) => c.value.trim().length > 0,
+    );
     if (activeConditions.length === 0) {
       onApply({ conditions: [], logic });
     } else {
@@ -101,15 +109,9 @@ export default function FilterPopup({
     <div ref={popupRef} className="filter-popup">
       {/* Header */}
       <div className="filter-popup-header">
-        <h3 className="filter-popup-title">
-          Filter: {columnLabel}
-        </h3>
+        <h3 className="filter-popup-title">Filter: {columnLabel}</h3>
 
-        <button
-          type="button"
-          onClick={onClose}
-          className="filter-popup-close"
-        >
+        <button type="button" onClick={onClose} className="filter-popup-close">
           <X size={16} />
         </button>
       </div>
@@ -118,11 +120,7 @@ export default function FilterPopup({
       <div className="filter-popup-content">
         {conditions.map((condition, index) => (
           <div key={index} className="filter-condition">
-            {index > 0 && (
-              <div className="filter-logic-label">
-                {logic}
-              </div>
-            )}
+            {index > 0 && <div className="filter-logic-label">{logic}</div>}
 
             <div className="filter-condition-row">
               <select
@@ -131,7 +129,7 @@ export default function FilterPopup({
                   handleConditionChange(
                     index,
                     "operator",
-                    e.target.value as FilterOperator
+                    e.target.value as FilterOperator,
                   )
                 }
                 className="filter-input"
@@ -177,16 +175,11 @@ export default function FilterPopup({
 
         {conditions.length > 1 && (
           <div className="filter-logic-section">
-            <label className="filter-match-label">
-              Match
-            </label>
+            <label className="filter-match-label">Match</label>
 
             <div className="filter-radio-group">
               {logicOptions.map((opt) => (
-                <label
-                  key={opt.value}
-                  className="filter-radio-label"
-                >
+                <label key={opt.value} className="filter-radio-label">
                   <input
                     type="radio"
                     name={`logic-operator-${columnLabel.replace(/\s+/g, "-")}`}

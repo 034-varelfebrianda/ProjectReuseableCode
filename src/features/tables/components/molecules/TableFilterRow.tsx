@@ -15,7 +15,7 @@ interface TableFilterRowProps<T> {
   sortDirection: SortDirection;
   onSortChange: (
     field: (keyof T & string) | null,
-    direction: SortDirection | null
+    direction: SortDirection | null,
   ) => void;
   mode: SortMode;
 }
@@ -36,10 +36,7 @@ export default function TableFilterRow<T>({
         const sortLabels = column.sortLabels;
 
         return (
-          <td
-            key={`filter-${column.key}`}
-            className="filter-cell"
-          >
+          <td key={`filter-${column.key}`} className="filter-cell">
             {column.filterType === "text" && (
               <div className="filter-cell-content">
                 <div className="filter-cell-input">
@@ -49,13 +46,9 @@ export default function TableFilterRow<T>({
                         ? (filters[column.key] as string)
                         : ""
                     }
-                    onChange={(val) =>
-                      onFilterChange(column.key, val)
-                    }
+                    onChange={(val) => onFilterChange(column.key, val)}
                     columnLabel={column.label}
-                    onFilterApply={(state) =>
-                      onFilterChange(column.key, state)
-                    }
+                    onFilterApply={(state) => onFilterChange(column.key, state)}
                     initialFilterState={
                       typeof filters[column.key] === "object" &&
                       filters[column.key] !== null &&

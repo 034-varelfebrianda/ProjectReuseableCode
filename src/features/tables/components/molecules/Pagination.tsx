@@ -70,8 +70,7 @@ export default function Pagination({
 
       <div className="pagination-pages">
         <IconData
-          className={`pagination-icon ${currentPage === 1 ? "disabled" : ""
-            }`}
+          className={`pagination-icon ${currentPage === 1 ? "disabled" : ""}`}
           onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
@@ -81,10 +80,7 @@ export default function Pagination({
         {pages.map((page, index) => {
           if (page === "...") {
             return (
-              <span
-                key={`ellipsis-${index}`}
-                className="pagination-ellipsis"
-              >
+              <span key={`ellipsis-${index}`} className="pagination-ellipsis">
                 ...
               </span>
             );
@@ -97,8 +93,7 @@ export default function Pagination({
             <button
               key={`page-${pageNum}`}
               onClick={() => onPageChange(pageNum)}
-              className={`pagination-page ${isActive ? "active" : ""
-                }`}
+              className={`pagination-page ${isActive ? "active" : ""}`}
             >
               {pageNum}
             </button>
@@ -106,11 +101,11 @@ export default function Pagination({
         })}
 
         <IconData
-          className={`pagination-icon ${currentPage === totalPages ? "disabled" : ""
-            }`}
+          className={`pagination-icon ${
+            currentPage === totalPages ? "disabled" : ""
+          }`}
           onClick={() =>
-            currentPage < totalPages &&
-            onPageChange(currentPage + 1)
+            currentPage < totalPages && onPageChange(currentPage + 1)
           }
           disabled={currentPage === totalPages}
         >
@@ -127,10 +122,7 @@ export default function Pagination({
           className="pagination-size-button"
         >
           <span>{pageSize}</span>
-          <ChevronDown
-            size={14}
-            className="pagination-size-icon"
-          />
+          <ChevronDown size={14} className="pagination-size-icon" />
         </button>
 
         {pageSizeOpen && (
@@ -143,8 +135,9 @@ export default function Pagination({
                   onPageSizeChange(option);
                   setPageSizeOpen(false);
                 }}
-                className={`pagination-size-option ${option === pageSize ? "active" : ""
-                  }`}
+                className={`pagination-size-option ${
+                  option === pageSize ? "active" : ""
+                }`}
               >
                 {option}
               </button>

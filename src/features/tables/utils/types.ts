@@ -21,4 +21,3 @@ export interface Column<T> {
   sortLabels?: { asc: string; desc: string };
   render?: (item: T) => ReactNode;
 }
-

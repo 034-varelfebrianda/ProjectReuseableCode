@@ -22,7 +22,7 @@ interface ReusableDataTableProps<T> {
   sortDirection: "asc" | "desc";
   onSortChange: (
     field: (keyof T & string) | null,
-    direction: SortDirection | null
+    direction: SortDirection | null,
   ) => void;
   currentPage: number;
   pageSize: number;
@@ -105,5 +105,6 @@ export default function ReusableDataTable<T extends { id: string | number }>({
           />
         </div>
       </div>
-    </div>);
+    </div>
+  );
 }

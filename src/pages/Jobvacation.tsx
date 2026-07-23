@@ -1,14 +1,18 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 import ReusableDataTable, {
   Column,
 } from "../features/tables/components/organism/ReusableDataTable";
 import type { FilterValue } from "../features/tables/utils/types";
 import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
+import { useTableState } from "../hooks/useTableState";
 import type { JobVacancyItem, FilterConfig } from "../types/jobVacancyTypes";
-import { FilterOperation, FilterConjunction, JobStatus, TableMode } from "../types/enums";
-import type { SortDirection } from "../features/tables/utils/sort";
-import type { FilterState } from "../features/tables/components/atoms/FilterPopup";
+import {
+  FilterOperation,
+  FilterConjunction,
+  JobStatus,
+  TableMode,
+} from "../types/enums";
 
 type Row = JobVacancyItem & { id: string };
 
@@ -58,86 +62,83 @@ const formatIsoDateToIndonesian = (dateString?: string): string => {
 };
 
 export default function Jobvacation() {
-  const [filters, setFilters] = useState<
-    Record<string, string | FilterState>
-  >({
-    jobTitle: "",
-  });
-
-  const [sortField, setSortField] = useState<keyof Row | null>("jobTitle");
-  const [sortDirection, setSortDirection] =
-    useState<SortDirection>("asc");
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const {
+    filters,
+    sortField,
+    sortDirection,
+    currentPage,
+    pageSize,
+    setCurrentPage,
+    setPageSize,
+    handleFilterChange,
+    handleSortChange,
+  } = useTableState<Row>({ initialPageSize: 10 });
 
   const debouncedFilters = useDebounce(filters, 500);
 
-  const buildFilters = useCallback(
-    (filters: Record<string, string | FilterState>) => {
-      const filterArray: FilterConfig[] = [];
+  const buildFilters = useCallback((filters: Record<string, FilterValue>) => {
+    const filterArray: FilterConfig[] = [];
 
-      const processFilter = (
-        key: string,
-        filterVal: FilterValue | undefined
-      ) => {
-        if (!filterVal) return;
+    const processFilter = (key: string, filterVal: FilterValue | undefined) => {
+      if (!filterVal) return;
 
-        if (typeof filterVal === "string") {
-          const val = filterVal.trim();
+      if (typeof filterVal === "string") {
+        const val = filterVal.trim();
 
-          if (val) {
-            filterArray.push({
-              key,
-              value: val,
-              operation: FilterOperation.MATCH,
-              conjunction: FilterConjunction.OR,
-            });
-          }
-        } else if (typeof filterVal === "object" && "type" in filterVal && filterVal.type === "date_tree") {
-          filterVal.selectedDates.forEach((d) => {
-            filterArray.push({
-              key,
-              value: d,
-              operation: FilterOperation.MATCH,
-              conjunction: FilterConjunction.OR,
-            });
-          });
-        } else if (typeof filterVal === "object" && "conditions" in filterVal) {
-          const active = filterVal.conditions.filter(
-            (c) => c.value && c.value.trim().length > 0
-          );
-
-          active.forEach((cond) => {
-            filterArray.push({
-              key,
-              value: cond.value.trim(),
-              operation:
-                cond.operator === "equals"
-                  ? FilterOperation.EQUAL
-                  : FilterOperation.MATCH,
-              conjunction: filterVal.logic.toLowerCase(),
-            });
+        if (val) {
+          filterArray.push({
+            key,
+            value: val,
+            operation: FilterOperation.MATCH,
+            conjunction: FilterConjunction.OR,
           });
         }
-      };
+      } else if (
+        typeof filterVal === "object" &&
+        "type" in filterVal &&
+        filterVal.type === "date_tree"
+      ) {
+        filterVal.selectedDates.forEach((d) => {
+          filterArray.push({
+            key,
+            value: d,
+            operation: FilterOperation.MATCH,
+            conjunction: FilterConjunction.OR,
+          });
+        });
+      } else if (typeof filterVal === "object" && "conditions" in filterVal) {
+        const active = filterVal.conditions.filter(
+          (c) => c.value && c.value.trim().length > 0,
+        );
 
-      processFilter("jobTitle", filters.jobTitle);
-      processFilter("location", filters.location);
-      processFilter("jobType", filters.jobType);
-      processFilter("createDate", filters.createDate);
+        active.forEach((cond) => {
+          filterArray.push({
+            key,
+            value: cond.value.trim(),
+            operation:
+              cond.operator === "equals"
+                ? FilterOperation.EQUAL
+                : FilterOperation.MATCH,
+            conjunction: filterVal.logic.toLowerCase(),
+          });
+        });
+      }
+    };
 
-      filterArray.push({
-        key: "jobStatus",
-        value: JobStatus.ACTIVE,
-        operation: FilterOperation.EQUAL,
-        conjunction: FilterConjunction.AND,
-      });
+    processFilter("jobTitle", filters.jobTitle);
+    processFilter("location", filters.location);
+    processFilter("jobType", filters.jobType);
+    processFilter("createDate", filters.createDate);
 
-      return filterArray;
-    },
-    []
-  );
+    filterArray.push({
+      key: "jobStatus",
+      value: JobStatus.ACTIVE,
+      operation: FilterOperation.EQUAL,
+      conjunction: FilterConjunction.AND,
+    });
+
+    return filterArray;
+  }, []);
 
   const params = useMemo(
     () => ({
@@ -154,7 +155,7 @@ export default function Jobvacation() {
       sortField,
       sortDirection,
       buildFilters,
-    ]
+    ],
   );
 
   const {
@@ -170,7 +171,7 @@ export default function Jobvacation() {
         ...item,
         id: item.uniqueId,
       })),
-    [apiData]
+    [apiData],
   );
 
   const columns: Column<Row>[] = [
@@ -209,38 +210,14 @@ export default function Jobvacation() {
         asc: "Oldest",
         desc: "Newest",
       },
-      render: (row) =>
-        formatIsoDateToIndonesian(row.createDate),
+      render: (row) => formatIsoDateToIndonesian(row.createDate),
     },
   ];
-
-  const handleFilterChange = (
-    key: keyof Row & string,
-    value: string | FilterState
-  ) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-
-    setCurrentPage(1);
-  };
-
-  const handleSortChange = (
-    field: keyof Row | null,
-    direction: SortDirection | null
-  ) => {
-    setSortField(field);
-    setSortDirection(direction ?? "asc");
-    setCurrentPage(1);
-  };
 
   if (loading) {
     return (
       <div className="jobvacation-page">
-        <div className="jobvacation-message">
-          Loading job vacancies...
-        </div>
+        <div className="jobvacation-message">Loading job vacancies...</div>
       </div>
     );
   }
@@ -248,9 +225,7 @@ export default function Jobvacation() {
   if (error) {
     return (
       <div className="jobvacation-page">
-        <div className="jobvacation-error">
-          {error}
-        </div>
+        <div className="jobvacation-error">{error}</div>
       </div>
     );
   }

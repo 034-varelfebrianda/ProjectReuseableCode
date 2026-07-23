@@ -6,7 +6,7 @@ export type SortMode = "client" | "server";
 
 export type SortValueResolver<T> = (
   item: T,
-  field: keyof T & string
+  field: keyof T & string,
 ) => string | number | boolean | Date | null | undefined;
 
 interface ComparableValue {
@@ -49,7 +49,7 @@ export function sortItems<T extends object>(
   items: T[],
   field: (keyof T & string) | null,
   direction: SortDirection = "asc",
-  valueResolver?: SortValueResolver<T>
+  valueResolver?: SortValueResolver<T>,
 ): T[] {
   if (!field) {
     return [...items];

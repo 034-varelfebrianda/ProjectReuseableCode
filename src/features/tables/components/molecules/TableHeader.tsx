@@ -30,5 +30,6 @@ export default function TableHeader<T>({
           />
         </th>
       ))}
-    </tr>);
+    </tr>
+  );
 }

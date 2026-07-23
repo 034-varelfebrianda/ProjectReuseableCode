@@ -26,10 +26,8 @@ export default function FilterBox({
   const [internalValue, setInternalValue] = useState(value ?? "");
   const [showPopup, setShowPopup] = useState(false);
   const [filterState, setFilterState] = useState<FilterState | undefined>(
-    initialFilterState
+    initialFilterState,
   );
-
-
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const nextValue = e.target.value;
@@ -49,11 +47,15 @@ export default function FilterBox({
   };
 
   const hasActiveFilter =
-    filterState && filterState.conditions.length > 0 && filterState.conditions.some((c) => c.value.trim().length > 0);
+    filterState &&
+    filterState.conditions.length > 0 &&
+    filterState.conditions.some((c) => c.value.trim().length > 0);
 
   const getDisplayValue = () => {
     if (hasActiveFilter && filterState) {
-      const active = filterState.conditions.filter((c) => c.value.trim().length > 0);
+      const active = filterState.conditions.filter(
+        (c) => c.value.trim().length > 0,
+      );
       if (active.length === 1) {
         const op = active[0].operator;
         const opLabel =
@@ -69,14 +71,13 @@ export default function FilterBox({
         return `(${active.length}) filters [${filterState.logic}]`;
       }
     }
-    return onChange ? value ?? "" : internalValue;
+    return onChange ? (value ?? "") : internalValue;
   };
 
   return (
     <div className="filter-box">
       <input
-        className={`filter-box-input ${hasActiveFilter ? "active" : ""
-          }`}
+        className={`filter-box-input ${hasActiveFilter ? "active" : ""}`}
         value={getDisplayValue()}
         onChange={handleChange}
         placeholder={placeholder}
@@ -88,10 +89,7 @@ export default function FilterBox({
           <>
             <div className="filter-box-divider-full" />
 
-            <ChevronDown
-              size={14}
-              className="filter-box-icon"
-            />
+            <ChevronDown size={14} className="filter-box-icon" />
           </>
         )}
 
@@ -101,8 +99,9 @@ export default function FilterBox({
           <button
             type="button"
             onClick={() => setShowPopup((prev) => !prev)}
-            className={`filter-box-filter-button ${hasActiveFilter ? "active" : ""
-              }`}
+            className={`filter-box-filter-button ${
+              hasActiveFilter ? "active" : ""
+            }`}
             title="Advanced Filter"
           >
             <Funnel size={14} />

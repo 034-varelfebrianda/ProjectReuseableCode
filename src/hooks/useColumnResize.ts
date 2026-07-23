@@ -23,7 +23,7 @@ export function useColumnResize<T>() {
             ...prev,
             [column.key as string]: Math.max(
               column.minWidth,
-              startWidth + deltaX
+              startWidth + deltaX,
             ),
           }));
         };
@@ -37,7 +37,7 @@ export function useColumnResize<T>() {
         document.addEventListener("mouseup", onMouseUp);
       };
     },
-    []
+    [],
   );
 
   return { colWidths, handleResize };

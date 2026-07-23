@@ -5,11 +5,9 @@ interface GridTopBarProps {
 }
 
 export default function ThemeButton({
-  showThemeToggle = false
+  showThemeToggle = false,
 }: GridTopBarProps) {
   return (
-    <div className="theme-button">
-      {showThemeToggle && <ThemeToggle />}
-    </div>
+    <div className="theme-button">{showThemeToggle && <ThemeToggle />}</div>
   );
 }

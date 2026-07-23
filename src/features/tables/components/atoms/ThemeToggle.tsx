@@ -7,7 +7,10 @@ interface ThemeToggleProps {
   size?: "sm" | "md";
 }
 
-export default function ThemeToggle({ className = "", size = "sm" }: ThemeToggleProps) {
+export default function ThemeToggle({
+  className = "",
+  size = "sm",
+}: ThemeToggleProps) {
   const { theme, setTheme } = useTheme();
 
   const buttonSize = size === "md" ? "theme-toggle-md" : "theme-toggle-sm";
@@ -17,8 +20,9 @@ export default function ThemeToggle({ className = "", size = "sm" }: ThemeToggle
       <button
         type="button"
         onClick={() => setTheme(ThemeMode.LIGHT)}
-        className={`theme-toggle-button ${buttonSize} ${theme === ThemeMode.LIGHT ? "active" : ""
-          }`}
+        className={`theme-toggle-button ${buttonSize} ${
+          theme === ThemeMode.LIGHT ? "active" : ""
+        }`}
       >
         <Sun size={size === "md" ? 14 : 13} />
         <span>Light</span>
@@ -27,8 +31,9 @@ export default function ThemeToggle({ className = "", size = "sm" }: ThemeToggle
       <button
         type="button"
         onClick={() => setTheme(ThemeMode.DARK)}
-        className={`theme-toggle-button ${buttonSize} ${theme === ThemeMode.DARK ? "active" : ""
-          }`}
+        className={`theme-toggle-button ${buttonSize} ${
+          theme === ThemeMode.DARK ? "active" : ""
+        }`}
       >
         <Moon size={size === "md" ? 14 : 13} />
         <span>Dark</span>

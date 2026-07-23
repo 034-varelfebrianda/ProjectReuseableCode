@@ -14,13 +14,11 @@ const options: Array<{ value: AttachmentValue; label: string }> = [
   { value: "no", label: "No" },
 ];
 
-export default function AttachmentBox({
-  value,
-  onChange,
-}: AttachmentBoxProps) {
+export default function AttachmentBox({ value, onChange }: AttachmentBoxProps) {
   const [open, setOpen] = useState(false);
 
-  const selectedLabel = options.find((option) => option.value === value)?.label ?? "All";
+  const selectedLabel =
+    options.find((option) => option.value === value)?.label ?? "All";
 
   return (
     <div className="filter-select">
@@ -36,7 +34,10 @@ export default function AttachmentBox({
 
           <div className="filter-select-divider" />
 
-          <Funnel size={14} className="filter-select-icon filter-select-icon-static" />
+          <Funnel
+            size={14}
+            className="filter-select-icon filter-select-icon-static"
+          />
         </div>
       </button>
 
@@ -61,5 +62,6 @@ export default function AttachmentBox({
           ))}
         </div>
       )}
-    </div>);
+    </div>
+  );
 }

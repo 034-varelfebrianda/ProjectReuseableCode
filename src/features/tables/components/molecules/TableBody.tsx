@@ -36,7 +36,7 @@ export default function TableBody<T extends { id: string | number }>({
                   {column.render
                     ? column.render(item)
                     : item[column.key] !== undefined &&
-                      item[column.key] !== null
+                        item[column.key] !== null
                       ? String(item[column.key])
                       : "-"}
                 </td>
@@ -46,10 +46,7 @@ export default function TableBody<T extends { id: string | number }>({
         ))
       ) : (
         <tr>
-          <td
-            colSpan={columns.length}
-            className="table-empty"
-          >
+          <td colSpan={columns.length} className="table-empty">
             No matching records found.
           </td>
         </tr>
@@ -57,10 +54,7 @@ export default function TableBody<T extends { id: string | number }>({
 
       {renderSummary && (
         <tr>
-          <td
-            colSpan={columns.length}
-            className="table-summary"
-          >
+          <td colSpan={columns.length} className="table-summary">
             {renderSummary(allData)}
           </td>
         </tr>
