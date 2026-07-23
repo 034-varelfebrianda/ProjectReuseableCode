@@ -5,7 +5,6 @@ import TableFilterRow from "../molecules/TableFilterRow";
 import TableBody from "../molecules/TableBody";
 import { useColumnResize } from "../../../../hooks/useColumnResize";
 import type { SortDirection } from "../../utils/sort";
-import type { FilterState } from "../atoms/FilterPopup";
 import type { Column, FilterValue } from "../../utils/types";
 import { TableMode } from "../../../../types/enums";
 
@@ -18,7 +17,7 @@ interface ReusableDataTableProps<T> {
   data: T[];
   columns: Column<T>[];
   filters: Record<string, FilterValue>;
-  onFilterChange: (key: keyof T & string, value: string | FilterState) => void;
+  onFilterChange: (key: keyof T & string, value: FilterValue) => void;
   sortField: (keyof T & string) | null;
   sortDirection: "asc" | "desc";
   onSortChange: (
@@ -78,6 +77,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 
                 <TableFilterRow
                   columns={columns}
+                  data={data}
                   filters={filters}
                   onFilterChange={onFilterChange}
                   sortField={sortField}

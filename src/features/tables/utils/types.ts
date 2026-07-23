@@ -1,7 +1,13 @@
 import type { ReactNode } from "react";
 import type { FilterState } from "../components/atoms/FilterPopup";
 
-export type FilterValue = string | FilterState;
+export interface DateFilterState {
+  type: "date_tree";
+  selectedKeys: string[];
+  selectedDates: string[];
+}
+
+export type FilterValue = string | FilterState | DateFilterState;
 
 export interface Column<T> {
   key: keyof T & string;
@@ -10,8 +16,9 @@ export interface Column<T> {
   minWidth: number;
   align?: "left" | "center" | "right";
   sortable?: boolean;
-  filterType?: "text" | "select" | "none";
+  filterType?: "text" | "select" | "date" | "none";
   filterOptions?: Array<{ value: string; label: string }>;
   sortLabels?: { asc: string; desc: string };
   render?: (item: T) => ReactNode;
 }
+

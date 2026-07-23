@@ -79,7 +79,7 @@ export default function LargeDataTable() {
       defaultWidth: 120,
       minWidth: 80,
       sortable: true,
-      filterType: "text",
+      filterType: "date",
       sortLabels: { asc: "Oldest", desc: "Newest" },
     },
     {

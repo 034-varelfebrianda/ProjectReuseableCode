@@ -2,6 +2,7 @@ import { useMemo, useState, useCallback } from "react";
 import ReusableDataTable, {
   Column,
 } from "../features/tables/components/organism/ReusableDataTable";
+import type { FilterValue } from "../features/tables/utils/types";
 import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
 import type { JobVacancyItem, FilterConfig } from "../types/jobVacancyTypes";
@@ -78,7 +79,7 @@ export default function Jobvacation() {
 
       const processFilter = (
         key: string,
-        filterVal: string | FilterState | undefined
+        filterVal: FilterValue | undefined
       ) => {
         if (!filterVal) return;
 
@@ -93,7 +94,16 @@ export default function Jobvacation() {
               conjunction: FilterConjunction.OR,
             });
           }
-        } else {
+        } else if (typeof filterVal === "object" && "type" in filterVal && filterVal.type === "date_tree") {
+          filterVal.selectedDates.forEach((d) => {
+            filterArray.push({
+              key,
+              value: d,
+              operation: FilterOperation.MATCH,
+              conjunction: FilterConjunction.OR,
+            });
+          });
+        } else if (typeof filterVal === "object" && "conditions" in filterVal) {
           const active = filterVal.conditions.filter(
             (c) => c.value && c.value.trim().length > 0
           );
@@ -115,6 +125,7 @@ export default function Jobvacation() {
       processFilter("jobTitle", filters.jobTitle);
       processFilter("location", filters.location);
       processFilter("jobType", filters.jobType);
+      processFilter("createDate", filters.createDate);
 
       filterArray.push({
         key: "jobStatus",
@@ -193,7 +204,7 @@ export default function Jobvacation() {
       defaultWidth: 220,
       minWidth: 180,
       sortable: true,
-      filterType: "text",
+      filterType: "date",
       sortLabels: {
         asc: "Oldest",
         desc: "Newest",

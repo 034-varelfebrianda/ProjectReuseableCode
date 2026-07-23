@@ -1,6 +1,8 @@
-import type { FilterState, FilterCondition } from "../components/atoms/FilterPopup";
+import type { FilterCondition } from "../components/atoms/FilterPopup";
+import { parseRowDate } from "../components/atoms/DateFilterPopup";
+import type { DateFilterState, FilterValue } from "./types";
 
-export type FilterValue = string | FilterState;
+export type { FilterValue };
 
 export function matchCondition(cellValue: string, condition: FilterCondition): boolean {
   const cellStr = cellValue.toLowerCase();
@@ -28,11 +30,21 @@ export function matchFilter(cellValue: unknown, filter: FilterValue | undefined)
     return String(cellValue ?? "").toLowerCase().includes(filter.toLowerCase());
   }
 
+  // If it's a DateFilterState object
+  if (typeof filter === "object" && filter !== null && "type" in filter && filter.type === "date_tree") {
+    const dateFilter = filter as DateFilterState;
+    if (!dateFilter.selectedDates || dateFilter.selectedDates.length === 0) return true;
+
+    const parsed = parseRowDate(cellValue);
+    if (!parsed) return false;
+
+    return dateFilter.selectedDates.includes(parsed.dateStr);
+  }
+
   // If it's a FilterState object
   if (typeof filter === "object" && "conditions" in filter) {
     const { conditions, logic } = filter;
 
-    // Filter out empty conditions
     const activeConditions = conditions.filter(
       (c) => c.value !== undefined && c.value.trim() !== ""
     );
