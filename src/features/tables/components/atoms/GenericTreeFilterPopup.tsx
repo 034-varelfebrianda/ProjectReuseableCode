@@ -11,7 +11,6 @@ import type { TreeFilterState, DateFilterState } from "../../utils/types";
 import {
   buildGenericTree,
   getAllTreeNodeIds,
-  getAllTreeLeafValues,
   filterGenericTree,
   type GenericTreeNode,
 } from "../../utils/filteringUtils";
