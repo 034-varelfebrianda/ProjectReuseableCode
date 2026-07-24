@@ -38,13 +38,7 @@ export default function LargeDataTable() {
       const fromMatch = matchFilter(mail.from, filters.from);
       const subjectMatch = matchFilter(mail.subject, filters.subject);
       const sentMatch = matchFilter(mail.sent, filters.sent);
-
-      const attachmentFilter =
-        typeof filters.attachment === "string" ? filters.attachment : "all";
-      const attachmentMatch =
-        attachmentFilter === "all" ||
-        (attachmentFilter === "yes" && mail.attachment === true) ||
-        (attachmentFilter === "no" && mail.attachment === false);
+      const attachmentMatch = matchFilter(mail.attachment, filters.attachment);
 
       return fromMatch && subjectMatch && sentMatch && attachmentMatch;
     });
@@ -89,6 +83,10 @@ export default function LargeDataTable() {
       minWidth: 80,
       align: "center",
       filterType: "select",
+      filterOptions: [
+        { value: "true", label: "Yes" },
+        { value: "false", label: "No" },
+      ],
       render: (mail) => <Checkbox checked={mail.attachment} />,
     },
     {

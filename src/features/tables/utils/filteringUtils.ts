@@ -2,7 +2,19 @@ export function parseRowDate(
   val: unknown,
 ): { year: string; month: string; day: string; dateStr: string } | null {
   if (!val) return null;
-  const d = new Date(val as string | number | Date);
+  if (typeof val === "boolean") return null;
+  if (typeof val === "number") return null;
+  if (typeof val === "string") {
+    if (val === "true" || val === "false") return null;
+    if (
+      !/\d/.test(val) ||
+      (!val.includes("-") && !val.includes("/") && !val.includes("T"))
+    ) {
+      return null;
+    }
+  }
+
+  const d = new Date(val as string | Date);
   if (isNaN(d.getTime())) return null;
 
   const year = d.getFullYear().toString();
