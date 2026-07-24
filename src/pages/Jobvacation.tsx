@@ -3,6 +3,7 @@ import ReusableDataTable, {
   Column,
 } from "../features/tables/components/organism/ReusableDataTable";
 import type { FilterValue } from "../features/tables/utils/types";
+import { matchFilter } from "../features/tables/utils/filter";
 import { useJobVacancy } from "../hooks/useJobVacancy";
 import { useDebounce } from "../hooks/useDebounce";
 import { useTableState } from "../hooks/useTableState";
@@ -102,7 +103,7 @@ export default function Jobvacation() {
           filterArray.push({
             key,
             value: d,
-            operation: FilterOperation.MATCH,
+            operation: FilterOperation.CONTAINS,
             conjunction: FilterConjunction.OR,
           });
         });
@@ -165,7 +166,7 @@ export default function Jobvacation() {
     totalItems,
   } = useJobVacancy(params);
 
-  const rows: Row[] = useMemo(
+  const allRows: Row[] = useMemo(
     () =>
       apiData.map((item) => ({
         ...item,
@@ -173,6 +174,20 @@ export default function Jobvacation() {
       })),
     [apiData],
   );
+
+  const rows: Row[] = useMemo(() => {
+    let list = allRows;
+
+    if (filters.createDate) {
+      list = list.filter((row) =>
+        matchFilter(row.createDate, filters.createDate),
+      );
+    }
+
+    return list;
+  }, [allRows, filters.createDate]);
+
+  const displayTotalItems = filters.createDate ? rows.length : totalItems;
 
   const columns: Column<Row>[] = [
     {
@@ -235,6 +250,7 @@ export default function Jobvacation() {
       <ReusableDataTable
         mode={TableMode.SERVER}
         data={rows}
+        allData={allRows}
         columns={columns}
         filters={filters}
         onFilterChange={handleFilterChange}
@@ -243,7 +259,7 @@ export default function Jobvacation() {
         onSortChange={handleSortChange}
         currentPage={currentPage}
         pageSize={pageSize}
-        totalItems={totalItems}
+        totalItems={displayTotalItems}
         serverPageSize
         onPageChange={setCurrentPage}
         onPageSizeChange={(size) => {

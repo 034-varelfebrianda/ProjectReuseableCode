@@ -2,6 +2,7 @@
 export const FilterOperation = {
   MATCH: "MATCH",
   EQUAL: "EQUAL",
+  CONTAINS: "CONTAINS",
 } as const;
 export type FilterOperation =
   (typeof FilterOperation)[keyof typeof FilterOperation];

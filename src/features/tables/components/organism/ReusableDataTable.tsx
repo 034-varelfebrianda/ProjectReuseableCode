@@ -15,6 +15,7 @@ interface ReusableDataTableProps<T> {
   mode?: TableMode | "client" | "server";
 
   data: T[];
+  allData?: T[];
   columns: Column<T>[];
   filters: Record<string, FilterValue>;
   onFilterChange: (key: keyof T & string, value: FilterValue) => void;
@@ -35,6 +36,7 @@ interface ReusableDataTableProps<T> {
 
 export default function ReusableDataTable<T extends { id: string | number }>({
   data,
+  allData,
   columns,
   filters,
   onFilterChange,
@@ -77,7 +79,7 @@ export default function ReusableDataTable<T extends { id: string | number }>({
 
                 <TableFilterRow
                   columns={columns}
-                  data={data}
+                  data={allData || data}
                   filters={filters}
                   onFilterChange={onFilterChange}
                   sortField={sortField}
