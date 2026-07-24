@@ -7,40 +7,41 @@ import {
   Check,
   Minus,
 } from "lucide-react";
-import type { DateFilterState } from "../../utils/types";
+import type { TreeFilterState, DateFilterState } from "../../utils/types";
 import {
-  buildDateTree,
-  getAllNodeIds,
-  filterTree,
-} from "../../utils/dateUtils";
+  buildGenericTree,
+  getAllTreeNodeIds,
+  getAllTreeLeafValues,
+  filterGenericTree,
+  type GenericTreeNode,
+} from "../../utils/filteringUtils";
 
-export interface DateTreeNode {
-  id: string; // "2025", "2025-01", "2025-01-15"
-  label: string;
-  level: "year" | "month" | "day";
-  children?: DateTreeNode[];
-  dateStr?: string; // "YYYY-MM-DD"
-}
-
-interface DateFilterPopupProps<T> {
+interface GenericTreeFilterPopupProps<T> {
   columnLabel: string;
   data: T[];
   columnKey: keyof T & string;
-  initialState?: DateFilterState;
-  onApply: (state: DateFilterState | undefined) => void;
+  filterType?: "text" | "select" | "date" | "number" | "none";
+  filterOptions?: Array<{ value: string; label: string }>;
+  initialState?: TreeFilterState | DateFilterState;
+  onApply: (state: TreeFilterState | undefined) => void;
   onClose: () => void;
 }
 
-export default function DateFilterPopup<T>({
+export default function GenericTreeFilterPopup<T>({
   columnLabel,
   data,
   columnKey,
+  filterType = "text",
+  filterOptions,
   initialState,
   onApply,
   onClose,
-}: DateFilterPopupProps<T>) {
-  const tree = useMemo(() => buildDateTree(data, columnKey), [data, columnKey]);
-  const allNodeIds = useMemo(() => getAllNodeIds(tree), [tree]);
+}: GenericTreeFilterPopupProps<T>) {
+  const tree = useMemo(
+    () => buildGenericTree(data, columnKey, filterType, filterOptions),
+    [data, columnKey, filterType, filterOptions],
+  );
+  const allNodeIds = useMemo(() => getAllTreeNodeIds(tree), [tree]);
 
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(() => {
     if (initialState?.selectedKeys && initialState.selectedKeys.length > 0) {
@@ -49,9 +50,7 @@ export default function DateFilterPopup<T>({
     return new Set(allNodeIds);
   });
 
-  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(() => new Set());
   const [searchTerm, setSearchTerm] = useState("");
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -77,7 +76,7 @@ export default function DateFilterPopup<T>({
     });
   };
 
-  const getSubtreeNodeIds = (node: DateTreeNode): string[] => {
+  const getSubtreeNodeIds = (node: GenericTreeNode): string[] => {
     const ids = [node.id];
     if (node.children) {
       node.children.forEach((child) => {
@@ -88,7 +87,7 @@ export default function DateFilterPopup<T>({
   };
 
   const getNodeState = (
-    node: DateTreeNode,
+    node: GenericTreeNode,
   ): "checked" | "unchecked" | "indeterminate" => {
     const subtreeIds = getSubtreeNodeIds(node);
     const selectedCount = subtreeIds.filter((id) =>
@@ -100,7 +99,7 @@ export default function DateFilterPopup<T>({
     return "indeterminate";
   };
 
-  const handleToggleNode = (node: DateTreeNode) => {
+  const handleToggleNode = (node: GenericTreeNode) => {
     const currentState = getNodeState(node);
     const subtreeIds = getSubtreeNodeIds(node);
 
@@ -132,10 +131,11 @@ export default function DateFilterPopup<T>({
     if (selectedKeys.size === 0 || selectedKeys.size === allNodeIds.length) {
       onApply(undefined);
     } else {
-      const selectedLeafDates: string[] = [];
-      const collectSelectedLeafs = (node: DateTreeNode) => {
-        if (node.level === "day" && node.dateStr && selectedKeys.has(node.id)) {
-          selectedLeafDates.push(node.dateStr);
+      const selectedLeafValues: string[] = [];
+      const collectSelectedLeafs = (node: GenericTreeNode) => {
+        const isLeaf = !node.children || node.children.length === 0;
+        if (isLeaf && selectedKeys.has(node.id)) {
+          selectedLeafValues.push(node.value);
         } else if (node.children) {
           node.children.forEach(collectSelectedLeafs);
         }
@@ -143,9 +143,9 @@ export default function DateFilterPopup<T>({
       tree.forEach(collectSelectedLeafs);
 
       onApply({
-        type: "date_tree",
+        type: "tree",
         selectedKeys: Array.from(selectedKeys),
-        selectedDates: selectedLeafDates,
+        selectedValues: selectedLeafValues,
       });
     }
     onClose();
@@ -156,14 +156,14 @@ export default function DateFilterPopup<T>({
   };
 
   const filteredTree = useMemo(
-    () => filterTree(tree, searchTerm),
+    () => filterGenericTree(tree, searchTerm),
     [tree, searchTerm],
   );
 
-  const renderTreeNode = (node: DateTreeNode) => {
+  const renderTreeNode = (node: GenericTreeNode) => {
     const isExpanded =
       expandedKeys.has(node.id) || searchTerm.trim().length > 0;
-    const hasChildren = node.children && node.children.length > 0;
+    const hasChildren = Boolean(node.children && node.children.length > 0);
     const state = getNodeState(node);
 
     return (
@@ -269,7 +269,7 @@ export default function DateFilterPopup<T>({
         {filteredTree.length > 0 ? (
           filteredTree.map((node) => renderTreeNode(node))
         ) : (
-          <div className="date-tree-empty">No dates found</div>
+          <div className="date-tree-empty">No items found</div>
         )}
       </div>
 

@@ -97,6 +97,22 @@ export default function Jobvacation() {
       } else if (
         typeof filterVal === "object" &&
         "type" in filterVal &&
+        filterVal.type === "tree"
+      ) {
+        filterVal.selectedValues.forEach((val) => {
+          filterArray.push({
+            key,
+            value: val,
+            operation:
+              key === "createDate"
+                ? FilterOperation.CONTAINS
+                : FilterOperation.MATCH,
+            conjunction: FilterConjunction.OR,
+          });
+        });
+      } else if (
+        typeof filterVal === "object" &&
+        "type" in filterVal &&
         filterVal.type === "date_tree"
       ) {
         filterVal.selectedDates.forEach((d) => {
@@ -178,16 +194,24 @@ export default function Jobvacation() {
   const rows: Row[] = useMemo(() => {
     let list = allRows;
 
-    if (filters.createDate) {
-      list = list.filter((row) =>
-        matchFilter(row.createDate, filters.createDate),
-      );
-    }
+    Object.keys(filters).forEach((key) => {
+      const filterVal = filters[key];
+      if (filterVal) {
+        list = list.filter((row) =>
+          matchFilter(row[key as keyof Row], filterVal),
+        );
+      }
+    });
 
     return list;
-  }, [allRows, filters.createDate]);
+  }, [allRows, filters]);
 
-  const displayTotalItems = filters.createDate ? rows.length : totalItems;
+  const hasActiveFilters = useMemo(
+    () => Object.values(filters).some((f) => Boolean(f)),
+    [filters],
+  );
+
+  const displayTotalItems = hasActiveFilters ? rows.length : totalItems;
 
   const columns: Column<Row>[] = [
     {

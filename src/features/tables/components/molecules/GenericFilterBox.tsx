@@ -1,35 +1,47 @@
 import { useState } from "react";
 import { Funnel } from "lucide-react";
-import DateFilterPopup from "../atoms/DateFilterPopup";
-import type { DateFilterState } from "../../utils/types";
+import GenericTreeFilterPopup from "../atoms/GenericTreeFilterPopup";
+import type { TreeFilterState, DateFilterState } from "../../utils/types";
 
-interface DateFilterBoxProps<T> {
+interface GenericFilterBoxProps<T> {
   columnLabel: string;
   columnKey: keyof T & string;
   data: T[];
-  filterState?: DateFilterState;
-  onFilterApply: (state: DateFilterState | undefined) => void;
+  filterType?: "text" | "select" | "date" | "number" | "none";
+  filterOptions?: Array<{ value: string; label: string }>;
+  filterState?: TreeFilterState | DateFilterState;
+  onFilterApply: (state: TreeFilterState | undefined) => void;
   placeholder?: string;
 }
 
-export default function DateFilterBox<T>({
+export default function GenericFilterBox<T>({
   columnLabel,
   columnKey,
   data,
+  filterType = "text",
+  filterOptions,
   filterState,
   onFilterApply,
-  placeholder = "Filter date...",
-}: DateFilterBoxProps<T>) {
+  placeholder = "Filter...",
+}: GenericFilterBoxProps<T>) {
   const [showPopup, setShowPopup] = useState(false);
 
-  const hasActiveFilter =
-    filterState &&
-    filterState.type === "date_tree" &&
-    filterState.selectedDates &&
-    filterState.selectedDates.length > 0;
+  const getActiveFilterCount = (): number => {
+    if (!filterState) return 0;
+    if ("selectedValues" in filterState && filterState.selectedValues) {
+      return filterState.selectedValues.length;
+    }
+    if ("selectedDates" in filterState && filterState.selectedDates) {
+      return filterState.selectedDates.length;
+    }
+    return 0;
+  };
+
+  const activeCount = getActiveFilterCount();
+  const hasActiveFilter = activeCount > 0;
 
   const displayValue = hasActiveFilter
-    ? `Filtered (${filterState.selectedDates.length} dates)`
+    ? `Filtered (${activeCount} items)`
     : "";
 
   return (
@@ -50,16 +62,18 @@ export default function DateFilterBox<T>({
             type="button"
             onClick={() => setShowPopup((prev) => !prev)}
             className={`filter-box-filter-button ${hasActiveFilter ? "active" : ""}`}
-            title="Filter by Date"
+            title={`Filter ${columnLabel}`}
           >
             <Funnel size={14} />
           </button>
 
           {showPopup && (
-            <DateFilterPopup
+            <GenericTreeFilterPopup
               columnLabel={columnLabel}
-              data={data}
               columnKey={columnKey}
+              data={data}
+              filterType={filterType}
+              filterOptions={filterOptions}
               initialState={filterState}
               onApply={(state) => {
                 onFilterApply(state);

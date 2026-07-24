@@ -7,7 +7,17 @@ export interface DateFilterState {
   selectedDates: string[];
 }
 
-export type FilterValue = string | FilterState | DateFilterState;
+export interface TreeFilterState {
+  type: "tree";
+  selectedKeys: string[];
+  selectedValues: string[];
+}
+
+export type FilterValue =
+  | string
+  | FilterState
+  | DateFilterState
+  | TreeFilterState;
 
 export interface Column<T> {
   key: keyof T & string;
@@ -16,7 +26,7 @@ export interface Column<T> {
   minWidth: number;
   align?: "left" | "center" | "right";
   sortable?: boolean;
-  filterType?: "text" | "select" | "date" | "none";
+  filterType?: "text" | "select" | "date" | "number" | "none";
   filterOptions?: Array<{ value: string; label: string }>;
   sortLabels?: { asc: string; desc: string };
   render?: (item: T) => ReactNode;

@@ -1,6 +1,10 @@
 import type { FilterCondition } from "../components/atoms/FilterPopup";
-import { parseRowDate } from "./dateUtils";
-import type { DateFilterState, FilterValue } from "./types";
+import { parseRowDate } from "./filteringUtils";
+import type {
+  DateFilterState,
+  TreeFilterState,
+  FilterValue,
+} from "./types";
 
 export type { FilterValue };
 
@@ -28,7 +32,7 @@ export function matchFilter(
   cellValue: unknown,
   filter: FilterValue | undefined,
 ): boolean {
-  if (filter === undefined || filter === null) return true;
+  if (filter === undefined || filter === null || filter === "") return true;
 
   // If it's a simple string filter
   if (typeof filter === "string") {
@@ -38,7 +42,32 @@ export function matchFilter(
       .includes(filter.toLowerCase());
   }
 
-  // If it's a DateFilterState object
+  // If it's a generic TreeFilterState object
+  if (
+    typeof filter === "object" &&
+    filter !== null &&
+    "type" in filter &&
+    filter.type === "tree"
+  ) {
+    const treeFilter = filter as TreeFilterState;
+    if (!treeFilter.selectedValues || treeFilter.selectedValues.length === 0)
+      return true;
+
+    // Check if cellValue matches date string format first
+    const parsedDate = parseRowDate(cellValue);
+    if (parsedDate) {
+      return treeFilter.selectedValues.includes(parsedDate.dateStr);
+    }
+
+    const strVal =
+      cellValue === undefined || cellValue === null || String(cellValue).trim() === ""
+        ? "(Blank)"
+        : String(cellValue).trim();
+
+    return treeFilter.selectedValues.includes(strVal);
+  }
+
+  // If it's legacy DateFilterState object
   if (
     typeof filter === "object" &&
     filter !== null &&

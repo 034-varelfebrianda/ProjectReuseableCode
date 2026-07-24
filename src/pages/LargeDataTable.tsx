@@ -128,6 +128,7 @@ export default function LargeDataTable() {
       <ReusableDataTable
         mode={TableMode.CLIENT}
         data={sortedMails}
+        allData={mails}
         columns={columns}
         filters={filters}
         onFilterChange={handleFilterChange}
